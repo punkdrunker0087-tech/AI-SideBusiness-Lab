@@ -94,6 +94,32 @@ Departments（Research / Evaluation ...）
 | 異常時の挙動 | 指定IDが存在しない場合はエラーを返す。Quality Gateを満たさない場合はExit Criteria未達として不足項目を明示し、Portfolio Dashboardの状態は「調査中」のまま据え置く |
 | 自然言語例 | 「<ID>の市場調査をして」「この案件のエビデンスを集めて」 |
 
+## /validate
+
+| 項目 | 内容 |
+|---|---|
+| 目的 | 市場調査部の成果物が事業評価部の評価に耐える品質かを監査する（検証部・QA） |
+| 入力 | 案件ID |
+| 処理 | `Validation.md` のチェックリスト（Evidence件数・URL実在・公式情報・Competitors件数・TAM/SAM/SOM・Risks・AI Fit・Recommendation・Confidence Score・重複・鮮度）を1項目ずつ確認する。事業性の評価は行わない |
+| 出力 | PASS、またはREWORK（不足項目付き） |
+| 呼び出す契約 | Validation.md、docs/department-contracts.md（検証部） |
+| 呼び出すエージェント | 検証部 |
+| 異常時の挙動 | 対象の市場調査成果物が存在しない場合はエラーを返す。REWORKの場合はPortfolio Dashboardの状態を「調査中」のまま据え置く |
+| 自然言語例 | 「<ID>のエビデンスを監査して」「この調査は品質OK？」 |
+
+## /evaluate
+
+| 項目 | 内容 |
+|---|---|
+| 目的 | 投資委員会として8軸スコアリングでGo/No-Go判定案を作成する（事業評価部） |
+| 入力 | 案件ID |
+| 処理 | 検証部PASS済みの成果物を対象に、`docs/decision-framework.md` の8軸（市場性・収益性・競争優位性・開発容易性・AI自動化率・リスク・Evidence品質・戦略適合性）を採点し、重み付け総合スコアと5段階判定（Strong Go/Go/Conditional Go/Pivot/No-Go）を算出する。`cases/<ID>/score-history.md` にスコアを記録する |
+| 出力 | 8軸スコア・総合スコア・5段階判定案・理由 |
+| 呼び出す契約 | Evaluation.md、docs/decision-framework.md |
+| 呼び出すエージェント | 事業評価部 |
+| 異常時の挙動 | 対象案件が検証部PASS済みでない場合は評価せず、検証部へ回すようPMに報告する |
+| 自然言語例 | 「<ID>に投資する価値ある？」「この案件のスコアを出して」 |
+
 ## /portfolio
 
 | 項目 | 内容 |

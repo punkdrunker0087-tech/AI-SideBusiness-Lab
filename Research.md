@@ -19,8 +19,8 @@
 | Authority | 調査範囲・調査手法・Evidenceのランク付けの決定権 |
 | Cannot do | 最終的なGo/No-Go・投資決定をしない／収益性の断定評価をしない／開発・実装をしない |
 | KPIs | 調査完了率、Exit Criteria達成率、エビデンス件数・ランク分布 |
-| Exit Criteria | Quality Gateを全項目達成し、事業評価部へ引き渡したら完了 |
-| Next Department | 事業評価部 |
+| Exit Criteria | Quality Gateを全項目達成し、検証部へ引き渡したら完了 |
+| Next Department | 検証部 |
 
 ## 入力
 
@@ -76,7 +76,7 @@ Research部の仕事は、以下がすべて完了するまで終わらない。
 - [ ] Risks（5項目以上）
 - [ ] AI Fit
 - [ ] Recommendation
-- [ ] PMレビュー
+- [ ] 検証部レビュー（PASS判定）
 
 ## Cannot do
 
@@ -89,7 +89,7 @@ Research部の仕事は、以下がすべて完了するまで終わらない。
 ## Outputs
 
 - 上記10セクション＋Confidence Scoreからなる調査成果物
-- PM・事業評価部への引き渡し
+- PM・検証部への引き渡し
 
 ## KPIs
 
@@ -101,5 +101,5 @@ CLAUDE.md「13. KPI階層」Level 3の例に基づく。
 
 ## Exit Criteria
 
-Quality Gateの全項目を達成し、成果物を事業評価部（PM経由）へ引き渡したら
+Quality Gateの全項目を達成し、成果物を検証部（PM経由）へ引き渡したら
 完了とする。未達の項目がある場合はExit Criteria未達とし、追加調査を続ける。
