@@ -120,6 +120,19 @@ Departments（Research / Evaluation ...）
 | 異常時の挙動 | 対象案件が検証部PASS済みでない場合は評価せず、検証部へ回すようPMに報告する |
 | 自然言語例 | 「<ID>に投資する価値ある？」「この案件のスコアを出して」 |
 
+## /produce
+
+| 項目 | 内容 |
+|---|---|
+| 目的 | CEOが承認した案件を販売可能な成果物へ変換する（制作部） |
+| 入力 | 案件ID |
+| 処理 | `Production.md` の4モード（Software/Content/Template/Package）から適切なものを選び、成果物を`cases/<ID>/production/`に作成する。Quality Gate（Definition of Done）を1項目ずつ確認する |
+| 出力 | 制作モード、成果物の保存先、Quality Gateの達成状況 |
+| 呼び出す契約 | Production.md、docs/department-contracts.md（制作部） |
+| 呼び出すエージェント | 制作部 |
+| 異常時の挙動 | CEO承認前の案件はエラーを返す。Quality Gate未達の場合は状態を「制作中」のまま据え置き、不足項目を明示する |
+| 自然言語例 | 「<ID>を形にして」「この案件の成果物を作って」 |
+
 ## /portfolio
 
 | 項目 | 内容 |
