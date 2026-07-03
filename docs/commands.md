@@ -133,6 +133,19 @@ Departments（Research / Evaluation ...）
 | 異常時の挙動 | CEO承認前の案件はエラーを返す。Quality Gate未達の場合は状態を「制作中」のまま据え置き、不足項目を明示する |
 | 自然言語例 | 「<ID>を形にして」「この案件の成果物を作って」 |
 
+## /marketing
+
+| 項目 | 内容 |
+|---|---|
+| 目的 | 制作部の成果物を最小コストで継続的に販売できる状態にする（マーケティング部） |
+| 入力 | 案件ID |
+| 処理 | `docs/channel-strategy.md` に基づきチャネルを選び、`Marketing.md` の最低6点セット（販売ページ・X投稿・note記事・商品説明・SEOタイトル・サムネイル指示書）を作成する。Exit Criteriaチェックリストを確認する |
+| 出力 | 6点セットの成果物（`cases/<ID>/marketing.md`）、チャネル別公開状態、Exit Criteriaの達成状況 |
+| 呼び出す契約 | Marketing.md、docs/channel-strategy.md、docs/department-contracts.md（マーケティング部） |
+| 呼び出すエージェント | マーケティング部 |
+| 異常時の挙動 | 制作部の成果物が存在しない場合はエラーを返す。Exit Criteria未達の場合は状態を「マーケティング準備中」のまま据え置く |
+| 自然言語例 | 「<ID>を売る準備をして」「販売ページを作って」 |
+
 ## /portfolio
 
 | 項目 | 内容 |
