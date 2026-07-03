@@ -81,6 +81,19 @@ Departments（Research / Evaluation ...）
 | 異常時の挙動 | 指定IDが存在しない場合はエラーを返す。Routing Rulesに該当ルールがない状態の場合はCEOへエスカレーションする |
 | 自然言語例 | 「021の状態を進めて」「案件021は次どこに行く？」 |
 
+## /research
+
+| 項目 | 内容 |
+|---|---|
+| 目的 | CEOが投資判断できるEvidence（証拠）ベースの調査成果物を作成する（市場調査部の実行） |
+| 入力 | 案件ID |
+| 処理 | 対象案件について実在する一次情報を調査し、`Research.md` の固定テンプレート（Executive Summary〜Recommendation）とEvidence Ranking（A〜E）、Confidence Scoreを生成する。`Research.md` のQuality Gateと照らして達成状況を判定する |
+| 出力 | 成果物全文（`cases/<ID>/research.md` に保存）、Quality Gateの達成状況 |
+| 呼び出す契約 | Research.md、docs/department-contracts.md（市場調査部） |
+| 呼び出すエージェント | 市場調査部 |
+| 異常時の挙動 | 指定IDが存在しない場合はエラーを返す。Quality Gateを満たさない場合はExit Criteria未達として不足項目を明示し、Portfolio Dashboardの状態は「調査中」のまま据え置く |
+| 自然言語例 | 「<ID>の市場調査をして」「この案件のエビデンスを集めて」 |
+
 ## /portfolio
 
 | 項目 | 内容 |
