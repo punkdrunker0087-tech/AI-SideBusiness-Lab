@@ -1,18 +1,23 @@
 # AI-SideBusiness-Lab
 
-> ⭐ **AI Company OS Template Kit** — LIMIT LAB WORKS発、Claude Code用
-> AI会社OSテンプレート一式
+> ⭐ **AI Company OS Template Kit** — 「ひとり社長のためのAI経営OS」
+> （An AI Executive Operating System for Solopreneurs）— LIMIT LAB WORKS発
 > 🛒 **BOOTHはこちら**: https://limit-lab.booth.pm/
 > 🐦 **Xはこちら**: https://x.com/LimitLabJP
 
 Claude Code上でCEO・PM・7部門をAIエージェントとして動かし、副業アイデアの
 調査・検証・評価・制作・販売・改善までを半自動で回す「AI会社OS」。
 
+**この会社OSがやっているのは「会社を運営すること」ではなく、「社長の
+経営判断を毎朝支援すること」です。** 情報収集・KPI整理・リスク整理・
+優先順位の提案まではAIが行い、最終判断は常に人間（CEO）が行う設計に
+なっています（`/morning-brief`が実例です）。
+
 このプロジェクト自体が実験台です。会社OSに副業アイデアを実際に流し込み、
 2026年7月4日、ブランド「LIMIT LAB WORKS」としてBOOTHショップを公開し、
 最初の商品「AI Company OS Template Kit」を出品しました。ゼロから
-「AIがAIに仕事を振る会社」を作っている過程を、このリポジトリと下記の
-アカウントで公開しています。
+「AIが社長を毎日支援する会社OS」を作っている過程を、このリポジトリと
+下記のアカウントで公開しています。
 
 - 🛍️ **BOOTH（ショップ）**: https://limit-lab.booth.pm/
 - 🐦 **X（開発ログ）**: https://x.com/LimitLabJP

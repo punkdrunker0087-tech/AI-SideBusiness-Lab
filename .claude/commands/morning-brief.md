@@ -1,5 +1,5 @@
 ---
-description: CEO Morning Brief。CEO Score・今日の一手・リスク/好機・Reflection・KPI・競合動向・投稿計画を1回で生成する
+description: CEO Morning Brief。CEO Score・Confidence・今日の一手・リスク/好機・Reflection・KPI・戦略会議・投稿計画を1回で生成する
 argument-hint: <今日のテーマ（省略可）>
 ---
 
@@ -10,29 +10,27 @@ argument-hint: <今日のテーマ（省略可）>
 
 **生成のみ行い、実際の投稿・出品は行わない**（自動化の境界は
 Marketing.md参照）。KPI・実績数値は`docs/daily-metrics.md`に人間が
-報告した値のみを使い、未報告の項目は「未報告」と明記する（憶測で
-埋めない）。情報量を増やすより、CEOが30秒で判断できる密度を優先する。
+報告した値のみを使い、未報告の項目は0点・「未報告」として扱う
+（憶測で埋めない）。CEO Score・CEO Confidenceは必ずMarketing.mdの
+計算式通りに算出し、内訳を示す。
 
-以下8セクションをこの順番で生成する。
+以下9セクションをこの順番で生成する。
 
-1. **CEO Score** — `Marketing.md`の計算方法（Execution/Marketing/
-   Assets/Growth/Automationの5軸平均）に従い算出。`docs/daily-metrics.md`
-   に前日の記録があれば前日比と理由も示す。データ不足の軸は保守的に
-   採点する
-2. **今日の経営判断** — 1つだけ。【最優先】＋具体的な行動＋期限＋
-   2〜3行の理由。複数の選択肢を比較検討する形式にしない
-3. **Risk** — 放置すると悪化する懸念を3件程度
-4. **Opportunity** — 今日活かせる好機を3件程度（Competitor Watchの
-   内容と連動してよい）
-5. **Reflection（昨日の振り返り）** — 実績報告があれば振り返る。
-   なければ「未報告」で終わらせず、何を・どれだけの時間で報告すれば
-   よいかを具体的に伝え、報告を習慣化するよう促す
-6. **KPI Tracker** — `docs/growth-roadmap.md`のWeek KPIに対し、
-   Marketing.mdの色分け基準（🟢🟡🔴⚪）で1行ずつ示す
-7. **Competitor Watch** — Claude・Cursor・OpenAI・n8n・Make等を実際に
-   Web検索し、ニュースごとに「影響」と「LIMIT LABとしての推奨アクション」
-   まで書く
-8. **Content Planner** — 本日のX投稿案・note下書き・GitHub更新案。
+1. **CEO Score** — Marketing.mdの計算式（Execution/Marketing/Assets/
+   Growth/Automationそれぞれの内訳積み上げ）で算出し、5軸の内訳と
+   総合点、前日比（算出可能な場合）を示す
+2. **CEO Confidence** — Marketing.mdの計算式（100%からの減点方式）で
+   算出し、減点理由を明記する
+3. **今日の経営判断** — 1つだけ。【最優先】＋具体的な行動＋期限＋
+   2〜3行の理由
+4. **Risk** — 3件程度
+5. **Opportunity** — 3件程度
+6. **Reflection（昨日の振り返り）** — 未報告の場合は報告を促す
+   （何を・何秒で報告すればよいか具体的に）
+7. **KPI Tracker** — Week KPIに対し色分け（🟢🟡🔴⚪）で1行ずつ
+8. **Competitor Watch（戦略会議）** — Marketing.mdの「戦略★／脅威★／
+   チャンス★／CEO判断」形式で、実際にWeb検索した2〜3件について書く
+9. **Content Planner** — 本日のX投稿案・note下書き・GitHub更新案。
    コンテンツスタイル原則（有益な情報から書き始め、ブランド名は文末に
    軽く触れる程度）に厳密に従う
 
@@ -44,8 +42,14 @@ CEO Morning Brief
 <日付>
 ======================
 ■ CEO Score: <total>/100（前日比: <+/-n> または算出不可）
-Execution <n> / Marketing <n> / Assets <n> / Growth <n> / Automation <n>
-理由: <前日比の理由、初回は「初回算出」>
+Execution <n>（内訳: 商品公開率<n>/40 期限内タスク<n>/30 週次レビュー<n>/30）
+Marketing <n>（内訳: X投稿<n>/30 note<n>/20 BOOTH更新<n>/20 フォロワー<n>/30）
+Assets <n>（内訳: 販売可能商品数<n>/40 再利用可能資産<n>/30 Asset Score平均<n>/30）
+Growth <n>（内訳: 売上<n>/30 お気に入り<n>/20 GitHub Star<n>/20 フォロワー<n>/30）
+Automation <n>（内訳: 自動化率<n>/40 手動作業削減<n>/30 Daily実行率<n>/30）
+----------------------
+■ CEO Confidence: <n>%
+理由: <減点項目の一覧>
 ----------------------
 ■ 今日の経営判断
 【最優先】<具体的な行動>（<期限>）
@@ -66,12 +70,12 @@ Execution <n> / Marketing <n> / Assets <n> / Growth <n> / Automation <n>
 ----------------------
 ■ KPI Tracker
 🟢/🟡/🔴/⚪ <指標名> <現状>/<目標>
-（Week KPI全項目について1行ずつ）
 ----------------------
-■ Competitor Watch
-- <ニュース>（<URL>）
-  影響: <内容>
-  推奨アクション: <LIMIT LABとして今日/今週やるべきこと>
+■ Competitor Watch（戦略会議）
+<トピック名>
+戦略 ★★★☆☆／脅威 ★★☆☆☆／チャンス ★★★★☆
+CEO判断: <方針>
+（出典: <URL>）
 ----------------------
 ■ Content Planner（投稿案）
 ① X投稿
