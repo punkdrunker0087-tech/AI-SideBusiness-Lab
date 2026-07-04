@@ -1,34 +1,64 @@
 # AI-SideBusiness-Lab
-Claude Codeを活用して、副業アイデアの調査・検証・開発・収益化までを半自動化するAI副業研究所。
-# AI SideBusiness Lab
 
-## 概要
+Claude Code上でCEO・PM・7部門をAIエージェントとして動かし、副業アイデアの
+調査・検証・評価・制作・販売・改善までを半自動で回す「AI会社OS」。
 
-このプロジェクトは、AIエージェントを活用して
-副業サービスの企画・開発・検証・改善を半自動で行うことを目的としています。
+このプロジェクト自体が実験台です。会社OSに副業アイデアを実際に流し込み、
+2026年7月4日、最初の商品「AI Company OS Template Kit」をBOOTHで公開
+しました。ゼロから「AIがAIに仕事を振る会社」を作っている過程を、
+このリポジトリと下記のアカウントで公開しています。
+
+- 🛍️ **BOOTH（ショップ）**: https://limit-lab.booth.pm/
+- 🐦 **X（開発ログ）**: https://x.com/LimitLabJP
+- 🐙 **GitHub**: LimitLabWorks
+
+## これは何か
+
+AIエージェントに「役職」を持たせ、それぞれに契約（Mission / Inputs /
+Outputs / Authority / Cannot do / KPIs / Exit Criteria）を与えることで、
+1人の人間（CEO）が複数のAI事業を同時に運営できる仕組みを目指しています。
+案件は以下のパイプラインを通ります。
+
+```
+【発掘フェーズ】投資判断を作る
+CEO／PM
+ ▼
+市場調査部 → 検証部 → 事業評価部 → CEO（Go/No-Go判断）
+
+【実行フェーズ】承認された案件を利益に変える
+CEO（承認）
+ ▼
+法務部 → 制作部 → マーケティング部 → 分析部 → 改善部
+ │
+ ▼
+PM（結果を集約）
+ ▼
+CEO（次の経営判断: 継続・改善・撤退）
+```
 
 ## ミッション
 
-週末だけで開発可能な副業を継続的に生み出し、
-月5万円以上の副収入を目指します。
+週末だけで開発可能な副業を継続的に生み出し、月5万円以上の副収入を
+安定的に得ることを当面のミッションとする。詳細は `CLAUDE.md`（会社の
+憲法）を参照。
 
 ## 開発方針
 
 - 小さく作る（MVP）
 - すぐ公開する
-- 数字で判断する
+- 数字で判断する（Evidence First / Reality First）
 - 失敗を記録する
 - 改善を繰り返す
 
 ## 組織構造
 
-CEO（経営・投資・撤退判断）を頂点に、PM（全案件統括・タスク配分）が
-各部門にタスクを配分し、成果をPortfolio Dashboardで一元管理する。
+CEO（経営・投資・撤退判断）を頂点に、PM（COO）が各部門にタスクを配分し、
+成果をPortfolio Dashboardで一元管理する。
 
 ```
 CEO（経営・投資・撤退判断）
         │
-PM（全案件統括・タスク配分）
+PM（COO・全案件統括・タスク配分）
         │
 ────────────────────
 市場調査部
@@ -44,21 +74,28 @@ PM（全案件統括・タスク配分）
 Portfolio Dashboard
 ```
 
-## AI社員
+## 主なドキュメント
 
-- 市場調査部
-- 検証部
-- 事業評価部
-- 法務部
-- 制作部
-- マーケティング部
-- 分析部
-- 改善部
+- `CLAUDE.md` — 会社の憲法（ミッション・経営理念・KPI階層・経営原則）
+- `CEO.md` / `PM.md` — CEO・PM（COO）エージェント定義
+- `Research.md` / `Validation.md` / `Evaluation.md` / `Production.md` /
+  `Marketing.md` — 各部門のエージェント定義
+- `docs/department-contracts.md` — 全役職の契約定義
+- `docs/decision-framework.md` — 8軸スコアリング・5段階Go/No-Go判定
+- `docs/portfolio-strategy.md` — 同時進行数の上限・Portfolio Rule・
+  「No Internal Completion」原則
+- `docs/channel-strategy.md` — 販売チャネル戦略（BOOTH/note/Gumroad/GitHub/X）
+- `docs/growth-roadmap.md` — 90日ロードマップ
+- `.claude/commands/` — Claude Code上でそのまま動くスラッシュコマンド一式
+- `cases/` — 実際に会社OSへ投入した案件の記録（Research〜Marketingの
+  実成果物）
+- `knowledge/Lessons Learned/` — Sprintごとの振り返り（うまくいった
+  ことも、いかなかったことも記録する）
 
 ## 最終目標
 
-AIが副業アイデアを提案し、開発から検証・改善まで支援し、
-CEOが経営判断を下すことで、1人で複数のAI事業を同時に運営できる
+AIが副業アイデアを提案し、調査から検証・評価・制作・販売・改善まで
+支援し、CEOが経営判断を下すことで、1人で複数のAI事業を同時に運営できる
 「会社OS」を構築する。
 
 まずは月5万円を目指しつつ、案件数と組織構造を拡張することで

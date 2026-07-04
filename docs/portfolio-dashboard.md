@@ -15,9 +15,9 @@
 | ID | 案件名 | 状態 | 担当部門 | 優先度 | 利益（実績/見込み） | 最終更新日 | 備考 |
 |---|---|---|---|---|---|---|---|
 | PJ-001 | YouTube動画要約サービス | 開発待ち（条件付き） | PM | 次点（ニッチ確定後に着手、PJ-002より下位） | - | 2026-07-03 | CEO承認: 日本語ビジネス/研修動画特化への絞り込みが前提。Software制作が必要なためマーケティング部実装まで保留 |
-| PJ-002 | AI Business Template Factory | 公開待ち（人間の操作待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-03 | 配布ZIP完成・BOOTH出品文言確定（¥980）。実際のBOOTH出品操作はCEO（人間）が実施。公開後、公開日・URL・売上をここに記録する |
+| PJ-002 | AI Business Template Factory（LIMIT LAB WORKS） | 公開済み（初回販売待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-04 | BOOTHショップ公開: https://limit-lab.booth.pm/ 。X: https://x.com/LimitLabJP 。初回売上が出次第Sprint 7（分析部）を開始 |
 
-状態の凡例: 新規 / 調査中 / 検証中 / 評価中 / CEO判断待ち / 開発待ち / 法務確認中 / 制作中 / 制作完了 / マーケティング準備中 / 運用中 / 改善中 / 撤退検討 / 撤退済
+状態の凡例: 新規 / 調査中 / 検証中 / 評価中 / CEO判断待ち / 開発待ち / 法務確認中 / 制作中 / 制作完了 / マーケティング準備中 / 公開済み（初回販売待ち） / 運用中 / 改善中 / 撤退検討 / 撤退済
 
 ## 次に採番するID
 
@@ -45,3 +45,4 @@ PJ-003
 | 2026-07-03 | PJ-002: /marketing実行。BOOTH/note向け6点セット（販売ページ・X投稿3本・note記事・商品説明・SEOタイトル・サムネイル指示書）を作成。価格決定（¥1,480/¥1,980）。Exit Criteria達成し分析部へ引き渡し（分析部未実装のため実際の出品・売上計測は次Sprintの課題） |
 | 2026-07-03 | Sprint 6.5開始。「No Internal Completion」ルールをportfolio-strategy.mdへ追加。CEO判断により価格を¥980へ改定 |
 | 2026-07-03 | PJ-002: 配布用ZIP（ai-company-os-template-kit-v1.zip、37ファイル）を実際に作成しユーザーへ送付。BOOTHへの実出品操作はCEO（人間）が行うため、状態は「公開待ち」のまま。架空の公開日・売上は記録しない |
+| 2026-07-04 | CEO（人間）がBOOTHショップ「LIMIT LAB WORKS」を実際に開設・公開（https://limit-lab.booth.pm/）。X（https://x.com/LimitLabJP）も公開。ブランド情報をdocs/brand.mdに記録。初回売上はまだ発生していないため、Analytics部の新設条件は未達のまま |
