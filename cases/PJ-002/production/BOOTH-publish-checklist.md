@@ -33,7 +33,7 @@
 | ショップ公開日 | 2026-07-04 |
 | ショップURL | https://limit-lab.booth.pm/ |
 | 本商品（AI Company OS Template Kit）の公開 | 公開済み（2026-07-04、CEO報告） |
-| 商品ページ個別URL | 未共有（ショップURL経由で確認可能） |
+| 商品ページ個別URL | https://limit-lab.booth.pm/items/8578483（3商品のURLが送付順で報告されたため、この商品と推定。未確定） |
 | 初回販売日 | （未売上） |
 | 初回売上金額 | （未売上） |
 
