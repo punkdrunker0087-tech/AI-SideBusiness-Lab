@@ -105,6 +105,10 @@ Portfolio Dashboard
 - `docs/opportunity-pipeline.md` — Idea→Research→Validation→Prototype→
   Pilot→Production→Growthの7ステージ
 - `knowledge/Decision Log/` — 経営判断とその根拠の記録
+- `knowledge/Institutional Memory/` — 再利用できる現場知見（効いたPrompt・
+  失敗したWorkflow・CVRの高い販売ページ等）
+- `knowledge/Performance Review/` — 各部門の月次振り返り
+- `knowledge/Annual Reflection/` — Purpose/Visionへの到達度を振り返る年次記録
 - `.claude/commands/` — Claude Code上でそのまま動くスラッシュコマンド一式
 - `cases/` — 実際に会社OSへ投入した案件の記録（Research〜Marketingの
   実成果物）
