@@ -13,19 +13,38 @@
 | Standard | ¥980〜¥1,980 | 主力商品 | AI Company OS Template Kit、Business Template Factory、AI Workflow Collection |
 | Premium | ¥2,980〜¥4,980 | 将来の高単価商品 | AI SideBusiness Lab Complete Edition、Claude Code Automation Bundle、AI Company OS Pro |
 
+## 商品ピラミッド（2026-07-04時点）
+
+```
+Premium
+Coming Soon
+────────────────────
+Standard
+¥980  AI Company OS Template Kit
+────────────────────
+Starter
+¥480  Claude Code Prompt Pack
+¥480  AI Business Template Pack（準備中）
+```
+
 ## 1つの開発資産から生まれる商品ロードマップ
 
 このプロジェクトの開発過程そのものが商品の源泉になる。以下の順で
-切り出す。
+切り出す。「買った瞬間に価値が分かる商品」を優先し、玄人向けの商品
+（Research Department Prompt等）は後回しにする。
 
-1. **AI Company OS**（Standard、公開済み） — 会社OS一式のフルパッケージ
-2. **Claude Code Prompt Pack**（Starter、次の商品） — `.claude/commands/`
+1. **AI Company OS Template Kit**（Standard、公開済み） — 会社OS一式の
+   フルパッケージ
+2. **Claude Code Prompt Pack**（Starter、公開待ち） — `.claude/commands/`
    のスラッシュコマンド一式を単体商品として切り出したもの
-3. **Research Department Prompt**（Starter〜Standard） — Research.md・
+3. **AI Business Template Pack**（Starter、次の商品） — 議事録テンプレート・
+   SOP・マニュアル・要件定義・レビューシートなど、仕事ですぐ使える
+   実務テンプレート集。玄人向けの設計思想を知らなくても価値が分かる
+4. **Research Department Prompt**（Starter〜Standard） — Research.md・
    Validation.md・Evaluation.mdとEvidence First手法を切り出したもの
-4. **Marketing Department Prompt**（Starter〜Standard） — Marketing.md・
+5. **Marketing Department Prompt**（Starter〜Standard） — Marketing.md・
    channel-strategy.mdと販売ページ/SNS生成の手法を切り出したもの
-5. **会社OS完全版**（Premium） — 上記すべて＋実際の運用実績（PJ-001/
+6. **会社OS完全版**（Premium） — 上記すべて＋実際の運用実績（PJ-001/
    PJ-002のケーススタディ）を含む完全版
 
 ## 運用ルール
