@@ -46,6 +46,7 @@ Softwareモードは使わず、Content/Template/Packageのみで完結してよ
 - [ ] 再利用可能な形式になっている
 - [ ] AI生成率を記録している（どこまでAIが生成したかを明記）
 - [ ] PMレビュー
+- [ ] `CONSTITUTION.md`のMission Check（8項目）を満たしている
 
 全項目を満たすまでExit Criteriaは達成されない。未達の場合は制作部内で
 差し戻し、CEOへの追加確認が必要な場合はPM経由でエスカレーションする。

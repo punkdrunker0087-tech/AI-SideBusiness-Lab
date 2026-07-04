@@ -87,7 +87,9 @@ Portfolio Dashboard
 
 ## 主なドキュメント
 
-- `CLAUDE.md` — 会社の憲法（ミッション・経営理念・KPI階層・経営原則）
+- `CONSTITUTION.md` — LIMIT LAB憲法（最上位規範。信頼と信用・世のため
+  人のため・先義後利・利用者第一・感動品質・技術は手段、Mission Check）
+- `CLAUDE.md` — 経営ルール（ミッション・経営理念・KPI階層・経営原則）
 - `CEO.md` / `PM.md` — CEO・PM（COO）エージェント定義
 - `Research.md` / `Validation.md` / `Evaluation.md` / `Production.md` /
   `Marketing.md` — 各部門のエージェント定義

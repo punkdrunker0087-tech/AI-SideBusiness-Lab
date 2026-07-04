@@ -1,8 +1,13 @@
-# CLAUDE.md — AI-SideBusiness-Lab 憲法
+# CLAUDE.md — AI-SideBusiness-Lab 経営ルール
 
-このドキュメントは、AI-SideBusiness-Lab（AI副業研究所）という「会社OS」の
-憲法である。CEO・PM・各部門のAI社員は、判断に迷ったとき常にこの文書に立ち返る。
-個別案件の仕様やコードよりもこの憲法が優先される。
+このドキュメントは、AI-SideBusiness-Lab（LIMIT LAB WORKS）という
+「会社OS」の経営ルールである。会社の最上位規範は `CONSTITUTION.md`
+（LIMIT LAB憲法: 信頼と信用・世のため人のため・先義後利・利用者第一・
+感動品質・技術は手段）であり、本ドキュメント以下のすべてのルール・
+部門契約・意思決定フレームワークは、その憲法に矛盾しない範囲で運用
+される。CEO・PM・各部門のAI社員は、判断に迷ったとき常にCONSTITUTION.md
+とこの文書に立ち返る。個別案件の仕様やコードよりもこれらの文書が
+優先される。
 
 ---
 
