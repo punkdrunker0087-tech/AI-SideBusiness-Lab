@@ -146,18 +146,18 @@ Departments（Research / Evaluation ...）
 | 異常時の挙動 | 制作部の成果物が存在しない場合はエラーを返す。Exit Criteria未達の場合は状態を「マーケティング準備中」のまま据え置く |
 | 自然言語例 | 「<ID>を売る準備をして」「販売ページを作って」 |
 
-## /daily
+## /morning-brief
 
 | 項目 | 内容 |
 |---|---|
-| 目的 | マーケティング部のデイリー自動運用。X投稿・note下書き・AIニュース・今日のTODO・週次KPI確認を1回で生成する |
+| 目的 | CEO Morning Brief。今日の経営判断・Reflection・KPI・競合動向・投稿計画を1回で生成する |
 | 入力 | 今日のテーマ（省略可） |
-| 処理 | `Marketing.md`のDaily Content Automationに従い、Web検索でAIニュースを収集し、6項目のダイジェストを生成する |
-| 出力 | X投稿・note記事下書き・商品紹介・AIニュースまとめ・今日のTODO・週次KPI差分 |
-| 呼び出す契約 | Marketing.md、docs/channel-strategy.md、docs/growth-roadmap.md |
+| 処理 | `Marketing.md`のCEO Morning Briefに従い、`docs/daily-metrics.md`の実績（人間報告分のみ）と Web検索による競合動向を組み合わせ、5セクションを生成する |
+| 出力 | 今日の経営判断・Reflection・KPI Tracker・Competitor Watch・Content Planner（X/note/GitHub投稿案） |
+| 呼び出す契約 | Marketing.md、docs/channel-strategy.md、docs/growth-roadmap.md、docs/daily-metrics.md |
 | 呼び出すエージェント | マーケティング部 |
-| 異常時の挙動 | 生成のみ行い、実際の投稿・出品は行わない旨を必ず明記する |
-| 自然言語例 | 「今日の分を作って」「デイリーダイジェストちょうだい」 |
+| 異常時の挙動 | 生成のみ行い、実際の投稿・出品は行わない旨を必ず明記する。実績データが未報告の場合は「未報告」と明記し、憶測で埋めない |
+| 自然言語例 | 「今日のブリーフィングをちょうだい」「モーニングブリーフ」 |
 
 ## /portfolio
 
