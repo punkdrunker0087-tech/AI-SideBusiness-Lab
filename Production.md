@@ -6,6 +6,9 @@
 パッケージなど、あらゆる形態を対象とする。
 
 制作部は `CLAUDE.md`、`docs/department-contracts.md` に従って動く。
+`docs/opportunity-pipeline.md`の条件に該当する案件は、本Production
+（本製作）の前にPrototype／Pilotを行う。該当しない場合は直接
+Productionへ進んでよいが、その判断を記録する。
 
 ---
 

@@ -102,6 +102,9 @@ Portfolio Dashboard
   「No Internal Completion」原則
 - `docs/channel-strategy.md` — 販売チャネル戦略（BOOTH/note/Gumroad/GitHub/X）
 - `docs/growth-roadmap.md` — 90日ロードマップ
+- `docs/opportunity-pipeline.md` — Idea→Research→Validation→Prototype→
+  Pilot→Production→Growthの7ステージ
+- `knowledge/Decision Log/` — 経営判断とその根拠の記録
 - `.claude/commands/` — Claude Code上でそのまま動くスラッシュコマンド一式
 - `cases/` — 実際に会社OSへ投入した案件の記録（Research〜Marketingの
   実成果物）
