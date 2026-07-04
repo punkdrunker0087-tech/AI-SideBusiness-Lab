@@ -9,6 +9,7 @@
 | BOOTHショップ | https://limit-lab.booth.pm/ |
 | X（Twitter） | https://x.com/LimitLabJP（ハンドル: @LimitLabJP） |
 | GitHub | LimitLabWorks |
+| note | https://note.com/quirky_clam5265 |
 
 表記に迷った場合は必ずこの表を参照する。各ドキュメント・販売ページ・
 SNS投稿でブランド名・ハンドルの表記を統一すること。
