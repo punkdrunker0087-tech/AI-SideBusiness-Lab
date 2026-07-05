@@ -227,4 +227,5 @@ LIMIT LABは、自動化を目的とする会社ではない。AIと人が協力
 
 この「なぜ必要か」の問いに加えて、「今やるべきか、他で代替できないか」
 という運用面のゲートは`docs/architecture-governance.md`（Architecture
-Change Gateの8ステップ）に従う。両方を満たして初めて実装してよい。
+Change GateのWhy→When→How、およびBusiness Impact Gate）に従う。
+両方を満たして初めて実装してよい。

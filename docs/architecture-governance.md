@@ -33,19 +33,54 @@ Decision Log 50件以上・全部署が自然に動いている状態）。
 ## Core Rule 03: Architecture Change Gate（ACG）
 
 Architecture変更（新しいModule・Agent・部署・ドキュメント・定期儀式の
-追加）時は、必ず以下の8ステップを順に評価する。途中でNOが出た時点で
+追加）時は、必ずWhy → When → Howの順に評価する。途中でNOが出た時点で
 その手前の代替案を採用する。
+
+### Why（CONSTITUTIONとの整合性）
+
+`CONSTITUTION.md`「新機能・新部署・新エージェント追加のルール」に従い、
+Purpose・Mission・Vision・Valuesのどれに貢献するかを1行で明確にする。
+説明できない場合は却下。
+
+### When（Company Phaseとの整合性）
 
 | Step | 問い | NOの場合 |
 |---|---|---|
-| 1 | この機能は現在のPhaseに必要か？ | 却下 |
-| 2 | 卒業ゲートへ直接貢献するか？ | 却下 |
+| 1 | 現在のCompany Phaseに必要か？（`docs/growth-roadmap.md`） | 却下 |
+| 2 | Company Phase Gate（卒業ゲート）へ直接貢献するか？ | 却下 |
+
+### How（Reuse Firstの実践）
+
+| Step | 問い | NOの場合 |
+|---|---|---|
 | 3 | 既存Moduleへ統合できないか？ | 統合可能なら新Module禁止 |
 | 4 | 既存SOPで運用できないか？ | 可能ならSOP更新のみ |
-| 5 | 運用時間は増えないか？（目安30分以内） | 超えるなら却下 |
-| 6 | Knowledge Baseへ保存できるか？ | できないなら却下 |
-| 7 | 改善ループへ接続できるか？ | できないなら却下 |
-| 8 | 半年後も必要と言えるか？ | 一時的用途なら却下 |
+| 5 | 既存Promptで代替できないか？ | 可能ならPrompt追加のみ |
+| 6 | 既存Workflowで代替できないか？ | 可能ならWorkflow更新のみ |
+| 7 | 既存Automationで代替できないか？ | 可能ならAutomation更新のみ |
+| 8 | 運用時間は増えないか？（目安30分以内） | 超えるなら却下 |
+| 9 | Knowledge Baseへ保存できるか？ | できないなら却下 |
+| 10 | 改善ループへ接続できるか？ | できないなら却下 |
+| 11 | 半年後も必要と言えるか？ | 一時的用途なら却下 |
+
+Why→Whenを通過したものだけがHowの検討に進む。Howで代替できないと
+判明した場合のみ、新しいModule・Agent・部署の追加を許可する。
+
+## Core Rule 03.5: Business Impact Gate
+
+Architecture Change Gateを通過した提案は、最後にBusiness Impactを
+評価する。評価対象は「この変更は現在のCompany Phaseの卒業へどれだけ
+寄与するか」。
+
+| 分類 | 基準 |
+|---|---|
+| Critical | 卒業ゲートの複数項目に直接寄与する |
+| High | 卒業ゲートの1項目に直接寄与する |
+| Medium | 卒業ゲートへの寄与は間接的だが明確 |
+| Low | 寄与はごくわずか |
+| None | 卒業ゲートへの寄与を説明できない |
+
+**Noneに分類された場合、実装を禁止する。**
 
 ## Core Rule 04: One Purpose Principle
 
@@ -91,31 +126,61 @@ Knowledge → SOP → Prompt → Workflow → Automation → New Module
 LIMIT LABは機能を作る組織ではない。学習する組織である。毎週増えるべき
 ものはModuleではなく、Knowledgeである（`knowledge/`配下の蓄積）。
 
+## Core Rule 11: No Silent Expansion
+
+機能・Module・SOP・Prompt・Workflow・Automation・Agentの追加は、必ず
+明確な理由を持つこと。以下を理由にした追加は禁止する。
+
+- 便利そう
+- AIなら簡単
+- 将来使うかもしれない
+- 面白そう
+
+追加は、Company Phase Gate（卒業）またはPurpose・Mission・Vision・
+Valuesへ直接貢献する場合のみ許可する。
+
+## Core Rule 12: Documentation Synchronization
+
+以下の文書群は整合性を維持する。同一内容を複数箇所に重複して書かない。
+一方を変更した場合、他方は参照関係（リンク・一行要約）のみ更新する。
+
+- `CONSTITUTION.md`
+- `docs/growth-roadmap.md`（Company Phase / Company Phase Gate）
+- `PM.md`（CEO定例レビュー）
+- `knowledge/CEO Weekly Review/`
+- `docs/architecture-governance.md`（本文書）
+
+新しいドキュメントを追加した場合も、内容を重複させず`LIMIT-OS.md`に
+一行だけ追記する（`CONSTITUTION.md`の新機能追加ルールと同じ考え方）。
+
 ---
 
-## Claude Codeの必須判断フロー
+## Development Decision Flow（開発判断フロー）
 
 Claude Codeは新しい実装（Module・Agent・部署・ドキュメント・定期儀式）
-を提案・実装する前に、必ず以下を実施する。
+を提案する前に、必ず以下の順序で判断する。途中で条件を満たさない場合、
+実装してはならない。
 
 ```
-① この提案は現在のPhaseに必要か？
+Idea
 ↓
-② 卒業ゲートへ直結するか？
+Purpose・Mission・Vision・Values（CONSTITUTION.md、Why）
 ↓
-③ 既存Moduleへ統合可能か？
+Company Phase（現在のPhaseに必要か）
 ↓
-④ SOP追加で代替可能か？
+Graduation Gate（卒業ゲートへ直結するか）
 ↓
-⑤ Prompt追加で代替可能か？
+Architecture Change Gate（既存Moduleで代替できないか、How）
 ↓
-⑥ Workflow追加で代替可能か？
+Business Impact Gate（Critical/High/Medium/Low/None。Noneなら却下）
 ↓
-⑦ 自動化追加で代替可能か？
+Reuse First（Knowledge→SOP→Prompt→Workflow→Automation→New Module）
 ↓
-⑧ 本当に新Moduleが必要か？
+Implementation（実装。ここまで到達した場合のみ）
 ↓
-YESの場合のみ実装許可
+Knowledge Base（`knowledge/`への記録）
+↓
+CEO Weekly Review（次回のレビューで報告）
 ```
 
 ---
