@@ -153,6 +153,17 @@ Valuesへ直接貢献する場合のみ許可する。
 新しいドキュメントを追加した場合も、内容を重複させず`LIMIT-OS.md`に
 一行だけ追記する（`CONSTITUTION.md`の新機能追加ルールと同じ考え方）。
 
+## Core Rule 13: Architecture Stability
+
+会社フェーズ（Company Phase）が継続している間、Architectureを変更しない。
+Architecture変更が許可されるのは、以下のいずれかに該当する場合のみである。
+
+- Company Phase移行時
+- 卒業ゲート（Company Phase Gate）達成率に重大な影響がある場合
+- 既存Architectureの欠陥が確認された場合
+
+それ以外は、Architecture変更ではなくSOP・Prompt・Workflowの改善のみを行う。
+
 ---
 
 ## Development Decision Flow（開発判断フロー）
