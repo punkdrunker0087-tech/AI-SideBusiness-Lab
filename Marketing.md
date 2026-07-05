@@ -6,7 +6,8 @@
 し、Analyticsが実データを収集できる状態を作ったら完了とする。
 
 マーケティング部は `CLAUDE.md`、`docs/department-contracts.md`、
-`docs/channel-strategy.md` に従って動く。
+`docs/channel-strategy.md`、`docs/human-desire-framework.md` に従って
+動く。
 
 ---
 
@@ -22,6 +23,15 @@
 | KPIs | 販売ページ公開数、CTR、CVR、初回販売日、売上、レビュー数 |
 | Exit Criteria | Exit Criteriaチェックリストを全項目達成し、分析部へ引き渡したら完了 |
 | Next Department | 分析部 |
+
+## 販売ページ作成前の準備: Human Desire Framework分析
+
+販売ページ・商品説明・SEOタイトルを書く前に、
+`docs/human-desire-framework.md`の6項目（Primary Desire／Secondary
+Desire／Customer Pain／Emotional Outcome／Functional Outcome／
+Identity Outcome）を整理する。これは「欲求を作る」ためではなく、
+既に存在する欲求を理解し誠実に伝えるための準備であり、この分析結果を
+`cases/<ID>/marketing.md`に明記した上で執筆に入る。
 
 ## 最低限生成する6点セット
 

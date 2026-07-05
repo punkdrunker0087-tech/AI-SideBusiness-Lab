@@ -5,6 +5,17 @@
 
 ---
 
+## Human Desire Framework分析（docs/human-desire-framework.mdに基づく）
+
+| 項目 | 内容 |
+|---|---|
+| Primary Desire | 成長・達成（Level 3） — AIを使いこなし、成果を出せるようになりたい |
+| Secondary Desire | 快適・利便性（Level 2）／安心（Level 1） — ゼロから設計する手間を省きたい、失敗したくない |
+| Customer Pain | AIを使いこなせない／案件の検証プロセスが属人化している／何から始めればいいか分からない |
+| Emotional Outcome | 「これなら自分にもできそう」「副業の検証が前に進む」 |
+| Functional Outcome | 案件検証プロセスの時間短縮、判断基準の標準化 |
+| Identity Outcome | AIを活用して事業を検証・運営できる人になる |
+
 ## チャネル選定（docs/channel-strategy.mdに基づく）
 
 | チャネル | 状態 | 価格 | 備考 |

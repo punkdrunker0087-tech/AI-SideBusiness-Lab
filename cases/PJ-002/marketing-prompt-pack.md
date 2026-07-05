@@ -6,6 +6,17 @@
 
 ---
 
+## Human Desire Framework分析（docs/human-desire-framework.mdに基づく）
+
+| 項目 | 内容 |
+|---|---|
+| Primary Desire | 快適・利便性（Level 2） — 軽く試せる、すぐ使える入口が欲しい |
+| Secondary Desire | 成長・達成（Level 3） — フル版に進む前に手応えを得たい |
+| Customer Pain | フル版（AI Company OS Template Kit）はいきなり試すには重い／まず軽く触ってみたい |
+| Emotional Outcome | 「これくらいなら気軽に試せる」 |
+| Functional Outcome | コマンド15個をそのまま自分のプロジェクトで使える |
+| Identity Outcome | Claude Codeを使いこなす人になる第一歩を踏み出せる |
+
 ## チャネル・価格
 
 | チャネル | 状態 | 価格 |

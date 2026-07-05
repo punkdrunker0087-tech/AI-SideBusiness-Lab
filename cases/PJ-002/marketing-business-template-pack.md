@@ -6,6 +6,17 @@
 
 ---
 
+## Human Desire Framework分析（docs/human-desire-framework.mdに基づく）
+
+| 項目 | 内容 |
+|---|---|
+| Primary Desire | 快適・利便性（Level 2） — 面倒な書類作成の手間をなくしたい |
+| Secondary Desire | 安心（Level 1） — 抜け漏れのない書式で失敗したくない |
+| Customer Pain | 議事録・SOP等をゼロから作るのが面倒／書式に自信がない |
+| Emotional Outcome | 「これでもう迷わない」 |
+| Functional Outcome | 文書作成時間の短縮、抜け漏れの防止 |
+| Identity Outcome | 仕事を整理して回せる人になる |
+
 ## ① 販売ページ
 
 > ### AI Business Template Pack — すぐ使える実務テンプレート5種

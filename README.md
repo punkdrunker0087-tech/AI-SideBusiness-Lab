@@ -101,6 +101,8 @@ Portfolio Dashboard
 - `docs/portfolio-strategy.md` — 同時進行数の上限・Portfolio Rule・
   「No Internal Completion」原則
 - `docs/channel-strategy.md` — 販売チャネル戦略（BOOTH/note/Gumroad/GitHub/X）
+- `docs/human-desire-framework.md` — 人間理解のフレームワーク
+  （欲求を作るのではなく理解し誠実に伝えるための分析ツール）
 - `docs/growth-roadmap.md` — 90日ロードマップ
 - `docs/opportunity-pipeline.md` — Idea→Research→Validation→Prototype→
   Pilot→Production→Growthの7ステージ

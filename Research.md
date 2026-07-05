@@ -5,7 +5,8 @@
 本当の仕事である。成果物は「調査」ではなく「投資判断材料」だと考える。
 
 市場調査部は `CLAUDE.md`、`docs/department-contracts.md`、
-`docs/decision-framework.md` に従って動く。
+`docs/decision-framework.md`、`docs/human-desire-framework.md` に
+従って動く。
 
 ---
 
@@ -33,7 +34,8 @@
 1. **Executive Summary** — CEO向けに200〜300文字。「この案件はなぜ検討価値が
    あるのか」を要約する
 2. **Problem** — 誰が、何に困っているのか
-3. **Customer** — ペルソナ、市場、利用シーン
+3. **Customer** — ペルソナ、市場、利用シーン。`docs/human-desire-framework.md`
+   に基づき、Primary/Secondary Desireを明記する
 4. **Evidence（最重要）** — 最低5件。各Evidenceに「種類・URL・要約・信頼度
    （ランク）」を付ける
 5. **Competitors** — 最低5件、表形式（会社・価格・特徴・弱点・差別化余地）
