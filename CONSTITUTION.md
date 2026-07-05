@@ -224,3 +224,7 @@ LIMIT LABは、自動化を目的とする会社ではない。AIと人が協力
 機能過多（feature creep）であり、追加しない。追加した場合は
 `LIMIT-OS.md`の該当セクション（Why/Who/How/What）にも一行追記し、
 地図から漏れないようにする。
+
+この「なぜ必要か」の問いに加えて、「今やるべきか、他で代替できないか」
+という運用面のゲートは`docs/architecture-governance.md`（Architecture
+Change Gateの8ステップ）に従う。両方を満たして初めて実装してよい。

@@ -102,6 +102,9 @@ PMは週次で以下の構成のレビューを自動生成し、CEOに提出す
 3. 良かったこと
 4. 課題
 5. 来週やること（最大3つ）
+6. **アーキテクチャ健全性**（`docs/architecture-governance.md` Core Rule 09）
+   — 増えたModule・SOP・Prompt数、運用時間の増減、保守性（1人で回せて
+   いるか）、卒業ゲート進捗。増えすぎている場合はこの場で削減案を出す
 
 ## Escalation Rules
 

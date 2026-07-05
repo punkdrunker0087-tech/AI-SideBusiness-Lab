@@ -92,6 +92,8 @@ Portfolio Dashboard
 - `CONSTITUTION.md` — LIMIT LAB憲法（最上位規範。Purpose/Mission/
   Vision/Values、信頼と信用・世のため人のため・先義後利・利用者第一・
   感動品質・技術は手段、Mission Check、Value Score）
+- `docs/architecture-governance.md` — 最小構成を保つための統治原則
+  （MVOS・Architecture Change Gate・Reuse First・Feature Freeze）
 - `CLAUDE.md` — 経営ルール（ミッション・経営理念・KPI階層・経営原則）
 - `CEO.md` / `PM.md` — CEO・PM（COO）エージェント定義
 - `Research.md` / `Validation.md` / `Evaluation.md` / `Production.md` /
