@@ -53,3 +53,4 @@ PJ-003
 | 2026-07-04 | CEO（人間）が3商品すべて（AI Company OS Template Kit / Claude Code Prompt Pack / AI Business Template Pack）をBOOTHへ実際に公開。Week1「商品を3点に増やす」「実出品」が完了。初回売上・お気に入り数はまだ未報告 |
 | 2026-07-05 | PJ-002: 4つ目の商品「Research Department Prompt」（Standard下限, ¥980、市場調査/品質監査/8軸スコアリングの3プロンプト）を法務チェック→/produce→/marketingで制作。Value Score81/100で基準達成。7ファイルのZIPを作成しユーザーへ送付。BOOTH出品は人間の操作待ち |
 | 2026-07-05 | CEO（人間）が4つ目の商品「Research Department Prompt」をBOOTHへ実際に公開。4商品すべて公開済みとなる |
+| 2026-07-06 | CEO（人間）がnote記事2稿目（`cases/PJ-002/marketing-note-002-architecture-governance.md`「AI会社に『これ以上増えるな』というルールを持たせた話」）を実際にnoteへ公開 |
