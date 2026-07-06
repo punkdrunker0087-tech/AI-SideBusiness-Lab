@@ -16,7 +16,7 @@
 |---|---|---|---|---|---|---|---|
 | PJ-001 | YouTube動画要約サービス | 開発待ち（条件付き） | PM | 次点（ニッチ確定後に着手、PJ-002より下位） | - | 2026-07-03 | CEO承認: 日本語ビジネス/研修動画特化への絞り込みが前提。Software制作が必要なためマーケティング部実装まで保留 |
 | PJ-002 | AI Business Template Factory（LIMIT LAB WORKS） | 公開済み（初回販売待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-06 | BOOTH: https://limit-lab.booth.pm/ 。X: https://x.com/LimitLabJP （フォロワー78名、07-06時点。詳細は`docs/daily-metrics.md`）。商品ライン: ①AI Company OS Template Kit（¥980）②Claude Code Prompt Pack（¥480）③AI Business Template Pack（¥480）④Research Department Prompt（¥980, Value Score81）。4商品すべてBOOTH公開済み。商品数4/10（Phase2卒業条件）。7/6 19:30時点、初回売上まだ0件。初回売上が出次第Sprint 7（分析部）を開始 |
-| PJ-003 | VRChat向けAI活用テンプレート・ワークフロー商品 | 調査中 | 市場調査部 | 未評価 | - | 2026-07-06 | ユーザー提案。「VRChat向けAI活用テンプレート・ワークフロー商品（Claude CodeでVRChat制作を効率化するテンプレート、AIでアバター設定を自動化するワークフロー、VRChatクリエイター向けAIプロンプト集等）。既存LIMIT LABブランドの新ジャンル展開案。」 |
+| PJ-003 | VRChat向けAI活用テンプレート・ワークフロー商品 | 検証中 | 検証部 | 未評価 | - | 2026-07-06 | ユーザー提案。市場調査完了（`cases/PJ-003/research.md`、Confidence 75%、Recommendation: Conditional Go）。市場規模（BOOTH3Dモデルカテゴリ104億円）は裏付けあるが、無料競合（UnityMCP-VRC等）とLIMIT LABの専門実績不足がリスク |
 
 状態の凡例: 新規 / 調査中 / 検証中 / 評価中 / CEO判断待ち / 開発待ち / 法務確認中 / 制作中 / 制作完了 / マーケティング準備中 / 公開済み（初回販売待ち） / 運用中 / 改善中 / 撤退検討 / 撤退済
 
@@ -56,3 +56,4 @@ PJ-004
 | 2026-07-05 | CEO（人間）が4つ目の商品「Research Department Prompt」をBOOTHへ実際に公開。4商品すべて公開済みとなる |
 | 2026-07-06 | CEO（人間）がnote記事2稿目（`cases/PJ-002/marketing-note-002-architecture-governance.md`「AI会社に『これ以上増えるな』というルールを持たせた話」）を実際にnoteへ公開 |
 | 2026-07-06 | PJ-003を新規登録し市場調査部へ引き渡し（VRChat向けAI活用テンプレート・ワークフロー商品、ユーザー提案） |
+| 2026-07-06 | PJ-003: /research実行。cases/PJ-003/research.mdを作成しQuality Gate達成（検証部レビュー除く）。Confidence 75%、Recommendation: Conditional Go。検証部へ引き渡し |

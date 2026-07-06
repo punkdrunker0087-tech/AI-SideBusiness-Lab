@@ -25,10 +25,11 @@ CEOが投資判断できるEvidence（証拠）を集めることが目的であ
 5. `Research.md` のQuality Gateチェックリストと照らし、全項目を満たしたかを
    確認する。満たしていない場合は不足項目を明記し、Exit Criteria未達として
    報告する
-6. Quality Gateを満たした場合、成果物を `cases/<ID>/research.md` として
-   保存し、`docs/portfolio-dashboard.md` の該当行を更新する
-   （状態: 評価中、担当部門: 事業評価部、備考: 成果物へのパスと
-   Confidence Scoreを記載）。更新履歴にも追記する
+6. Quality Gateの実質項目（検証部レビューを除く）を満たした場合、成果物を
+   `cases/<ID>/research.md` として保存し、`docs/portfolio-dashboard.md` の
+   該当行を更新する（状態: 検証中、担当部門: 検証部、備考: 成果物への
+   パスとConfidence Scoreを記載）。更新履歴にも追記する。`Research.md`の
+   Next Departmentは検証部であり、事業評価部へ直接渡さない
 
 出力は成果物全文と、Quality Gateの達成状況（達成/未達と不足項目）を示す。
 
