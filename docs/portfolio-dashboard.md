@@ -15,7 +15,7 @@
 | ID | 案件名 | 状態 | 担当部門 | 優先度 | 利益（実績/見込み） | 最終更新日 | 備考 |
 |---|---|---|---|---|---|---|---|
 | PJ-001 | YouTube動画要約サービス | 開発待ち（条件付き） | PM | 次点（ニッチ確定後に着手、PJ-002より下位） | - | 2026-07-03 | CEO承認: 日本語ビジネス/研修動画特化への絞り込みが前提。Software制作が必要なためマーケティング部実装まで保留 |
-| PJ-002 | AI Business Template Factory（LIMIT LAB WORKS） | マーケティング準備中（4商品目公開待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-05 | BOOTH: https://limit-lab.booth.pm/ 。X: https://x.com/LimitLabJP （フォロワー77名）。商品ライン: ①AI Company OS Template Kit（¥980）②Claude Code Prompt Pack（¥480）③AI Business Template Pack（¥480）④Research Department Prompt（¥980, Value Score81、公開待ち）。商品数4/10（Phase2卒業条件）。初回売上が出次第Sprint 7（分析部）を開始 |
+| PJ-002 | AI Business Template Factory（LIMIT LAB WORKS） | 公開済み（初回販売待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-06 | BOOTH: https://limit-lab.booth.pm/ 。X: https://x.com/LimitLabJP （フォロワー77名、07-04時点）。商品ライン: ①AI Company OS Template Kit（¥980）②Claude Code Prompt Pack（¥480）③AI Business Template Pack（¥480）④Research Department Prompt（¥980, Value Score81）。4商品すべてBOOTH公開済み。商品数4/10（Phase2卒業条件）。7/6 19:30時点、初回売上まだ0件。初回売上が出次第Sprint 7（分析部）を開始 |
 
 状態の凡例: 新規 / 調査中 / 検証中 / 評価中 / CEO判断待ち / 開発待ち / 法務確認中 / 制作中 / 制作完了 / マーケティング準備中 / 公開済み（初回販売待ち） / 運用中 / 改善中 / 撤退検討 / 撤退済
 
@@ -52,3 +52,4 @@ PJ-003
 | 2026-07-04 | PJ-002: 3つ目の商品「AI Business Template Pack」（Starter, ¥480、議事録/SOP/マニュアル/要件定義/レビューシートの5テンプレート）を法務チェック→/produce→/marketingで制作。9ファイルのZIPを作成しユーザーへ送付。商品数3/3（Week1目標達成）。BOOTH出品は人間の操作待ち |
 | 2026-07-04 | CEO（人間）が3商品すべて（AI Company OS Template Kit / Claude Code Prompt Pack / AI Business Template Pack）をBOOTHへ実際に公開。Week1「商品を3点に増やす」「実出品」が完了。初回売上・お気に入り数はまだ未報告 |
 | 2026-07-05 | PJ-002: 4つ目の商品「Research Department Prompt」（Standard下限, ¥980、市場調査/品質監査/8軸スコアリングの3プロンプト）を法務チェック→/produce→/marketingで制作。Value Score81/100で基準達成。7ファイルのZIPを作成しユーザーへ送付。BOOTH出品は人間の操作待ち |
+| 2026-07-05 | CEO（人間）が4つ目の商品「Research Department Prompt」をBOOTHへ実際に公開。4商品すべて公開済みとなる |
