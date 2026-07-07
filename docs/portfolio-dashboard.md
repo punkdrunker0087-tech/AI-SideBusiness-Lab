@@ -56,5 +56,6 @@ PJ-004
 | 2026-07-05 | CEO（人間）が4つ目の商品「Research Department Prompt」をBOOTHへ実際に公開。4商品すべて公開済みとなる |
 | 2026-07-06 | CEO（人間）がnote記事2稿目（`cases/PJ-002/marketing-note-002-architecture-governance.md`「AI会社に『これ以上増えるな』というルールを持たせた話」）を実際にnoteへ公開 |
 | 2026-07-06 | PJ-003を新規登録し市場調査部へ引き渡し（VRChat向けAI活用テンプレート・ワークフロー商品、ユーザー提案） |
-| 2026-07-08 | CEO（人間）がnote記事3稿目（`cases/PJ-002/marketing-note-003-vrchat-conditional-go.md`「儲かりそうな新市場の話が来たので、AIに調べさせてから『今はやらない』と決めた話」）を実際にnoteへ公開。7/8時点でnote3本の実績（ビュー20/17/12、スキ計1、コメント0）を確認。あわせて`https://limit-lab.booth.pm/`が7/7のWebFetchで「非公開」表示を返した件が未確認のまま残っており、CEOへ直接確認を依頼中 |
+| 2026-07-08 | CEO（人間）がnote記事3稿目（`cases/PJ-002/marketing-note-003-vrchat-conditional-go.md`「儲かりそうな新市場の話が来たので、AIに調べさせてから『今はやらない』と決めた話」）を実際にnoteへ公開。7/8時点でnote3本の実績（ビュー20/17/12、スキ計1、コメント0）を確認 |
+| 2026-07-08 | CEOがBOOTHショップ・商品ともに公開設定であることを確認。7/7のWebFetchが「非公開」と表示したのはツール側（ボット判定）の誤検知と判明。「非公開設定が原因で売上が出ていない」という仮説は解消。売上0の原因は別（集客・転換率・価格・認知等）にあると再整理 |
 | 2026-07-06 | PJ-003: /research実行。cases/PJ-003/research.mdを作成しQuality Gate達成（検証部レビュー除く）。Confidence 75%、Recommendation: Conditional Go。検証部へ引き渡し |
