@@ -17,7 +17,7 @@
 | PJ-001 | YouTube動画要約サービス | Backlog（保留） | PM | 保留（PJ-004着手のためアクティブ枠を明け渡し） | - | 2026-07-08 | CEO承認: 日本語ビジネス/研修動画特化への絞り込みが前提。Software制作が必要なためマーケティング部実装まで保留。2026-07-08、PJ-004（株式投資研究）の即時着手のためBacklogへ降格 |
 | PJ-002 | AI Business Template Factory（LIMIT LAB WORKS） | 公開済み（初回販売待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-06 | BOOTH: https://limit-lab.booth.pm/ 。X: https://x.com/LimitLabJP （フォロワー80名、07-07時点。詳細は`docs/daily-metrics.md`）。商品ライン: ①AI Company OS Template Kit（¥980）②Claude Code Prompt Pack（¥480）③AI Business Template Pack（¥480）④Research Department Prompt（¥980, Value Score81）。4商品すべてBOOTH公開済み。商品数4/10（Phase2卒業条件）。7/6 19:30時点、初回売上まだ0件。初回売上が出次第Sprint 7（分析部）を開始 |
 | PJ-003 | VRChat向けAI活用テンプレート・ワークフロー商品 | 検証中 | 検証部 | 次点（PJ-002より下位、急がない） | - | 2026-07-06 | ユーザー提案。市場調査完了（`cases/PJ-003/research.md`、Confidence 75%、Recommendation: Conditional Go）。市場規模（BOOTH3Dモデルカテゴリ104億円）は裏付けあるが、無料競合（UnityMCP-VRC等）とLIMIT LABの専門実績不足がリスク。CEO判断によりショップ分割・サブブランド化は行わず、LIMIT LAB WORKS（PJ-002）を最優先で推進（詳細は`knowledge/Decision Log/2026-07-06-pj003-priority-and-shop-split-deferred.md`） |
-| PJ-004 | 株式投資研究（自社内部運用・非提供） | 調査中 | 市場調査部 | 高（CEO指示により即時着手） | - | 2026-07-08 | ユーザー提案。他者への投資助言・商品提供ではなく、CEO自身の投資判断を支援するための自社内部運用。市場調査部の手法（Evidence First・銘柄調査）を転用。最終的な投資判断・発注は必ずCEO（人間）が行う |
+| PJ-004 | 株式投資研究（自社内部運用・非提供） | 検証中 | 検証部 | 高（CEO指示により即時着手） | - | 2026-07-08 | 市場調査完了（`cases/PJ-004/research.md`、Confidence 70%、Recommendation: Conditional Go）。法務面は自己資金の範囲であれば投資助言業登録は不要と整理。条件: 投資額上限の事前設定、最終発注は必ずCEO、PJ-002運営を圧迫しない時間配分 |
 | PJ-005 | 電脳せどり自動化・無在庫販売の越境EC | Backlog（新規） | 未着手 | 保留（Backlog登録のみ） | - | 2026-07-08 | ユーザー提案。自社内部で運用する実ビジネス（商品として他者へ提供するものではない）。仕入れ・決済・マーケットプレイスAPI連携等、実資金とSoftware実装が必要。着手判断は今後改めて行う |
 
 状態の凡例: 新規 / 調査中 / 検証中 / 評価中 / CEO判断待ち / 開発待ち / 法務確認中 / 制作中 / 制作完了 / マーケティング準備中 / 公開済み（初回販売待ち） / 運用中 / 改善中 / 撤退検討 / 撤退済
@@ -63,3 +63,4 @@ PJ-006
 | 2026-07-06 | PJ-003: /research実行。cases/PJ-003/research.mdを作成しQuality Gate達成（検証部レビュー除く）。Confidence 75%、Recommendation: Conditional Go。検証部へ引き渡し |
 | 2026-07-08 | CEOより新規案件2件の提案（株式投資研究、電脳せどり自動化・無在庫越境EC）。いずれも商品提供ではなく自社内部運用。PJ-004（株式投資研究）はCEO指示により即時着手、PJ-005（電脳せどり）はBacklog登録のみ |
 | 2026-07-08 | アクティブ枠（3/3）超過のため、PJ-001（次点・7/3以降動きなし）をBacklogへ降格しPJ-004の着手枠を確保（CEO承認）。PJ-004を新規登録し市場調査部へ引き渡し。PJ-005も新規登録しBacklogで保持 |
+| 2026-07-08 | PJ-004: /research実行。cases/PJ-004/research.mdを作成しQuality Gate達成（検証部レビュー除く）。Confidence 70%、Recommendation: Conditional Go（自己資金の範囲内であること等を条件）。検証部へ引き渡し |
