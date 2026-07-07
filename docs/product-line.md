@@ -18,7 +18,7 @@ Solopreneurs）**へ改訂した（詳細は`docs/brand.md`）。商品名の直
 | Standard | ¥980〜¥1,980 | 主力商品 | AI Company OS Template Kit、Business Template Factory、AI Workflow Collection |
 | Premium | ¥2,980〜¥4,980 | 将来の高単価商品 | AI SideBusiness Lab Complete Edition、Claude Code Automation Bundle、AI Company OS Pro |
 
-## 商品ピラミッド（2026-07-06時点）
+## 商品ピラミッド（2026-07-08時点）
 
 ```
 Premium
@@ -31,9 +31,16 @@ Standard
 Starter
 ¥480  Claude Code Prompt Pack
 ¥480  AI Business Template Pack
+────────────────────
+Free（集客層）
+¥0   AI Company OS Starter（無料サンプル、公開待ち）
 ```
 
-4商品すべてBOOTH公開済み（初回売上はまだ0件）。
+有料4商品はBOOTH公開済み（初回売上はまだ0件）。Free層は認知施策
+（2026-07-08 CEO承認）として追加。役割は売上ではなく集客・回遊・
+有料版へのクロスセルであり、**Phase 2卒業ゲートの「商品10点」には
+数えない**（無料商品でゲートを埋める運用をしないため）。KPIはDL数・
+お気に入り数・ショップ流入数。
 
 ## 1つの開発資産から生まれる商品ロードマップ
 
