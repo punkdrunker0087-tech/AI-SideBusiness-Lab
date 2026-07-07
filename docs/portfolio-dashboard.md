@@ -18,7 +18,7 @@
 | PJ-002 | AI Business Template Factory（LIMIT LAB WORKS） | 公開済み（初回販売待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-06 | BOOTH: https://limit-lab.booth.pm/ 。X: https://x.com/LimitLabJP （フォロワー80名、07-07時点。詳細は`docs/daily-metrics.md`）。商品ライン: ①AI Company OS Template Kit（¥980）②Claude Code Prompt Pack（¥480）③AI Business Template Pack（¥480）④Research Department Prompt（¥980, Value Score81）。4商品すべてBOOTH公開済み。商品数4/10（Phase2卒業条件）。7/6 19:30時点、初回売上まだ0件。初回売上が出次第Sprint 7（分析部）を開始 |
 | PJ-003 | VRChat向けAI活用テンプレート・ワークフロー商品 | 検証中 | 検証部 | 次点（PJ-002より下位、急がない） | - | 2026-07-06 | ユーザー提案。市場調査完了（`cases/PJ-003/research.md`、Confidence 75%、Recommendation: Conditional Go）。市場規模（BOOTH3Dモデルカテゴリ104億円）は裏付けあるが、無料競合（UnityMCP-VRC等）とLIMIT LABの専門実績不足がリスク。CEO判断によりショップ分割・サブブランド化は行わず、LIMIT LAB WORKS（PJ-002）を最優先で推進（詳細は`knowledge/Decision Log/2026-07-06-pj003-priority-and-shop-split-deferred.md`） |
 | PJ-004 | 株式投資研究（CEO個人の意思決定支援ツール） | 運用中（小規模・スコア対象外） | CEO（自己運用） | 対象外（アクティブ枠から除外、Portfolio Ruleの事業案件パイプラインから卒業） | - | 2026-07-08 | CEO判断: 事業評価部のPivot案（42点、`cases/PJ-004/score-history.md`）を受け、「事業案件」としての8軸スコアリング・Go/No-Go運用から外し、個人の意思決定支援ツールとして小規模運用する方針に変更。投資額上限¥100,000・最終発注は必ずCEO・PJ-002運営を圧迫しない時間配分の3条件は維持。Weekly Review等の定例報告対象からも外す（詳細は`knowledge/Decision Log/2026-07-08-pj004-reclassify-as-internal-tool.md`） |
-| PJ-005 | 電脳せどり自動化・無在庫販売の越境EC | 検証済み | 事業評価部 | 低（PJ-002より下位。時間の余裕がある時に進める） | - | 2026-07-08 | 検証部PASS（`cases/PJ-005/research.md`、Confidence 72%、Recommendation: Conditional Go）。CEO指示によりShopee等の成長ECを販路候補に追加（手数料約5%・新規3ヶ月0%・農水省公式マニュアルあり）。資金上限¥100,000をCEO決定。規約適合ルート限定（小売仕入れ直送型無在庫は禁止販路のため行わない）・法務チェック先行・リサーチ半自動化MVP限定の条件付き |
+| PJ-005 | 電脳せどり自動化・無在庫販売の越境EC | CEO判断待ち | CEO | 要CEO判断（事業評価部案: Conditional Go、55点） | - | 2026-07-08 | 事業評価部が独立採点し総合55点でConditional Go案・下限ぎりぎり（`cases/PJ-005/score-history.md`）。Evidence品質76は全案件中最高。Asset Score★2（慎重）、Value Score61（僅差クリア）。提案は段階承認: ①法務チェック完了（古物商許可要否・Shopee/eBayポリシー原文）→②Shopee手数料0%期間でMVP手動検証（少数商品で利幅実証）→③システム本格構築はMVP実績後に再判断。資金上限¥100,000 |
 
 状態の凡例: 新規 / 調査中 / 検証中 / 評価中 / CEO判断待ち / 開発待ち / 法務確認中 / 制作中 / 制作完了 / マーケティング準備中 / 公開済み（初回販売待ち） / 運用中 / 改善中 / 撤退検討 / 撤退済
 
@@ -73,3 +73,4 @@ PJ-006
 | 2026-07-08 | PJ-005: /research実行。cases/PJ-005/research.mdを作成しQuality Gate達成（検証部レビュー除く）。Confidence 72%、Recommendation: Conditional Go（規約適合ルートへの限定・法務チェック先行・MVP限定構築・資金上限設定の4条件）。検証部へ引き渡し |
 | 2026-07-08 | PJ-005: CEO指示によりShopee等の成長ECを追加調査（農水省公式マニュアル=Aランク、手数料約5%・新規3ヶ月0%）。Evidence 10件に拡充。資金上限¥100,000をCEOが決定 |
 | 2026-07-08 | PJ-005: /validate実行。チェックリスト11項目すべて達成しPASS（Evidence 10件・全て異なるドメイン・公式A評価3件）。事業評価部へ前進 |
+| 2026-07-08 | PJ-005: /evaluate実行。8軸独立採点で総合55点、Conditional Go案（下限ぎりぎり）。Evidence品質76は全案件中最高。Asset Score★2、Value Score61。段階承認（法務→Shopee 0%期間MVP→実績後にシステム投資再判断）を提案しCEOへ提出 |
