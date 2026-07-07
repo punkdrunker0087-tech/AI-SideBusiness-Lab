@@ -118,6 +118,8 @@ Knowledge → SOP → Prompt → Workflow → Automation → New Module
 - 運用時間の増減
 - 保守性（1人で回せているか）
 - 卒業ゲート進捗
+- 不要Module監査（Core Rule 08 Module Retirement） — 参照されなくなった
+  ファイル・コマンド・Agentがないかを棚卸しし、あれば削除する
 
 増えすぎている場合は、その回のレビューで削減案を提案する。
 
