@@ -6,6 +6,7 @@
 | 項目 | 値 |
 |---|---|
 | ブランド名 | LIMIT LAB WORKS |
+| キャラクター（発信者） | 限界社会人（BOOTHのバナー・アイコンに使用。タグライン「アイデアをカタチに、限界を超えていく。」） |
 | BOOTHショップ | https://limit-lab.booth.pm/ |
 | X（Twitter） | https://x.com/LimitLabJP（ハンドル: @LimitLabJP） |
 | GitHub | LimitLabWorks |
