@@ -27,7 +27,7 @@ Coming Soon
 Standard
 ¥980  AI Company OS Template Kit
 ¥980  Research Department Prompt
-¥980  クリエイター売上台帳（Software第1号、公開待ち）
+¥1,480 クリエイター売上台帳（Software第1号、公開待ち）
 ────────────────────
 Starter
 ¥480  Claude Code Prompt Pack

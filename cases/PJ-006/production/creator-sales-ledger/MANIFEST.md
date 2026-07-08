@@ -1,8 +1,8 @@
-# MANIFEST — クリエイター売上台帳 v1.0
+# MANIFEST — クリエイター売上台帳 v1.1
 
 ## 配布パッケージ構成
 
-### 製品版ZIP（creator-sales-ledger-v1.zip、¥980）
+### 製品版ZIP（creator-sales-ledger-v1.zip、¥1,480）
 
 | パッケージ内パス | 取得元 | 内容 |
 |---|---|---|
