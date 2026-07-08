@@ -64,6 +64,21 @@
   footer{max-width:1080px;margin:30px auto 0;padding:16px 20px 40px;border-top:1px solid #31415e;
     color:#93a3bd;font-size:.78rem;line-height:1.9}
   .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  .goalbar{height:8px;background:#101a2b;border:1px solid #31415e;border-radius:99px;overflow:hidden;margin-top:6px}
+  .goalbar>div{height:100%;background:#ffd333}
+  #csv-map{display:none}
+  #print-area{display:none}
+  @media print{
+    body>*:not(#print-area){display:none!important}
+    body{background:#fff}
+    #print-area{display:block!important;color:#000;background:#fff;font-size:12px;padding:10mm}
+    #print-area h1{font-size:16px;margin:0 0 8px;color:#000}
+    #print-area h2{color:#000;font-size:13px;margin:12px 0 6px}
+    #print-area table{width:100%;border-collapse:collapse;background:#fff}
+    #print-area th,#print-area td{border:1px solid #999;padding:4px 6px;text-align:left;color:#000;background:#fff;font-size:11px}
+    #print-area td.num,#print-area th.num{text-align:right}
+    #print-area .foot{margin-top:10px;font-size:10px;color:#333}
+  }
   @media(max-width:600px){ .frow{flex-direction:column;align-items:stretch} }
 </style>
 </head>
@@ -116,6 +131,13 @@
   </form>
 
   <h2>最近の記録</h2>
+  <div class="frow" style="margin-bottom:8px">
+    <div><label>種類</label><select id="flt-type">
+      <option value="">すべて</option><option value="income">収入</option>
+      <option value="expense">経費</option><option value="kpi">KPI</option></select></div>
+    <div><label>月</label><select id="flt-month"><option value="">すべて</option></select></div>
+    <div><label>キーワード</label><input type="text" id="flt-q" placeholder="品名・メモ・指標名"></div>
+  </div>
   <div class="tblwrap"><table id="t-recent"><thead>
     <tr><th>日付</th><th>種類</th><th>内容</th><th class="num">金額 / 値</th><th></th></tr>
   </thead><tbody></tbody></table></div>
@@ -156,6 +178,7 @@
   <div class="btnrow">
     <button class="ghost" onclick="exportCSV('income')">収入をCSV書き出し</button>
     <button class="ghost" onclick="exportCSV('expense')">経費をCSV書き出し</button>
+    <button class="ghost" onclick="printReport()">印刷用レポート（PDF保存可）</button>
   </div>
   <div class="notice">確定申告の準備には、上記CSVを表計算ソフトや会計ソフトに
   取り込んでご利用ください。本ツールは記録・集計を支援するものであり、
@@ -190,6 +213,38 @@
   <div class="frow"><div><input type="text" id="kpi-new" placeholder="例: YouTube登録者"></div>
     <div><button class="ghost" onclick="addSetting('kpiMetrics','kpi-new')">追加</button></div></div>
 
+  <h2>目標設定</h2>
+  <div class="frow">
+    <div><label>月間の収入目標（円）</label><input type="number" id="goal-monthly" min="0" step="1000"></div>
+    <div><label>年間の収入目標（円）</label><input type="number" id="goal-yearly" min="0" step="10000"></div>
+    <div><button class="ghost" onclick="saveGoals()">目標を保存</button></div>
+  </div>
+  <p class="muted">設定するとダッシュボードと年間集計に達成率が表示されます（0で非表示）。</p>
+
+  <h2>手数料設定（手取り計算）</h2>
+  <div id="fee-editor"></div>
+
+  <h2>CSVインポート（収入の一括登録）</h2>
+  <div id="csv-import-box">
+    <p class="muted">BOOTH等からダウンロードした売上CSVを読み込み、収入として
+    一括登録できます。列の対応付けは読み込み後に画面で選べます。</p>
+    <div class="btnrow">
+      <label class="ghost" style="cursor:pointer;display:inline-flex;align-items:center">
+        CSVファイルを選ぶ<input type="file" id="csv-file" accept=".csv,text/csv" style="display:none">
+      </label>
+    </div>
+    <div id="csv-map">
+      <div class="frow">
+        <div><label>日付の列</label><select id="map-date"></select></div>
+        <div><label>金額の列</label><select id="map-amount"></select></div>
+        <div><label>品名の列（任意）</label><select id="map-item"></select></div>
+        <div><label>プラットフォーム</label><select id="map-platform"></select></div>
+        <div><button class="primary" type="button" onclick="importCSV()">取り込む</button></div>
+      </div>
+      <div class="tblwrap" style="margin-top:8px"><table id="csv-preview"><thead></thead><tbody></tbody></table></div>
+    </div>
+  </div>
+
   <h2>危険な操作</h2>
   <div class="btnrow">
     <button class="danger" onclick="wipeAll()">すべてのデータを削除する</button>
@@ -197,8 +252,9 @@
 </section>
 
 </main>
+<div id="print-area"></div>
 <footer>
-  クリエイター売上台帳 v1.0 — LIMIT LAB WORKS<br>
+  クリエイター売上台帳 v1.1 — LIMIT LAB WORKS<br>
   ・本ツールは売上・経費・KPIの記録と集計を支援するものであり、税務助言・
   申告代行を行うものではありません。確定申告の内容は税理士等の専門家に
   ご確認ください。<br>
@@ -219,7 +275,9 @@ const DEFAULTS = {
   settings: {
     platforms: ["BOOTH","note","Skeb","その他"],
     expenseCategories: ["素材・ツール代","手数料","通信費","消耗品","その他"],
-    kpiMetrics: ["Xフォロワー","BOOTHお気に入り"]
+    kpiMetrics: ["Xフォロワー","BOOTHお気に入り"],
+    goals: { monthly: 0, yearly: 0 },
+    feeRates: {}
   }
 };
 let db = load();
@@ -231,6 +289,8 @@ function load(){
     const d = JSON.parse(raw);
     for(const k of ["income","expense","kpi"]) if(!Array.isArray(d[k])) d[k]=[];
     d.settings = Object.assign(structuredClone(DEFAULTS.settings), d.settings||{});
+    d.settings.goals = Object.assign({monthly:0,yearly:0}, d.settings.goals||{});
+    if(typeof d.settings.feeRates !== "object" || !d.settings.feeRates) d.settings.feeRates = {};
     return d;
   }catch(e){ return structuredClone(DEFAULTS); }
 }
@@ -282,6 +342,172 @@ function removeSetting(key, idx){
   db.settings[key].splice(idx,1); save(); renderAll();
 }
 
+/* ---------- 目標・手数料・手取り ---------- */
+function saveGoals(){
+  db.settings.goals.monthly = Number(document.getElementById("goal-monthly").value)||0;
+  db.settings.goals.yearly  = Number(document.getElementById("goal-yearly").value)||0;
+  save(); renderAll(); alert("目標を保存しました。");
+}
+function renderGoalsInput(){
+  document.getElementById("goal-monthly").value = db.settings.goals.monthly||"";
+  document.getElementById("goal-yearly").value  = db.settings.goals.yearly||"";
+}
+function goalBar(actual, goal){
+  if(!goal) return "";
+  const pct = Math.min(100, Math.round(actual/goal*100));
+  return `<div class="card"><div class="label">目標達成率</div>
+    <div class="value">${Math.round(actual/goal*100)}%</div>
+    <div class="goalbar"><div style="width:${pct}%"></div></div>
+    <div class="diff">目標 ${yen(goal)}</div></div>`;
+}
+function feeFor(platform){ return db.settings.feeRates[platform]||null; }
+function netOf(entry){
+  const f=feeFor(entry.platform); if(!f) return Number(entry.amount)||0;
+  const a=Number(entry.amount)||0;
+  return Math.max(0, Math.round(a - a*(Number(f.pct)||0)/100 - (Number(f.fixed)||0)));
+}
+function netSumBy(ymStr){ return db.income.filter(x=>ym(x.date)===ymStr).reduce((s,x)=>s+netOf(x),0); }
+function renderFeeEditor(){
+  const box=document.getElementById("fee-editor");
+  if(FREE){
+    box.innerHTML=`<p class="muted">手数料設定と手取り計算は製品版の機能です。
+      製品版では、プラットフォームごとに手数料率（例: 5.6%＋45円）を設定し、
+      額面と手取りの両方を確認できます。</p>`;
+    return;
+  }
+  box.innerHTML = db.settings.platforms.map(p=>{
+    const f=db.settings.feeRates[p]||{pct:"",fixed:""};
+    return `<div class="frow" style="margin-bottom:6px">
+      <div style="min-width:120px"><label>&nbsp;</label><span>${esc(p)}</span></div>
+      <div><label>手数料率（%）</label><input type="number" step="0.1" min="0" data-fee-pct="${esc(p)}" value="${f.pct}"></div>
+      <div><label>固定手数料（円/件）</label><input type="number" step="1" min="0" data-fee-fixed="${esc(p)}" value="${f.fixed}"></div>
+    </div>`;
+  }).join("") + `<div class="btnrow"><button class="ghost" onclick="saveFees()">手数料を保存</button></div>
+  <p class="muted">未設定のプラットフォームは額面＝手取りとして扱います。手取りは概算です。</p>`;
+}
+function saveFees(){
+  db.settings.platforms.forEach(p=>{
+    const pct=document.querySelector(`[data-fee-pct="${CSS.escape(p)}"]`);
+    const fx =document.querySelector(`[data-fee-fixed="${CSS.escape(p)}"]`);
+    if(!pct||!fx) return;
+    if(pct.value===""&&fx.value===""){ delete db.settings.feeRates[p]; return; }
+    db.settings.feeRates[p]={pct:Number(pct.value)||0, fixed:Number(fx.value)||0};
+  });
+  save(); renderAll(); alert("手数料設定を保存しました。");
+}
+
+/* ---------- CSVインポート ---------- */
+let csvRows=null;
+function parseCSV(text){
+  text=text.replace(/^﻿/,"");
+  const rows=[]; let row=[],cur="",inQ=false;
+  for(let i=0;i<text.length;i++){
+    const c=text[i];
+    if(inQ){
+      if(c==='"'){ if(text[i+1]==='"'){cur+='"';i++;} else inQ=false; }
+      else cur+=c;
+    }else if(c==='"') inQ=true;
+    else if(c===","){ row.push(cur); cur=""; }
+    else if(c==="\n"||c==="\r"){
+      if(c==="\r"&&text[i+1]==="\n") i++;
+      row.push(cur); cur="";
+      if(row.some(x=>x!=="")) rows.push(row);
+      row=[];
+    }else cur+=c;
+  }
+  row.push(cur); if(row.some(x=>x!=="")) rows.push(row);
+  return rows;
+}
+document.getElementById("csv-file").addEventListener("change",e=>{
+  const f=e.target.files[0]; e.target.value=""; if(!f) return;
+  if(FREE){ alert(`CSVインポートは製品版の機能です。\n${SHOP_URL}`); return; }
+  const r=new FileReader();
+  r.onload=()=>{
+    const rows=parseCSV(String(r.result));
+    if(rows.length<2){ alert("データ行が見つかりません（ヘッダー行＋1行以上が必要です）。"); return; }
+    csvRows=rows;
+    const head=rows[0];
+    const opts=head.map((h,i)=>`<option value="${i}">${esc(h||("列"+(i+1)))}</option>`).join("");
+    const guess=(words)=>{ const idx=head.findIndex(h=>words.some(w=>String(h).toLowerCase().includes(w))); return idx; };
+    const selDate=document.getElementById("map-date"), selAmt=document.getElementById("map-amount"),
+          selItem=document.getElementById("map-item"), selPf=document.getElementById("map-platform");
+    selDate.innerHTML=opts; selAmt.innerHTML=opts;
+    selItem.innerHTML=`<option value="-1">（使わない）</option>`+opts;
+    selPf.innerHTML=db.settings.platforms.map(p=>`<option>${esc(p)}</option>`).join("");
+    const gd=guess(["日付","date","日時","注文日"]); if(gd>=0) selDate.value=gd;
+    const ga=guess(["金額","amount","価格","小計","合計"]); if(ga>=0) selAmt.value=ga;
+    const gi=guess(["商品","品名","item","タイトル","内容"]); if(gi>=0) selItem.value=gi;
+    document.querySelector("#csv-preview thead").innerHTML =
+      "<tr>"+head.map(h=>`<th>${esc(h)}</th>`).join("")+"</tr>";
+    document.querySelector("#csv-preview tbody").innerHTML =
+      rows.slice(1,6).map(r2=>"<tr>"+r2.map(c=>`<td>${esc(c)}</td>`).join("")+"</tr>").join("");
+    document.getElementById("csv-map").style.display="block";
+  };
+  r.readAsText(f);
+});
+function normDate(s){
+  s=String(s).trim().replace(/[./]/g,"-");
+  const m=s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if(!m) return null;
+  return `${m[1]}-${m[2].padStart(2,"0")}-${m[3].padStart(2,"0")}`;
+}
+function importCSV(){
+  if(FREE){ alert(`CSVインポートは製品版の機能です。\n${SHOP_URL}`); return; }
+  if(!csvRows) return;
+  const di=Number(document.getElementById("map-date").value);
+  const ai=Number(document.getElementById("map-amount").value);
+  const ii=Number(document.getElementById("map-item").value);
+  const pf=document.getElementById("map-platform").value;
+  let ok=0, skip=0, dup=0;
+  for(const r of csvRows.slice(1)){
+    const date=normDate(r[di]);
+    const amount=Number(String(r[ai]??"").replace(/[¥,\s円]/g,""));
+    if(!date || !isFinite(amount) || amount<=0){ skip++; continue; }
+    const item = ii>=0 ? String(r[ii]||"").trim()||"インポート" : "インポート";
+    if(db.income.some(x=>x.date===date && x.amount===amount && x.item===item)){ dup++; continue; }
+    db.income.push({ id:uid(), date, platform:pf, item, amount, memo:"CSVインポート" });
+    ok++;
+  }
+  save(); renderAll();
+  document.getElementById("csv-map").style.display="none"; csvRows=null;
+  alert(`取り込み完了: ${ok}件を登録しました。\nスキップ: ${skip}件（日付/金額が読めない行）\n重複除外: ${dup}件`);
+}
+
+/* ---------- 印刷用レポート ---------- */
+function printReport(){
+  if(FREE){ alert(`印刷用レポートは製品版の機能です。\n${SHOP_URL}`); return; }
+  const Y=document.getElementById("year-select").value;
+  const inc=db.income.filter(x=>x.date.startsWith(Y));
+  const exp=db.expense.filter(x=>x.date.startsWith(Y));
+  const tInc=inc.reduce((s,x)=>s+x.amount,0), tExp=exp.reduce((s,x)=>s+x.amount,0);
+  const tNet=inc.reduce((s,x)=>s+netOf(x),0);
+  let monthRows="";
+  for(let m=1;m<=12;m++){
+    const mm=`${Y}-${String(m).padStart(2,"0")}`;
+    const i=sumBy(db.income,mm), e=sumBy(db.expense,mm);
+    monthRows+=`<tr><td>${m}月</td><td class="num">${yen(i)}</td><td class="num">${yen(e)}</td><td class="num">${yen(i-e)}</td></tr>`;
+  }
+  const byKey=(arr,key)=>{ const m={};
+    arr.forEach(x=>{ const k=x[key]||"未分類"; (m[k]=m[k]||{sum:0,n:0}); m[k].sum+=x.amount; m[k].n++; });
+    return Object.entries(m).sort((a,b)=>b[1].sum-a[1].sum); };
+  document.getElementById("print-area").innerHTML = `
+    <h1>クリエイター売上台帳 — ${Y}年 年間レポート</h1>
+    <table><tr><th>収入合計</th><th>経費合計</th><th>利益</th><th>手取り概算（手数料控除後）</th></tr>
+    <tr><td class="num">${yen(tInc)}</td><td class="num">${yen(tExp)}</td>
+    <td class="num">${yen(tInc-tExp)}</td><td class="num">${yen(tNet)}</td></tr></table>
+    <h2>月別内訳</h2>
+    <table><tr><th>月</th><th class="num">収入</th><th class="num">経費</th><th class="num">利益</th></tr>${monthRows}</table>
+    <h2>プラットフォーム別収入</h2>
+    <table><tr><th>プラットフォーム</th><th class="num">収入</th><th class="num">件数</th></tr>
+    ${byKey(inc,"platform").map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${yen(v.sum)}</td><td class="num">${v.n}</td></tr>`).join("")}</table>
+    <h2>経費カテゴリ別</h2>
+    <table><tr><th>カテゴリ</th><th class="num">経費</th><th class="num">件数</th></tr>
+    ${byKey(exp,"category").map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${yen(v.sum)}</td><td class="num">${v.n}</td></tr>`).join("")}</table>
+    <div class="foot">作成: クリエイター売上台帳（LIMIT LAB WORKS）／出力日: ${today()}<br>
+    本レポートは記録の集計であり、税務書類ではありません。手取りは設定された手数料率に基づく概算です。</div>`;
+  window.print();
+}
+
 /* ---------- 記録の追加・削除 ---------- */
 function totalEntries(){ return db.income.length + db.expense.length + db.kpi.length; }
 function gateAdd(){
@@ -330,12 +556,28 @@ function renderRecent(){
   db.kpi.forEach(r=>rows.push({d:r.date,k:"KPI",kind:"kpi",id:r.id,
     desc:r.metric,v:Number(r.value).toLocaleString("ja-JP")}));
   rows.sort((a,b)=>b.d.localeCompare(a.d));
+
+  const mSel=document.getElementById("flt-month");
+  const months=[...new Set(rows.map(r=>ym(r.d)))].sort().reverse();
+  const keep=mSel.value;
+  mSel.innerHTML=`<option value="">すべて</option>`+
+    months.map(m=>`<option value="${m}" ${m===keep?"selected":""}>${m}</option>`).join("");
+
+  const ft=document.getElementById("flt-type").value;
+  const fm=mSel.value;
+  const fq=document.getElementById("flt-q").value.trim().toLowerCase();
+  const filtered=rows.filter(r=>
+    (!ft || r.kind===ft) && (!fm || ym(r.d)===fm) &&
+    (!fq || r.desc.toLowerCase().includes(fq)));
+
   document.querySelector("#t-recent tbody").innerHTML =
-    rows.slice(0,30).map(r=>`<tr><td>${esc(r.d)}</td><td>${r.k}</td>
+    filtered.slice(0,100).map(r=>`<tr><td>${esc(r.d)}</td><td>${r.k}</td>
       <td>${esc(r.desc)}</td><td class="num">${esc(r.v)}</td>
       <td><button class="del" onclick="delEntry('${r.kind}','${r.id}')">削除</button></td></tr>`).join("")
-    || `<tr><td colspan="5" class="muted">まだ記録がありません。上のフォームから追加してください。</td></tr>`;
+    || `<tr><td colspan="5" class="muted">${rows.length?"条件に合う記録がありません。":"まだ記録がありません。上のフォームから追加してください。"}</td></tr>`;
 }
+for(const id of ["flt-type","flt-month","flt-q"])
+  document.getElementById(id).addEventListener(id==="flt-q"?"input":"change",renderRecent);
 
 /* ---------- ダッシュボード ---------- */
 function sumBy(arr, ymStr){ return arr.filter(x=>ym(x.date)===ymStr)
@@ -350,10 +592,15 @@ function renderDash(){
   const profit=inc-exp, profitP=incP-expP;
   const diff=(a,b)=>{ const d=a-b;
     return `<span class="${d>=0?"pos":"neg"}">前月比 ${d>=0?"+":""}${d.toLocaleString("ja-JP")}円</span>`; };
+  const netCard = FREE
+    ? `<div class="card"><div class="label">今月の手取り概算</div><div class="value" style="font-size:.95rem;color:#93a3bd">製品版の機能</div><div class="diff">手数料控除後の金額を表示</div></div>`
+    : `<div class="card"><div class="label">今月の手取り概算</div><div class="value">${yen(netSumBy(thisYM))}</div><div class="diff">設定した手数料率で控除</div></div>`;
   document.getElementById("dash-cards").innerHTML = `
     <div class="card"><div class="label">今月の収入</div><div class="value">${yen(inc)}</div><div class="diff">${diff(inc,incP)}</div></div>
     <div class="card"><div class="label">今月の経費</div><div class="value">${yen(exp)}</div><div class="diff">${diff(exp,expP)}</div></div>
     <div class="card"><div class="label">今月の利益</div><div class="value ${profit>=0?"pos":"neg"}">${yen(profit)}</div><div class="diff">${diff(profit,profitP)}</div></div>
+    ${netCard}
+    ${goalBar(inc, db.settings.goals.monthly)}
     <div class="card"><div class="label">記録件数（累計）</div><div class="value">${db.income.length+db.expense.length+db.kpi.length}</div><div class="diff">収入${db.income.length}／経費${db.expense.length}／KPI${db.kpi.length}</div></div>`;
   renderMonthlyChart();
   renderKpiChart();
@@ -420,10 +667,14 @@ function renderYear(){
   const inc=db.income.filter(x=>x.date.startsWith(Y));
   const exp=db.expense.filter(x=>x.date.startsWith(Y));
   const tInc=inc.reduce((s,x)=>s+x.amount,0), tExp=exp.reduce((s,x)=>s+x.amount,0);
+  const yNet = FREE ? "" :
+    `<div class="card"><div class="label">${Y}年 手取り概算</div><div class="value">${yen(inc.reduce((s,x)=>s+netOf(x),0))}</div></div>`;
   document.getElementById("year-cards").innerHTML=`
     <div class="card"><div class="label">${Y}年 収入合計</div><div class="value">${yen(tInc)}</div></div>
     <div class="card"><div class="label">${Y}年 経費合計</div><div class="value">${yen(tExp)}</div></div>
-    <div class="card"><div class="label">${Y}年 利益</div><div class="value ${tInc-tExp>=0?"pos":"neg"}">${yen(tInc-tExp)}</div></div>`;
+    <div class="card"><div class="label">${Y}年 利益</div><div class="value ${tInc-tExp>=0?"pos":"neg"}">${yen(tInc-tExp)}</div></div>
+    ${yNet}
+    ${Y===String(new Date().getFullYear()) ? goalBar(tInc, db.settings.goals.yearly) : ""}`;
 
   let rows="";
   for(let m=1;m<=12;m++){
@@ -502,7 +753,8 @@ function wipeAll(){
 
 /* ---------- 一括描画 ---------- */
 function renderAll(){
-  renderSettings(); renderRecent(); renderDash(); renderYear(); setToday();
+  renderSettings(); renderRecent(); renderDash(); renderYear();
+  renderGoalsInput(); renderFeeEditor(); setToday();
 }
 if(FREE){
   document.title = "クリエイター売上台帳（無料版） — LIMIT LAB WORKS";
