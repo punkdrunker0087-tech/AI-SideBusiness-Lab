@@ -27,6 +27,7 @@ Coming Soon
 Standard
 ¥980  AI Company OS Template Kit
 ¥980  Research Department Prompt
+¥980  クリエイター売上台帳（Software第1号、公開待ち）
 ────────────────────
 Starter
 ¥480  Claude Code Prompt Pack
@@ -34,6 +35,7 @@ Starter
 ────────────────────
 Free（集客層）
 ¥0   AI Company OS Starter（無料サンプル、公開済み）
+¥0   クリエイター売上台帳 無料版（記録50件まで、公開待ち）
 ```
 
 有料4商品はBOOTH公開済み（初回売上はまだ0件）。Free層は認知施策
