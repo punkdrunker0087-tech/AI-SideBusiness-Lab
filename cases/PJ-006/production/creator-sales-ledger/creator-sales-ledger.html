@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>クリエイター売上台帳 — LIMIT LAB WORKS</title>
+<style>
+  :root{
+    --navy:#101a2b; --panel:#1c2940;
+    --ink:#e8edf5; --sub:#93a3bd; --line:#31415e;
+    --accent:#ffd333; --accent-ink:#1a1a10;
+    --green:#4cd97b; --red:#ff6b6b; --blue:#5aa9ff;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    background:#101a2b;color:#e8edf5;min-height:100vh;font-size:15px}
+  header{background:#0b1220;border-bottom:2px solid #ffd333;padding:14px 20px;
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  header .logo{font-weight:800;font-size:1.15rem;letter-spacing:.06em}
+  header .logo span{color:#ffd333}
+  header .tag{color:#93a3bd;font-size:.8rem}
+  nav{display:flex;gap:6px;padding:12px 20px 0;flex-wrap:wrap;background:#0b1220}
+  nav button{background:#1c2940;color:#93a3bd;border:1px solid #31415e;border-bottom:none;
+    padding:10px 18px;border-radius:8px 8px 0 0;cursor:pointer;font-size:.95rem;font-weight:600}
+  nav button.active{background:#ffd333;color:#1a1a10;border-color:#ffd333}
+  main{max-width:1080px;margin:0 auto;padding:20px}
+  .view{display:none}.view.active{display:block}
+  h2{font-size:1.05rem;margin:18px 0 10px;color:#ffd333}
+  h3{font-size:.95rem;margin:14px 0 8px;color:#e8edf5}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin:12px 0}
+  .card{background:#1c2940;border:1px solid #31415e;border-radius:10px;padding:14px}
+  .card .label{color:#93a3bd;font-size:.78rem;margin-bottom:6px}
+  .card .value{font-size:1.45rem;font-weight:800}
+  .card .diff{font-size:.78rem;margin-top:4px;color:#93a3bd}
+  .pos{color:#4cd97b}.neg{color:#ff6b6b}
+  form{background:#1c2940;border:1px solid #31415e;border-radius:10px;padding:14px;margin-bottom:14px}
+  .frow{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end}
+  .frow>div{display:flex;flex-direction:column;gap:4px}
+  label{color:#93a3bd;font-size:.78rem}
+  input,select{background:#101a2b;color:#e8edf5;border:1px solid #31415e;
+    border-radius:6px;padding:8px 10px;font-size:.95rem}
+  input:focus,select:focus{outline:2px solid #ffd333;border-color:#ffd333}
+  button.primary{background:#ffd333;color:#1a1a10;border:none;border-radius:6px;
+    padding:9px 20px;font-weight:800;cursor:pointer;font-size:.95rem}
+  button.ghost{background:transparent;color:#93a3bd;border:1px solid #31415e;
+    border-radius:6px;padding:8px 14px;cursor:pointer;font-size:.85rem}
+  button.ghost:hover{color:#e8edf5;border-color:#93a3bd}
+  button.danger{background:transparent;color:#ff6b6b;border:1px solid #ff6b6b;
+    border-radius:6px;padding:8px 14px;cursor:pointer;font-size:.85rem}
+  table{width:100%;border-collapse:collapse;background:#1c2940;border-radius:10px;overflow:hidden}
+  th,td{padding:8px 10px;text-align:left;border-bottom:1px solid #31415e;font-size:.88rem}
+  th{background:#233250;color:#93a3bd;font-weight:600;font-size:.78rem}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tblwrap{overflow-x:auto;border-radius:10px;border:1px solid #31415e;margin-bottom:16px}
+  .del{color:#ff6b6b;cursor:pointer;background:none;border:none;font-size:.85rem}
+  .chartbox{background:#1c2940;border:1px solid #31415e;border-radius:10px;padding:14px;margin-bottom:14px;overflow-x:auto}
+  .muted{color:#93a3bd;font-size:.82rem;line-height:1.7}
+  .notice{background:#233250;border-left:4px solid #ffd333;border-radius:6px;
+    padding:10px 14px;margin:12px 0;font-size:.85rem;color:#c9d4e6;line-height:1.7}
+  .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .pill{background:#233250;border:1px solid #31415e;border-radius:99px;
+    padding:4px 12px;font-size:.82rem;display:flex;align-items:center;gap:6px}
+  .pill button{background:none;border:none;color:#ff6b6b;cursor:pointer;font-size:.9rem}
+  footer{max-width:1080px;margin:30px auto 0;padding:16px 20px 40px;border-top:1px solid #31415e;
+    color:#93a3bd;font-size:.78rem;line-height:1.9}
+  .btnrow{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+  @media(max-width:600px){ .frow{flex-direction:column;align-items:stretch} }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">📒 クリエイター<span>売上台帳</span></div>
+  <div class="tag">売上・経費・KPIを、この1ファイルで。 — LIMIT LAB WORKS</div>
+</header>
+<nav>
+  <button data-v="rec" class="active">📝 記録</button>
+  <button data-v="dash">📊 ダッシュボード</button>
+  <button data-v="year">📅 年間集計</button>
+  <button data-v="data">💾 データ</button>
+</nav>
+<main>
+
+<!-- ============ 記録 ============ -->
+<section id="v-rec" class="view active">
+  <h2>収入を記録</h2>
+  <form id="f-income">
+    <div class="frow">
+      <div><label>日付</label><input type="date" id="in-date" required></div>
+      <div><label>プラットフォーム</label><select id="in-platform"></select></div>
+      <div><label>品名・内容</label><input type="text" id="in-item" placeholder="例: テンプレート集" required></div>
+      <div><label>金額（円）</label><input type="number" id="in-amount" min="0" step="1" required></div>
+      <div><label>メモ（任意）</label><input type="text" id="in-memo"></div>
+      <div><button class="primary" type="submit">追加</button></div>
+    </div>
+  </form>
+
+  <h2>経費を記録</h2>
+  <form id="f-expense">
+    <div class="frow">
+      <div><label>日付</label><input type="date" id="ex-date" required></div>
+      <div><label>カテゴリ</label><select id="ex-cat"></select></div>
+      <div><label>金額（円）</label><input type="number" id="ex-amount" min="0" step="1" required></div>
+      <div><label>メモ（任意）</label><input type="text" id="ex-memo" placeholder="例: サムネイル素材代"></div>
+      <div><button class="primary" type="submit">追加</button></div>
+    </div>
+  </form>
+
+  <h2>KPIを記録（フォロワー数・お気に入り数など）</h2>
+  <form id="f-kpi">
+    <div class="frow">
+      <div><label>日付</label><input type="date" id="kp-date" required></div>
+      <div><label>指標</label><select id="kp-metric"></select></div>
+      <div><label>値</label><input type="number" id="kp-value" step="1" required></div>
+      <div><button class="primary" type="submit">追加</button></div>
+    </div>
+  </form>
+
+  <h2>最近の記録</h2>
+  <div class="tblwrap"><table id="t-recent"><thead>
+    <tr><th>日付</th><th>種類</th><th>内容</th><th class="num">金額 / 値</th><th></th></tr>
+  </thead><tbody></tbody></table></div>
+</section>
+
+<!-- ============ ダッシュボード ============ -->
+<section id="v-dash" class="view">
+  <h2>今月のサマリー</h2>
+  <div class="cards" id="dash-cards"></div>
+  <h2>月次推移（直近12ヶ月）</h2>
+  <div class="chartbox" id="chart-monthly"></div>
+  <h2>KPIの推移</h2>
+  <div class="frow" style="margin-bottom:8px">
+    <div><label>表示する指標</label><select id="dash-kpi-select"></select></div>
+  </div>
+  <div class="chartbox" id="chart-kpi"></div>
+</section>
+
+<!-- ============ 年間集計 ============ -->
+<section id="v-year" class="view">
+  <div class="frow">
+    <div><label>対象年</label><select id="year-select"></select></div>
+  </div>
+  <h2>年間サマリー</h2>
+  <div class="cards" id="year-cards"></div>
+  <h2>月別内訳</h2>
+  <div class="tblwrap"><table id="t-year-month"><thead>
+    <tr><th>月</th><th class="num">収入</th><th class="num">経費</th><th class="num">利益</th></tr>
+  </thead><tbody></tbody></table></div>
+  <h2>プラットフォーム別収入</h2>
+  <div class="tblwrap"><table id="t-year-platform"><thead>
+    <tr><th>プラットフォーム</th><th class="num">収入合計</th><th class="num">件数</th></tr>
+  </thead><tbody></tbody></table></div>
+  <h2>経費カテゴリ別</h2>
+  <div class="tblwrap"><table id="t-year-cat"><thead>
+    <tr><th>カテゴリ</th><th class="num">経費合計</th><th class="num">件数</th></tr>
+  </thead><tbody></tbody></table></div>
+  <div class="btnrow">
+    <button class="ghost" onclick="exportCSV('income')">収入をCSV書き出し</button>
+    <button class="ghost" onclick="exportCSV('expense')">経費をCSV書き出し</button>
+  </div>
+  <div class="notice">確定申告の準備には、上記CSVを表計算ソフトや会計ソフトに
+  取り込んでご利用ください。本ツールは記録・集計を支援するものであり、
+  税務助言を行うものではありません。</div>
+</section>
+
+<!-- ============ データ ============ -->
+<section id="v-data" class="view">
+  <h2>バックアップ</h2>
+  <div class="notice">データはこの端末のブラウザ内（localStorage）にのみ保存され、
+  外部には一切送信されません。ブラウザのデータ削除や端末の故障で失われる
+  ことがあるため、<strong>定期的なバックアップ書き出しを強くおすすめします</strong>。</div>
+  <div class="btnrow">
+    <button class="primary" onclick="exportJSON()">バックアップを書き出す（JSON）</button>
+    <label class="ghost" style="cursor:pointer;display:inline-flex;align-items:center">
+      バックアップを読み込む<input type="file" id="import-file" accept=".json" style="display:none">
+    </label>
+  </div>
+
+  <h2>プラットフォームの管理</h2>
+  <div class="pillrow" id="pf-list"></div>
+  <div class="frow"><div><input type="text" id="pf-new" placeholder="例: DLsite"></div>
+    <div><button class="ghost" onclick="addSetting('platforms','pf-new')">追加</button></div></div>
+
+  <h2>経費カテゴリの管理</h2>
+  <div class="pillrow" id="cat-list"></div>
+  <div class="frow"><div><input type="text" id="cat-new" placeholder="例: ソフトウェア代"></div>
+    <div><button class="ghost" onclick="addSetting('expenseCategories','cat-new')">追加</button></div></div>
+
+  <h2>KPI指標の管理</h2>
+  <div class="pillrow" id="kpi-list"></div>
+  <div class="frow"><div><input type="text" id="kpi-new" placeholder="例: YouTube登録者"></div>
+    <div><button class="ghost" onclick="addSetting('kpiMetrics','kpi-new')">追加</button></div></div>
+
+  <h2>危険な操作</h2>
+  <div class="btnrow">
+    <button class="danger" onclick="wipeAll()">すべてのデータを削除する</button>
+  </div>
+</section>
+
+</main>
+<footer>
+  クリエイター売上台帳 v1.0 — LIMIT LAB WORKS<br>
+  ・本ツールは売上・経費・KPIの記録と集計を支援するものであり、税務助言・
+  申告代行を行うものではありません。確定申告の内容は税理士等の専門家に
+  ご確認ください。<br>
+  ・データはお使いの端末のブラウザ内にのみ保存されます。外部への送信は
+  一切ありません。<br>
+  ・本ツールはAI（Claude）によって設計・生成されました。Anthropic社の
+  公式製品・公認製品ではありません。
+</footer>
+
+<script>
+"use strict";
+const LS_KEY = "creatorLedgerV1";
+const DEFAULTS = {
+  income: [], expense: [], kpi: [],
+  settings: {
+    platforms: ["BOOTH","note","Skeb","その他"],
+    expenseCategories: ["素材・ツール代","手数料","通信費","消耗品","その他"],
+    kpiMetrics: ["Xフォロワー","BOOTHお気に入り"]
+  }
+};
+let db = load();
+
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return structuredClone(DEFAULTS);
+    const d = JSON.parse(raw);
+    for(const k of ["income","expense","kpi"]) if(!Array.isArray(d[k])) d[k]=[];
+    d.settings = Object.assign(structuredClone(DEFAULTS.settings), d.settings||{});
+    return d;
+  }catch(e){ return structuredClone(DEFAULTS); }
+}
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
+function uid(){ return Date.now().toString(36) + Math.random().toString(36).slice(2,7); }
+function esc(s){ return String(s??"").replace(/[&<>"']/g,
+  c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function yen(n){ return "¥" + Number(n||0).toLocaleString("ja-JP"); }
+function today(){ const d=new Date(),p=x=>String(x).padStart(2,"0");
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function ym(dateStr){ return (dateStr||"").slice(0,7); }
+
+/* ---------- ナビゲーション ---------- */
+document.querySelectorAll("nav button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById("v-"+b.dataset.v).classList.add("active");
+    renderAll();
+  });
+});
+
+/* ---------- 設定（プラットフォーム等） ---------- */
+function fillSelect(id, arr){
+  const el = document.getElementById(id);
+  el.innerHTML = arr.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+}
+function renderSettings(){
+  fillSelect("in-platform", db.settings.platforms);
+  fillSelect("ex-cat", db.settings.expenseCategories);
+  fillSelect("kp-metric", db.settings.kpiMetrics);
+  const mk=(listId, key)=>{
+    document.getElementById(listId).innerHTML = db.settings[key].map((v,i)=>
+      `<span class="pill">${esc(v)}<button title="削除" onclick="removeSetting('${key}',${i})">✕</button></span>`).join("");
+  };
+  mk("pf-list","platforms"); mk("cat-list","expenseCategories"); mk("kpi-list","kpiMetrics");
+  const sel=document.getElementById("dash-kpi-select");
+  const metrics=[...new Set([...db.settings.kpiMetrics, ...db.kpi.map(k=>k.metric)])];
+  sel.innerHTML = metrics.map(v=>`<option value="${esc(v)}">${esc(v)}</option>`).join("");
+}
+function addSetting(key, inputId){
+  const el=document.getElementById(inputId); const v=el.value.trim();
+  if(!v) return;
+  if(!db.settings[key].includes(v)) db.settings[key].push(v);
+  el.value=""; save(); renderAll();
+}
+function removeSetting(key, idx){
+  db.settings[key].splice(idx,1); save(); renderAll();
+}
+
+/* ---------- 記録の追加・削除 ---------- */
+document.getElementById("f-income").addEventListener("submit",e=>{
+  e.preventDefault();
+  db.income.push({ id:uid(), date:val("in-date"), platform:val("in-platform"),
+    item:val("in-item"), amount:num("in-amount"), memo:val("in-memo") });
+  save(); e.target.reset(); setToday(); renderAll();
+});
+document.getElementById("f-expense").addEventListener("submit",e=>{
+  e.preventDefault();
+  db.expense.push({ id:uid(), date:val("ex-date"), category:val("ex-cat"),
+    amount:num("ex-amount"), memo:val("ex-memo") });
+  save(); e.target.reset(); setToday(); renderAll();
+});
+document.getElementById("f-kpi").addEventListener("submit",e=>{
+  e.preventDefault();
+  db.kpi.push({ id:uid(), date:val("kp-date"), metric:val("kp-metric"), value:num("kp-value") });
+  save(); e.target.reset(); setToday(); renderAll();
+});
+function val(id){ return document.getElementById(id).value.trim(); }
+function num(id){ return Number(document.getElementById(id).value)||0; }
+function delEntry(kind,id){
+  db[kind] = db[kind].filter(x=>x.id!==id); save(); renderAll();
+}
+function setToday(){
+  for(const id of ["in-date","ex-date","kp-date"])
+    if(!document.getElementById(id).value) document.getElementById(id).value = today();
+}
+
+/* ---------- 最近の記録テーブル ---------- */
+function renderRecent(){
+  const rows=[];
+  db.income.forEach(r=>rows.push({d:r.date,k:"収入",kind:"income",id:r.id,
+    desc:`${r.platform}／${r.item}${r.memo?"（"+r.memo+"）":""}`,v:yen(r.amount)}));
+  db.expense.forEach(r=>rows.push({d:r.date,k:"経費",kind:"expense",id:r.id,
+    desc:`${r.category}${r.memo?"（"+r.memo+"）":""}`,v:"-"+yen(r.amount)}));
+  db.kpi.forEach(r=>rows.push({d:r.date,k:"KPI",kind:"kpi",id:r.id,
+    desc:r.metric,v:Number(r.value).toLocaleString("ja-JP")}));
+  rows.sort((a,b)=>b.d.localeCompare(a.d));
+  document.querySelector("#t-recent tbody").innerHTML =
+    rows.slice(0,30).map(r=>`<tr><td>${esc(r.d)}</td><td>${r.k}</td>
+      <td>${esc(r.desc)}</td><td class="num">${esc(r.v)}</td>
+      <td><button class="del" onclick="delEntry('${r.kind}','${r.id}')">削除</button></td></tr>`).join("")
+    || `<tr><td colspan="5" class="muted">まだ記録がありません。上のフォームから追加してください。</td></tr>`;
+}
+
+/* ---------- ダッシュボード ---------- */
+function sumBy(arr, ymStr){ return arr.filter(x=>ym(x.date)===ymStr)
+  .reduce((s,x)=>s+Number(x.amount||0),0); }
+function renderDash(){
+  const now=new Date();
+  const thisYM = ym(today());
+  const prev = new Date(now.getFullYear(), now.getMonth()-1, 1);
+  const prevYM = `${prev.getFullYear()}-${String(prev.getMonth()+1).padStart(2,"0")}`;
+  const inc=sumBy(db.income,thisYM), exp=sumBy(db.expense,thisYM);
+  const incP=sumBy(db.income,prevYM), expP=sumBy(db.expense,prevYM);
+  const profit=inc-exp, profitP=incP-expP;
+  const diff=(a,b)=>{ const d=a-b;
+    return `<span class="${d>=0?"pos":"neg"}">前月比 ${d>=0?"+":""}${d.toLocaleString("ja-JP")}円</span>`; };
+  document.getElementById("dash-cards").innerHTML = `
+    <div class="card"><div class="label">今月の収入</div><div class="value">${yen(inc)}</div><div class="diff">${diff(inc,incP)}</div></div>
+    <div class="card"><div class="label">今月の経費</div><div class="value">${yen(exp)}</div><div class="diff">${diff(exp,expP)}</div></div>
+    <div class="card"><div class="label">今月の利益</div><div class="value ${profit>=0?"pos":"neg"}">${yen(profit)}</div><div class="diff">${diff(profit,profitP)}</div></div>
+    <div class="card"><div class="label">記録件数（累計）</div><div class="value">${db.income.length+db.expense.length+db.kpi.length}</div><div class="diff">収入${db.income.length}／経費${db.expense.length}／KPI${db.kpi.length}</div></div>`;
+  renderMonthlyChart();
+  renderKpiChart();
+}
+function lastMonths(n){
+  const out=[]; const d=new Date();
+  for(let i=n-1;i>=0;i--){
+    const t=new Date(d.getFullYear(), d.getMonth()-i, 1);
+    out.push(`${t.getFullYear()}-${String(t.getMonth()+1).padStart(2,"0")}`);
+  }
+  return out;
+}
+function renderMonthlyChart(){
+  const months=lastMonths(12);
+  const incs=months.map(m=>sumBy(db.income,m));
+  const exps=months.map(m=>sumBy(db.expense,m));
+  const max=Math.max(1000, ...incs, ...exps);
+  const W=940,H=240,P=36,bw=W/months.length;
+  let bars="";
+  months.forEach((m,i)=>{
+    const x=P/2+i*((W-P)/months.length);
+    const hi=(incs[i]/max)*(H-60), he=(exps[i]/max)*(H-60);
+    bars+=`<rect x="${x}" y="${H-30-hi}" width="${bw*0.32}" height="${hi}" fill="#ffd333" rx="2"><title>${m} 収入 ${yen(incs[i])}</title></rect>`;
+    bars+=`<rect x="${x+bw*0.36}" y="${H-30-he}" width="${bw*0.32}" height="${he}" fill="#5aa9ff" rx="2"><title>${m} 経費 ${yen(exps[i])}</title></rect>`;
+    bars+=`<text x="${x+bw*0.32}" y="${H-12}" fill="#93a3bd" font-size="10" text-anchor="middle">${m.slice(2).replace("-","/")}</text>`;
+  });
+  document.getElementById("chart-monthly").innerHTML =
+    `<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="月次の収入と経費">
+      <text x="4" y="14" fill="#ffd333" font-size="11">■ 収入</text>
+      <text x="60" y="14" fill="#5aa9ff" font-size="11">■ 経費</text>${bars}</svg>`;
+}
+function renderKpiChart(){
+  const metric=document.getElementById("dash-kpi-select").value;
+  const pts=db.kpi.filter(k=>k.metric===metric).sort((a,b)=>a.date.localeCompare(b.date));
+  const box=document.getElementById("chart-kpi");
+  if(!metric || pts.length<2){
+    box.innerHTML=`<div class="muted">この指標の記録が2件以上たまるとグラフが表示されます。</div>`; return;
+  }
+  const W=940,H=200,P=40;
+  const vals=pts.map(p=>Number(p.value));
+  const min=Math.min(...vals), max=Math.max(...vals), span=(max-min)||1;
+  const x=i=>P+(i/(pts.length-1))*(W-P*2);
+  const y=v=>H-30-((v-min)/span)*(H-70);
+  const path=pts.map((p,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(p.value).toFixed(1)}`).join(" ");
+  const dots=pts.map((p,i)=>`<circle cx="${x(i)}" cy="${y(p.value)}" r="3.5" fill="#ffd333"><title>${p.date} ${Number(p.value).toLocaleString()}</title></circle>`).join("");
+  box.innerHTML=`<svg viewBox="0 0 ${W} ${H}" width="100%" role="img" aria-label="KPI推移">
+    <text x="4" y="14" fill="#93a3bd" font-size="11">${esc(metric)}（${pts[0].date} 〜 ${pts[pts.length-1].date}）</text>
+    <text x="4" y="${y(max)+4}" fill="#93a3bd" font-size="10">${max.toLocaleString()}</text>
+    <text x="4" y="${y(min)+4}" fill="#93a3bd" font-size="10">${min.toLocaleString()}</text>
+    <path d="${path}" fill="none" stroke="#ffd333" stroke-width="2"/>${dots}</svg>`;
+}
+document.getElementById("dash-kpi-select").addEventListener("change",renderKpiChart);
+
+/* ---------- 年間集計 ---------- */
+function renderYear(){
+  const years=[...new Set([...db.income,...db.expense].map(x=>x.date.slice(0,4)))]
+    .filter(Boolean).sort().reverse();
+  const sel=document.getElementById("year-select");
+  const cur=sel.value;
+  const list=years.length?years:[String(new Date().getFullYear())];
+  sel.innerHTML=list.map(y=>`<option ${y===cur?"selected":""}>${y}</option>`).join("");
+  const Y=sel.value||list[0];
+
+  const inc=db.income.filter(x=>x.date.startsWith(Y));
+  const exp=db.expense.filter(x=>x.date.startsWith(Y));
+  const tInc=inc.reduce((s,x)=>s+x.amount,0), tExp=exp.reduce((s,x)=>s+x.amount,0);
+  document.getElementById("year-cards").innerHTML=`
+    <div class="card"><div class="label">${Y}年 収入合計</div><div class="value">${yen(tInc)}</div></div>
+    <div class="card"><div class="label">${Y}年 経費合計</div><div class="value">${yen(tExp)}</div></div>
+    <div class="card"><div class="label">${Y}年 利益</div><div class="value ${tInc-tExp>=0?"pos":"neg"}">${yen(tInc-tExp)}</div></div>`;
+
+  let rows="";
+  for(let m=1;m<=12;m++){
+    const mm=`${Y}-${String(m).padStart(2,"0")}`;
+    const i=sumBy(db.income,mm), e=sumBy(db.expense,mm);
+    rows+=`<tr><td>${m}月</td><td class="num">${yen(i)}</td><td class="num">${yen(e)}</td>
+      <td class="num ${i-e>=0?"pos":"neg"}">${yen(i-e)}</td></tr>`;
+  }
+  document.querySelector("#t-year-month tbody").innerHTML=rows;
+
+  const byKey=(arr,key)=>{ const m={};
+    arr.forEach(x=>{ const k=x[key]||"未分類"; (m[k]=m[k]||{sum:0,n:0}); m[k].sum+=x.amount; m[k].n++; });
+    return Object.entries(m).sort((a,b)=>b[1].sum-a[1].sum); };
+  document.querySelector("#t-year-platform tbody").innerHTML =
+    byKey(inc,"platform").map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${yen(v.sum)}</td><td class="num">${v.n}</td></tr>`).join("")
+    || `<tr><td colspan="3" class="muted">この年の収入記録はまだありません。</td></tr>`;
+  document.querySelector("#t-year-cat tbody").innerHTML =
+    byKey(exp,"category").map(([k,v])=>`<tr><td>${esc(k)}</td><td class="num">${yen(v.sum)}</td><td class="num">${v.n}</td></tr>`).join("")
+    || `<tr><td colspan="3" class="muted">この年の経費記録はまだありません。</td></tr>`;
+}
+document.getElementById("year-select").addEventListener("change",renderYear);
+
+/* ---------- エクスポート／インポート ---------- */
+function download(name, text, type){
+  const blob=new Blob([text],{type});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=name; a.click();
+  URL.revokeObjectURL(a.href);
+}
+function csvCell(s){ s=String(s??""); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+function exportCSV(kind){
+  const Y=document.getElementById("year-select").value;
+  let rows,head,name;
+  if(kind==="income"){
+    head=["日付","プラットフォーム","品名","金額","メモ"];
+    rows=db.income.filter(x=>x.date.startsWith(Y)).sort((a,b)=>a.date.localeCompare(b.date))
+      .map(x=>[x.date,x.platform,x.item,x.amount,x.memo]);
+    name=`income-${Y}.csv`;
+  }else{
+    head=["日付","カテゴリ","金額","メモ"];
+    rows=db.expense.filter(x=>x.date.startsWith(Y)).sort((a,b)=>a.date.localeCompare(b.date))
+      .map(x=>[x.date,x.category,x.amount,x.memo]);
+    name=`expense-${Y}.csv`;
+  }
+  const csv="﻿"+[head,...rows].map(r=>r.map(csvCell).join(",")).join("\n");
+  download(name,csv,"text/csv");
+}
+function exportJSON(){
+  download(`creator-ledger-backup-${today()}.json`, JSON.stringify(db,null,1), "application/json");
+}
+document.getElementById("import-file").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!d || !Array.isArray(d.income) || !Array.isArray(d.expense))
+        throw new Error("形式が不正です");
+      if(!confirm("現在のデータをバックアップの内容で置き換えます。よろしいですか？")) return;
+      db=d; db.settings=Object.assign(structuredClone(DEFAULTS.settings), d.settings||{});
+      if(!Array.isArray(db.kpi)) db.kpi=[];
+      save(); renderAll(); alert("読み込みが完了しました。");
+    }catch(err){ alert("読み込みに失敗しました: "+err.message); }
+  };
+  r.readAsText(f); e.target.value="";
+});
+function wipeAll(){
+  if(!confirm("本当にすべてのデータを削除しますか？この操作は取り消せません。")) return;
+  if(!confirm("バックアップは書き出しましたか？「OK」で完全に削除します。")) return;
+  db=structuredClone(DEFAULTS); save(); renderAll();
+}
+
+/* ---------- 一括描画 ---------- */
+function renderAll(){
+  renderSettings(); renderRecent(); renderDash(); renderYear(); setToday();
+}
+renderAll();
+</script>
+</body>
+</html>
