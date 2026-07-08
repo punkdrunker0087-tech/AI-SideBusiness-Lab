@@ -33,7 +33,7 @@ Starter
 ¥480  AI Business Template Pack
 ────────────────────
 Free（集客層）
-¥0   AI Company OS Starter（無料サンプル、公開待ち）
+¥0   AI Company OS Starter（無料サンプル、公開済み）
 ```
 
 有料4商品はBOOTH公開済み（初回売上はまだ0件）。Free層は認知施策
