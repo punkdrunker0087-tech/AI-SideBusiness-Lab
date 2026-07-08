@@ -27,7 +27,7 @@ Coming Soon
 Standard
 ¥980  AI Company OS Template Kit
 ¥980  Research Department Prompt
-¥1,480 クリエイター売上台帳（Software第1号、公開待ち）
+¥1,480 クリエイター売上台帳（Software第1号、公開済み）
 ────────────────────
 Starter
 ¥480  Claude Code Prompt Pack
@@ -35,10 +35,10 @@ Starter
 ────────────────────
 Free（集客層）
 ¥0   AI Company OS Starter（無料サンプル、公開済み）
-¥0   クリエイター売上台帳 無料版（記録50件まで、公開待ち）
+¥0   クリエイター売上台帳 無料版（記録50件まで、公開済み）
 ```
 
-有料4商品はBOOTH公開済み（初回売上はまだ0件）。Free層は認知施策
+有料5商品はBOOTH公開済み（初回売上はまだ0件、卒業ゲート算入5/10）。Free層は認知施策
 （2026-07-08 CEO承認）として追加。役割は売上ではなく集客・回遊・
 有料版へのクロスセルであり、**Phase 2卒業ゲートの「商品10点」には
 数えない**（無料商品でゲートを埋める運用をしないため）。KPIはDL数・
