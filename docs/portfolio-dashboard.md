@@ -8,7 +8,7 @@
 
 ## アクティブ案件数
 
-3 / 3（上限。PJ-002・PJ-003・PJ-006。PJ-004は個人ツールとして枠対象外、PJ-001はBacklog、PJ-005は撤退済）
+3 / 3（上限。PJ-002・PJ-006・PJ-007。PJ-004は個人ツールとして枠対象外、PJ-001・PJ-003はBacklog、PJ-005は撤退済）
 
 ## 案件一覧
 
@@ -16,16 +16,17 @@
 |---|---|---|---|---|---|---|---|
 | PJ-001 | YouTube動画要約サービス | Backlog（保留） | PM | 保留（PJ-004着手のためアクティブ枠を明け渡し） | - | 2026-07-08 | CEO承認: 日本語ビジネス/研修動画特化への絞り込みが前提。Software制作が必要なためマーケティング部実装まで保留。2026-07-08、PJ-004（株式投資研究）の即時着手のためBacklogへ降格 |
 | PJ-002 | AI Business Template Factory（LIMIT LAB WORKS） | 公開済み（初回販売待ち） | CEO（人間） | 最優先（総合79点/Go、Asset Score★5） | - | 2026-07-06 | BOOTH: https://limit-lab.booth.pm/ 。X: https://x.com/LimitLabJP （フォロワー79名、07-09時点。詳細は`docs/daily-metrics.md`）。商品ライン: ①AI Company OS Template Kit（¥980）②Claude Code Prompt Pack（¥480）③AI Business Template Pack（¥480）④Research Department Prompt（¥980, Value Score81）。4商品すべてBOOTH公開済み。商品数4/10（Phase2卒業条件）。7/6 19:30時点、初回売上まだ0件。初回売上が出次第Sprint 7（分析部）を開始 |
-| PJ-003 | VRChat向けAI活用テンプレート・ワークフロー商品 | 検証中 | 検証部 | 次点（PJ-002より下位、急がない） | - | 2026-07-06 | ユーザー提案。市場調査完了（`cases/PJ-003/research.md`、Confidence 75%、Recommendation: Conditional Go）。市場規模（BOOTH3Dモデルカテゴリ104億円）は裏付けあるが、無料競合（UnityMCP-VRC等）とLIMIT LABの専門実績不足がリスク。CEO判断によりショップ分割・サブブランド化は行わず、LIMIT LAB WORKS（PJ-002）を最優先で推進（詳細は`knowledge/Decision Log/2026-07-06-pj003-priority-and-shop-split-deferred.md`） |
+| PJ-003 | VRChat向けAI活用テンプレート・ワークフロー商品 | Backlog（検証中のまま凍結） | PM | 保留（Fable-5窓のツール量産を優先するため枠を明け渡し） | - | 2026-07-09 | ユーザー提案。市場調査完了（Confidence 75%、Conditional Go）。もともと「急がない」方針だったため、7/12までのツール量産（CEO指示）に枠を譲りBacklogへ。調査資産は保持、再開時は検証部から |
 | PJ-004 | 株式投資研究（CEO個人の意思決定支援ツール） | 運用中（小規模・スコア対象外） | CEO（自己運用） | 対象外（アクティブ枠から除外、Portfolio Ruleの事業案件パイプラインから卒業） | - | 2026-07-08 | CEO判断: 事業評価部のPivot案（42点、`cases/PJ-004/score-history.md`）を受け、「事業案件」としての8軸スコアリング・Go/No-Go運用から外し、個人の意思決定支援ツールとして小規模運用する方針に変更。投資額上限¥100,000・最終発注は必ずCEO・PJ-002運営を圧迫しない時間配分の3条件は維持。Weekly Review等の定例報告対象からも外す（詳細は`knowledge/Decision Log/2026-07-08-pj004-reclassify-as-internal-tool.md`） |
 | PJ-005 | 電脳せどり自動化・無在庫販売の越境EC | 撤退済（30日アーカイブ） | - | - | - | 2026-07-08 | CEO判断: 評価55点（Conditional Go下限）を受け撤退を決定。薄利構造・Asset Score★2（Build Once Sell Manyとの不適合）・実工数の重さが主因。調査資産（`cases/PJ-005/research.md`: 無在庫の規約整理・Shopee/越境EC市場データ）は今後の案件評価に再利用可能。Portfolio Ruleに従い30日保存後にアーカイブ |
+| PJ-007 | 頒布レジ（イベント当日の売上・在庫管理、単一HTML） | CEO判断待ち | CEO | 要CEO判断（事業評価部案: Conditional Go、64点） | - | 2026-07-09 | Fable-5窓のツール量産1本目。需要証拠はBOOTH実データ（RegiTail¥500等、当日管理系の有料商品が¥300〜1,000で実在）。差別化: 完全オフライン（会場の通信問題）＋タップ会計・お釣り計算・残部数＋売上台帳CSV連携。評価64点・Asset★5・Value Score70。条件: iOS制約の正直表記／即時保存＋Undo必須／売上台帳連携必須／¥980以下（`cases/PJ-007/score-history.md`） |
 | PJ-006 | クリエイター売上台帳（単一HTML） | 公開済み（初回販売待ち・30日判定中） | CEO（人間） | 高 | - | 2026-07-08 | 製品版¥1,480（ https://limit-lab.booth.pm/items/8596089 ）・無料版¥0（ https://limit-lab.booth.pm/items/8596083 ）を2026-07-08にBOOTH公開。会社初のSoftware商品。30日判定基準（`knowledge/Decision Log/2026-07-08-pj006-launch-with-falsifiable-criteria.md`）で2026-08-08頃に判定。日次報告に無料版DL数・製品版売上を追加する。卒業ゲート算入で全社商品数5/10（無料版は数えない） |
 
 状態の凡例: 新規 / 調査中 / 検証中 / 評価中 / CEO判断待ち / 開発待ち / 法務確認中 / 制作中 / 制作完了 / マーケティング準備中 / 公開済み（初回販売待ち） / 運用中 / 改善中 / 撤退検討 / 撤退済
 
 ## 次に採番するID
 
-PJ-007
+PJ-008
 
 ## 更新履歴
 
@@ -94,3 +95,5 @@ PJ-007
 | 2026-07-09 | データ訂正: 7/8スクリーンショットの「お気に入り計5件」はCEO自身のテスト操作分と確定し、公式なお気に入りは0件（Week1 KPI未達に訂正）。無料版DLの初報告はStarter=0・売上台帳お試し版=0（公開半日時点）。BOOTHガイドライン改定（7/8付、誘導主目的商品の禁止）は無料2商品とも非該当と判断し変更不要 |
 | 2026-07-09 | CEO（人間）が売上台帳の告知X投稿3本（`cases/PJ-006/marketing.md`②の制作ストーリー2本＋告知1本）を予約登録。7/10に5時間おきに発信予定。7/10〜11の無料版DL数・フォロワー変化で「告知→DL」の初の反応率測定が可能になる |
 | 2026-07-09 | CEO（人間）がX・noteのプロフィールを正本（`docs/brand.md`）の文面へ実際に更新。noteはnote-001（起源ストーリー）を固定記事に設定。入口の整備（プロフィール→BOOTH導線・固定記事）が完了し、明日の告知3本を受け止める体制が整う |
+| 2026-07-09 | CEO指示: Fable-5窓（〜7/12）で売り物になる小さなニッチツールを可能な限り量産する。需要検証先行の原則は維持。PJ-003（もともと急がない方針・7/6以降停滞）をBacklogへ降格し量産用の枠を確保 |
+| 2026-07-09 | PJ-007（頒布レジ）を新規登録。WebSearch上限のためEvidenceは7/8取得のBOOTH実データを再利用（Reuse First）: 当日管理系の有料商品がRegiTail¥500等¥300〜1,000で実在。/research→/validate→/evaluateを同日実行し、検証部PASS・評価64点（Conditional Go）・Asset★5・Value Score70。CEOへGo判断を提出 |
