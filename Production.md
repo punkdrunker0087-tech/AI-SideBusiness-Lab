@@ -6,6 +6,9 @@
 パッケージなど、あらゆる形態を対象とする。
 
 制作部は `CLAUDE.md`、`docs/department-contracts.md` に従って動く。
+Software（単一HTMLツール）商品を制作する場合は、実証済みの
+`knowledge/SOP/single-html-tool-factory.md`（需要検証→パイプライン→
+実装標準→QA→パッケージング→価格→ローンチの全工程）に従う。
 `docs/opportunity-pipeline.md`の条件に該当する案件は、本Production
 （本製作）の前にPrototype／Pilotを行う。該当しない場合は直接
 Productionへ進んでよいが、その判断を記録する。
