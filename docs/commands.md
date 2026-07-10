@@ -152,7 +152,7 @@ Departments（Research / Evaluation ...）
 |---|---|
 | 目的 | 今日のX投稿・note記事案を短い依頼で作成する（マーケティング部の日次運用。`/marketing`の6点セット作成とは別コマンド） |
 | 入力 | 案件ID（省略可、デフォルトPJ-002）、トピック（省略可） |
-| 処理 | `docs/channel-strategy.md`の80:20原則・書き出しルールに従いX投稿2〜3本を作成する。note記事は週1本を目安とし、直近作成済みなら省略する。`docs/daily-metrics.md`の未報告項目は憶測で埋めない |
+| 処理 | `docs/channel-strategy.md`の投稿頻度ルール（1日3本・可能な限り画像付き）・80:20原則・書き出しルールに従いX投稿3本を作成し、各投稿に画像指示（撮影型/作成型）を添える。note記事は週1本を目安とし、直近作成済みなら省略する。`docs/daily-metrics.md`の未報告項目は憶測で埋めない |
 | 出力 | X投稿案・note記事案（またはnote省略の明記）。ファイル保存やExit Criteria判定は行わない |
 | 呼び出す契約 | Marketing.md、docs/channel-strategy.md |
 | 呼び出すエージェント | マーケティング部 |
