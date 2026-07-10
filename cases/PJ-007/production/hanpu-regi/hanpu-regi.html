@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>頒布レジ — LIMIT LAB WORKS</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+    background:#101a2b;color:#e8edf5;font-size:15px;padding-bottom:70px}
+  header{background:#0b1220;border-bottom:2px solid #ffd333;padding:10px 14px;
+    display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+  header .logo{font-weight:800;font-size:1.05rem}
+  header .logo span{color:#ffd333}
+  header .ev{color:#93a3bd;font-size:.78rem}
+  main{max-width:720px;margin:0 auto;padding:12px 12px 24px}
+  .view{display:none}.view.active{display:block}
+  h2{font-size:.98rem;margin:14px 0 8px;color:#ffd333}
+  .muted{color:#93a3bd;font-size:.8rem;line-height:1.7}
+  .notice{background:#233250;border-left:4px solid #ffd333;border-radius:6px;
+    padding:9px 12px;margin:10px 0;font-size:.82rem;color:#c9d4e6;line-height:1.7}
+  input,select{background:#101a2b;color:#e8edf5;border:1px solid #31415e;
+    border-radius:8px;padding:10px;font-size:1rem;width:100%}
+  input:focus{outline:2px solid #ffd333;border-color:#ffd333}
+  label{color:#93a3bd;font-size:.75rem;display:block;margin-bottom:3px}
+  .frow{display:flex;gap:8px;margin:8px 0}
+  .frow>div{flex:1}
+  button{cursor:pointer;border:none;border-radius:8px;font-family:inherit}
+  .primary{background:#ffd333;color:#1a1a10;font-weight:800;padding:12px 18px;font-size:1rem}
+  .ghost{background:transparent;color:#93a3bd;border:1px solid #31415e;padding:10px 14px;font-size:.85rem}
+  .danger{background:transparent;color:#ff6b6b;border:1px solid #ff6b6b;padding:10px 14px;font-size:.85rem}
+  .primary:disabled{opacity:.4;cursor:default}
+
+  /* レジ: 商品グリッド */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin:10px 0}
+  @media(min-width:520px){ .grid{grid-template-columns:repeat(3,1fr)} }
+  .itembtn{background:#1c2940;border:1px solid #31415e;border-radius:12px;
+    padding:14px 10px;text-align:center;color:#e8edf5;min-height:84px;
+    display:flex;flex-direction:column;justify-content:center;gap:4px}
+  .itembtn:active{background:#2a3b5c}
+  .itembtn .nm{font-weight:700;font-size:.95rem;word-break:break-all}
+  .itembtn .pr{color:#ffd333;font-weight:800;font-size:1.05rem}
+  .itembtn .st{color:#93a3bd;font-size:.72rem}
+  .itembtn.sold{opacity:.45}
+  .itembtn.sold .st{color:#ff6b6b;font-weight:700}
+
+  /* カート */
+  .cart{background:#1c2940;border:1px solid #31415e;border-radius:12px;padding:12px;margin-top:10px}
+  .cline{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid #31415e;font-size:.92rem}
+  .cline .n{flex:1;word-break:break-all}
+  .qbtn{background:#233250;color:#e8edf5;border:1px solid #31415e;width:34px;height:34px;
+    border-radius:8px;font-size:1.1rem;font-weight:800}
+  .total{display:flex;justify-content:space-between;align-items:baseline;margin:10px 0 6px}
+  .total .t{font-size:1.5rem;font-weight:800;color:#ffd333}
+  .cashrow{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}
+  .cashrow button{background:#233250;color:#e8edf5;border:1px solid #31415e;
+    padding:10px 12px;border-radius:8px;font-size:.9rem;font-weight:700}
+  .change{display:flex;justify-content:space-between;font-size:1.05rem;margin:6px 0}
+  .change .ok{color:#4cd97b;font-weight:800}
+  .change .ng{color:#ff6b6b;font-weight:800}
+  .lastsale{background:#233250;border-radius:10px;padding:10px 12px;margin-top:10px;
+    display:flex;justify-content:space-between;align-items:center;font-size:.88rem}
+
+  table{width:100%;border-collapse:collapse;background:#1c2940;font-size:.85rem}
+  th,td{padding:8px;border-bottom:1px solid #31415e;text-align:left}
+  th{background:#233250;color:#93a3bd;font-size:.75rem}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+  .tblwrap{overflow-x:auto;border-radius:10px;border:1px solid #31415e;margin:8px 0}
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin:10px 0}
+  .card{background:#1c2940;border:1px solid #31415e;border-radius:10px;padding:12px}
+  .card .label{color:#93a3bd;font-size:.72rem;margin-bottom:4px}
+  .card .value{font-size:1.25rem;font-weight:800}
+  .btnrow{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+
+  /* 下部ナビ */
+  nav{position:fixed;bottom:0;left:0;right:0;background:#0b1220;border-top:1px solid #31415e;
+    display:flex;z-index:10}
+  nav button{flex:1;background:none;color:#93a3bd;padding:12px 4px;font-size:.8rem;border-radius:0}
+  nav button.active{color:#ffd333;font-weight:800;border-top:2px solid #ffd333}
+  footer{max-width:720px;margin:20px auto 0;padding:0 14px 20px;color:#93a3bd;font-size:.72rem;line-height:1.8}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🧾 頒布<span>レジ</span></div>
+  <div class="ev" id="ev-label">イベント未設定</div>
+</header>
+<main>
+
+<!-- ============ レジ ============ -->
+<section id="v-regi" class="view active">
+  <div class="grid" id="item-grid"></div>
+  <div class="cart">
+    <div id="cart-lines"><p class="muted">商品をタップするとここに入ります。</p></div>
+    <div class="total"><span>合計</span><span class="t" id="cart-total">¥0</span></div>
+    <div class="cashrow">
+      <button onclick="addCash(500)">+¥500</button>
+      <button onclick="addCash(1000)">+¥1,000</button>
+      <button onclick="addCash(5000)">+¥5,000</button>
+      <button onclick="addCash(10000)">+¥10,000</button>
+      <button onclick="exactCash()">ぴったり</button>
+      <button onclick="clearCash()">クリア</button>
+    </div>
+    <div class="change"><span>預かり <span id="cash-amt">¥0</span></span>
+      <span id="change-amt">お釣り —</span></div>
+    <button class="primary" id="btn-checkout" style="width:100%" onclick="checkout()" disabled>会計する</button>
+  </div>
+  <div class="lastsale" id="lastsale" style="display:none">
+    <span id="lastsale-text"></span>
+    <button class="ghost" onclick="undoLast()">直前の会計を取り消す</button>
+  </div>
+</section>
+
+<!-- ============ 頒布物 ============ -->
+<section id="v-items" class="view">
+  <h2>イベント情報</h2>
+  <div class="frow">
+    <div><label>イベント名</label><input type="text" id="ev-name" placeholder="例: 夏の即売会"></div>
+    <div><label>日付</label><input type="date" id="ev-date"></div>
+  </div>
+  <button class="ghost" onclick="saveEvent()">イベント情報を保存</button>
+
+  <h2>頒布物を追加</h2>
+  <div class="frow">
+    <div style="flex:2"><label>名前</label><input type="text" id="it-name" placeholder="例: 新刊セット"></div>
+    <div><label>頒布価格（円）</label><input type="number" id="it-price" min="0" step="50"></div>
+    <div><label>持込数</label><input type="number" id="it-stock" min="0" step="1"></div>
+  </div>
+  <button class="primary" onclick="addItem()">追加</button>
+  <h2>頒布物リスト</h2>
+  <div class="tblwrap"><table><thead>
+    <tr><th>名前</th><th class="num">価格</th><th class="num">持込</th><th class="num">頒布</th><th class="num">残</th><th></th></tr>
+  </thead><tbody id="item-rows"></tbody></table></div>
+  <p class="muted">「持込」をタップすると数を変更できます（追加搬入・数え直しに）。</p>
+</section>
+
+<!-- ============ 記録 ============ -->
+<section id="v-log" class="view">
+  <h2>会計の記録</h2>
+  <div class="tblwrap"><table><thead>
+    <tr><th>時刻</th><th>内容</th><th class="num">合計</th><th></th></tr>
+  </thead><tbody id="log-rows"></tbody></table></div>
+  <p class="muted">「取消」すると在庫（残部数）も元に戻ります。</p>
+</section>
+
+<!-- ============ 集計・データ ============ -->
+<section id="v-sum" class="view">
+  <h2>集計</h2>
+  <div class="cards" id="sum-cards"></div>
+  <div class="tblwrap"><table><thead>
+    <tr><th>頒布物</th><th class="num">頒布数</th><th class="num">売上</th><th class="num">残</th></tr>
+  </thead><tbody id="sum-rows"></tbody></table></div>
+
+  <h2>データ</h2>
+  <div class="btnrow">
+    <button class="ghost" onclick="exportCSV()">売上台帳用CSVを書き出す</button>
+    <button class="ghost" onclick="exportJSON()">バックアップを書き出す（JSON）</button>
+    <label class="ghost" style="display:inline-flex;align-items:center;cursor:pointer">
+      バックアップを読み込む<input type="file" id="import-file" accept=".json" style="display:none"></label>
+  </div>
+  <div class="notice">CSVは「クリエイター売上台帳」のCSVインポートでそのまま
+  取り込めます（日付・品名・金額の列）。イベントが終わったら台帳へ。</div>
+  <h2>次のイベント</h2>
+  <div class="btnrow">
+    <button class="danger" onclick="resetEvent()">記録をリセットして新しいイベントを始める</button>
+  </div>
+</section>
+
+</main>
+<nav>
+  <button data-v="regi" class="active">🧾 レジ</button>
+  <button data-v="items">📦 頒布物</button>
+  <button data-v="log">📜 記録</button>
+  <button data-v="sum">📊 集計</button>
+</nav>
+<footer>
+  頒布レジ v1.0 — LIMIT LAB WORKS<br>
+  ・本ツールは頒布の記録・計算を支援するものであり、税務助言・決済処理を
+  行うものではありません。<br>
+  ・データはお使いの端末のブラウザ内にのみ保存されます。外部への送信は
+  一切ありません（完全オフライン動作）。<br>
+  ・本ツールはAI（Claude）によって設計・生成されました。Anthropic社の
+  公式製品・公認製品ではありません。
+</footer>
+
+<script>
+"use strict";
+const FREE = false; /* 無料版ビルドでは true */
+const FREE_ITEM_LIMIT = 3;
+const SHOP_URL = "https://limit-lab.booth.pm/";
+const LS_KEY = "hanpuRegiV1";
+const DEFAULTS = { event:{name:"",date:""}, items:[], sales:[] };
+let db = load();
+let cart = {};   // itemId -> qty
+let cash = 0;
+
+function load(){
+  try{
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return structuredClone(DEFAULTS);
+    const d = JSON.parse(raw);
+    if(!Array.isArray(d.items)) d.items=[];
+    if(!Array.isArray(d.sales)) d.sales=[];
+    d.event = Object.assign({name:"",date:""}, d.event||{});
+    return d;
+  }catch(e){ return structuredClone(DEFAULTS); }
+}
+function save(){ localStorage.setItem(LS_KEY, JSON.stringify(db)); }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+function esc(s){ return String(s??"").replace(/[&<>"']/g,
+  c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function yen(n){ return "¥"+Number(n||0).toLocaleString("ja-JP"); }
+function today(){ const d=new Date(),p=x=>String(x).padStart(2,"0");
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`; }
+function soldOf(id){ let n=0;
+  db.sales.forEach(s=>s.lines.forEach(l=>{ if(l.itemId===id) n+=l.qty; })); return n; }
+function remainOf(it){ return it.stock - soldOf(it.id); }
+
+/* ---------- ナビ ---------- */
+document.querySelectorAll("nav button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("nav button").forEach(x=>x.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));
+    b.classList.add("active");
+    document.getElementById("v-"+b.dataset.v).classList.add("active");
+    renderAll();
+  });
+});
+
+/* ---------- イベント情報 ---------- */
+function saveEvent(){
+  db.event.name = document.getElementById("ev-name").value.trim();
+  db.event.date = document.getElementById("ev-date").value || today();
+  save(); renderAll();
+}
+function renderEvent(){
+  document.getElementById("ev-name").value = db.event.name;
+  document.getElementById("ev-date").value = db.event.date || today();
+  document.getElementById("ev-label").textContent =
+    db.event.name ? `${db.event.date}｜${db.event.name}` : "イベント未設定（📦頒布物タブで設定）";
+}
+
+/* ---------- 頒布物 ---------- */
+function addItem(){
+  if(FREE && db.items.length >= FREE_ITEM_LIMIT){
+    alert(`無料版で登録できる頒布物は${FREE_ITEM_LIMIT}種までです。\n製品版では無制限に登録できます。\n${SHOP_URL}`);
+    return;
+  }
+  const name=document.getElementById("it-name").value.trim();
+  const price=Number(document.getElementById("it-price").value);
+  const stock=Number(document.getElementById("it-stock").value);
+  if(!name || !isFinite(price) || price<0){ alert("名前と価格を入力してください。"); return; }
+  db.items.push({ id:uid(), name, price, stock: isFinite(stock)&&stock>0 ? stock : 0 });
+  save();
+  document.getElementById("it-name").value="";
+  document.getElementById("it-price").value="";
+  document.getElementById("it-stock").value="";
+  renderAll();
+}
+function editStock(id){
+  const it=db.items.find(x=>x.id===id); if(!it) return;
+  const v=prompt(`「${it.name}」の持込数（現在: ${it.stock}）`, it.stock);
+  if(v===null) return;
+  const n=Number(v);
+  if(!isFinite(n)||n<0){ alert("0以上の数字を入力してください。"); return; }
+  it.stock=n; save(); renderAll();
+}
+function delItem(id){
+  const it=db.items.find(x=>x.id===id); if(!it) return;
+  if(soldOf(id)>0){ alert("頒布記録のある商品は削除できません（記録の整合性を守るため）。"); return; }
+  if(!confirm(`「${it.name}」を削除しますか？`)) return;
+  db.items=db.items.filter(x=>x.id!==id); delete cart[id]; save(); renderAll();
+}
+function renderItems(){
+  document.getElementById("item-rows").innerHTML = db.items.map(it=>{
+    const sold=soldOf(it.id), rem=it.stock-sold;
+    return `<tr><td>${esc(it.name)}</td><td class="num">${yen(it.price)}</td>
+      <td class="num"><button class="ghost" style="padding:4px 10px" onclick="editStock('${it.id}')">${it.stock}</button></td>
+      <td class="num">${sold}</td><td class="num" style="${rem<=0?'color:#ff6b6b;font-weight:700':''}">${rem}</td>
+      <td><button class="danger" style="padding:4px 10px" onclick="delItem('${it.id}')">削除</button></td></tr>`;
+  }).join("") || `<tr><td colspan="6" class="muted">まだ頒布物がありません。上のフォームから追加してください。</td></tr>`;
+}
+
+/* ---------- レジ（カート） ---------- */
+function tapItem(id){
+  const it=db.items.find(x=>x.id===id); if(!it) return;
+  const inCart=cart[id]||0;
+  if(remainOf(it)-inCart<=0){ alert(`「${it.name}」は残りがありません。`); return; }
+  cart[id]=inCart+1; renderRegi();
+}
+function chQty(id,d){
+  cart[id]=(cart[id]||0)+d;
+  if(cart[id]<=0) delete cart[id];
+  const it=db.items.find(x=>x.id===id);
+  if(it && (cart[id]||0)>remainOf(it)) cart[id]=remainOf(it);
+  renderRegi();
+}
+function cartTotal(){
+  return Object.entries(cart).reduce((s,[id,q])=>{
+    const it=db.items.find(x=>x.id===id); return s+(it?it.price*q:0); },0);
+}
+function addCash(n){ cash+=n; renderRegi(); }
+function exactCash(){ cash=cartTotal(); renderRegi(); }
+function clearCash(){ cash=0; renderRegi(); }
+function renderRegi(){
+  document.getElementById("item-grid").innerHTML = db.items.map(it=>{
+    const rem=remainOf(it)-(cart[it.id]||0);
+    const sold=rem<=0 && remainOf(it)<=0;
+    return `<button class="itembtn${sold?' sold':''}" onclick="tapItem('${it.id}')">
+      <span class="nm">${esc(it.name)}</span><span class="pr">${yen(it.price)}</span>
+      <span class="st">${sold?'完売':'残 '+(remainOf(it)-(cart[it.id]||0))}</span></button>`;
+  }).join("") || `<p class="muted" style="grid-column:1/-1">📦「頒布物」タブで商品を登録すると、ここに大きなボタンが並びます。</p>`;
+
+  const lines=Object.entries(cart).map(([id,q])=>{
+    const it=db.items.find(x=>x.id===id); if(!it) return "";
+    return `<div class="cline"><span class="n">${esc(it.name)}</span>
+      <button class="qbtn" onclick="chQty('${id}',-1)">−</button>
+      <span style="min-width:2em;text-align:center;font-weight:800">${q}</span>
+      <button class="qbtn" onclick="chQty('${id}',1)">＋</button>
+      <span class="num" style="min-width:5em;text-align:right">${yen(it.price*q)}</span></div>`;
+  }).join("");
+  document.getElementById("cart-lines").innerHTML =
+    lines || `<p class="muted">商品をタップするとここに入ります。</p>`;
+  const total=cartTotal();
+  document.getElementById("cart-total").textContent=yen(total);
+  document.getElementById("cash-amt").textContent=yen(cash);
+  const ch=cash-total;
+  const chEl=document.getElementById("change-amt");
+  if(total===0){ chEl.textContent="お釣り —"; chEl.className=""; }
+  else if(cash===0){ chEl.textContent="預かり金を入力"; chEl.className=""; }
+  else if(ch>=0){ chEl.innerHTML=`お釣り <span class="ok">${yen(ch)}</span>`; }
+  else { chEl.innerHTML=`<span class="ng">あと${yen(-ch)}</span>`; }
+  document.getElementById("btn-checkout").disabled = !(total>0 && cash>=total);
+}
+function checkout(){
+  const total=cartTotal();
+  if(total<=0 || cash<total) return;
+  const lines=Object.entries(cart).map(([id,q])=>{
+    const it=db.items.find(x=>x.id===id);
+    return { itemId:id, name:it.name, price:it.price, qty:q };
+  });
+  const sale={ id:uid(), ts:Date.now(), lines, total, cash, change:cash-total };
+  db.sales.push(sale); save();
+  const chg=sale.change;
+  cart={}; cash=0;
+  renderAll();
+  const ls=document.getElementById("lastsale");
+  ls.style.display="flex";
+  document.getElementById("lastsale-text").textContent =
+    `会計しました: ${yen(sale.total)}（お釣り ${yen(chg)}）`;
+}
+function undoLast(){
+  if(!db.sales.length) return;
+  const s=db.sales[db.sales.length-1];
+  if(!confirm(`直前の会計（${yen(s.total)}）を取り消しますか？在庫も元に戻ります。`)) return;
+  db.sales.pop(); save();
+  document.getElementById("lastsale").style.display="none";
+  renderAll();
+}
+function cancelSale(id){
+  const s=db.sales.find(x=>x.id===id); if(!s) return;
+  if(!confirm(`${yen(s.total)}の会計を取り消しますか？在庫も元に戻ります。`)) return;
+  db.sales=db.sales.filter(x=>x.id!==id); save(); renderAll();
+}
+
+/* ---------- 記録 ---------- */
+function renderLog(){
+  const fmt=ts=>{ const d=new Date(ts),p=x=>String(x).padStart(2,"0");
+    return `${p(d.getHours())}:${p(d.getMinutes())}`; };
+  document.getElementById("log-rows").innerHTML =
+    [...db.sales].reverse().map(s=>`<tr><td>${fmt(s.ts)}</td>
+      <td>${s.lines.map(l=>`${esc(l.name)}×${l.qty}`).join("、")}</td>
+      <td class="num">${yen(s.total)}</td>
+      <td><button class="danger" style="padding:4px 10px" onclick="cancelSale('${s.id}')">取消</button></td></tr>`).join("")
+    || `<tr><td colspan="4" class="muted">まだ会計の記録がありません。</td></tr>`;
+}
+
+/* ---------- 集計 ---------- */
+function renderSum(){
+  const totalSales=db.sales.reduce((s,x)=>s+x.total,0);
+  const totalQty=db.sales.reduce((s,x)=>s+x.lines.reduce((a,l)=>a+l.qty,0),0);
+  document.getElementById("sum-cards").innerHTML=`
+    <div class="card"><div class="label">総売上</div><div class="value" style="color:#ffd333">${yen(totalSales)}</div></div>
+    <div class="card"><div class="label">会計数</div><div class="value">${db.sales.length}</div></div>
+    <div class="card"><div class="label">頒布点数</div><div class="value">${totalQty}</div></div>`;
+  document.getElementById("sum-rows").innerHTML = db.items.map(it=>{
+    const sold=soldOf(it.id);
+    return `<tr><td>${esc(it.name)}</td><td class="num">${sold}</td>
+      <td class="num">${yen(sold*it.price)}</td><td class="num">${it.stock-sold}</td></tr>`;
+  }).join("") || `<tr><td colspan="4" class="muted">頒布物が未登録です。</td></tr>`;
+}
+
+/* ---------- データ ---------- */
+function download(name,text,type){
+  const blob=new Blob([text],{type});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob); a.download=name; a.click();
+  URL.revokeObjectURL(a.href);
+}
+function csvCell(s){ s=String(s??""); return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s; }
+function exportCSV(){
+  if(FREE){ alert(`CSV書き出し（売上台帳連携）は製品版の機能です。\n${SHOP_URL}`); return; }
+  const date=db.event.date||today();
+  const memo=db.event.name?`頒布レジ: ${db.event.name}`:"頒布レジ";
+  const head=["日付","品名","金額","メモ"];
+  const rows=[];
+  db.sales.forEach(s=>s.lines.forEach(l=>{
+    rows.push([date, l.name, l.price*l.qty, `${memo}（${l.qty}点）`]);
+  }));
+  if(!rows.length){ alert("まだ会計の記録がありません。"); return; }
+  download(`hanpu-${date}.csv`,
+    "﻿"+[head,...rows].map(r=>r.map(csvCell).join(",")).join("\n"), "text/csv");
+}
+function exportJSON(){
+  download(`hanpu-regi-backup-${today()}.json`, JSON.stringify(db,null,1), "application/json");
+}
+document.getElementById("import-file").addEventListener("change",e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!d || !Array.isArray(d.items) || !Array.isArray(d.sales)) throw new Error("形式が不正です");
+      if(!confirm("現在のデータをバックアップの内容で置き換えます。よろしいですか？")) return;
+      db=d; db.event=Object.assign({name:"",date:""}, d.event||{});
+      save(); cart={}; cash=0; renderAll(); alert("読み込みが完了しました。");
+    }catch(err){ alert("読み込みに失敗しました: "+err.message); }
+  };
+  r.readAsText(f); e.target.value="";
+});
+function resetEvent(){
+  if(!confirm("会計の記録をすべて消去して、新しいイベントを始めますか？\n（頒布物リストは残ります）")) return;
+  if(!confirm("バックアップ（JSON）は書き出しましたか？「OK」で消去します。")) return;
+  db.sales=[]; db.event={name:"",date:""}; save(); cart={}; cash=0; renderAll();
+}
+
+/* ---------- 一括描画 ---------- */
+function renderAll(){ renderEvent(); renderItems(); renderRegi(); renderLog(); renderSum(); }
+if(FREE){
+  document.title="頒布レジ（無料版） — LIMIT LAB WORKS";
+  document.querySelector("header .logo").insertAdjacentHTML("beforeend",
+    ` <span style="font-size:.7rem;color:#93a3bd">無料版（頒布物${FREE_ITEM_LIMIT}種まで）</span>`);
+}
+renderAll();
+</script>
+</body>
+</html>

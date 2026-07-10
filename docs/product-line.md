@@ -32,10 +32,12 @@ Standard
 Starter
 ¥480  Claude Code Prompt Pack
 ¥480  AI Business Template Pack
+¥780  頒布レジ（Software第2号、公開待ち）
 ────────────────────
 Free（集客層）
 ¥0   AI Company OS Starter（無料サンプル、公開済み）
 ¥0   クリエイター売上台帳 無料版（記録50件まで、公開済み）
+¥0   頒布レジ 無料版（頒布物3種まで、公開待ち）
 ```
 
 有料5商品はBOOTH公開済み（初回売上はまだ0件、卒業ゲート算入5/10）。Free層は認知施策
