@@ -104,3 +104,4 @@ PJ-008
 | 2026-07-11 | CEO（人間）がnote記事4稿目（`cases/PJ-002/marketing-note-004-fable5-4days.md`「高性能AIが使える4日間で、売り物のツールを2つ作った話」）を実際にnoteへ公開。Fable-5窓での2ツール制作（PJ-006/PJ-007）の開発ログ記事。note公開数4本目 |
 | 2026-07-11 | PJ-007「頒布レジ」のBOOTH URLをCEOより取得・確認（製品版 https://limit-lab.booth.pm/items/8599947 ・無料版 https://limit-lab.booth.pm/items/8599935 ）。「URLは報告待ち」の記載を解消 |
 | 2026-07-11 | Fable-5窓の最終日施策（CEO指示）①判断系SOP 3本を追加（価格決定・事業評価の採点の勘所・販売ページ監査。`knowledge/SOP/`）②会社OS総点検を実施: PM.mdのレビュー項目数表記（5→6）、CLAUDE.mdの部門名（開発部→制作部）、ダッシュボードの卒業ゲート表記（4/10→6/10）を修正。opportunity-pipeline.mdにPilot同等ルート（反証可能な30日判定つき本公開）を追記しPJ-006/007の実践とルールを整合。Customer VoiceにPJ-006/007の受け皿を新設 |
+| 2026-07-11 | Fable-5窓の最終施策②（CEO指示「Fable5でしかできないことを」）: ①経営プリモーテム（`docs/pre-mortem-90days.md`）を作成——失敗シナリオ5件（最有力: 発信の聴衆と買い手のミスマッチ）と転換トリガー（7/25無料版DL5件未満でチャネル転換）を事前固定 ②需要発掘SOP（`knowledge/SOP/demand-discovery.md`）を作成——全案件がConditional Go止まりの構造（思いつき→裏取りの順序）を是正する10件バッチ制・5問スクリーニング・支出起点の探索手順 |
