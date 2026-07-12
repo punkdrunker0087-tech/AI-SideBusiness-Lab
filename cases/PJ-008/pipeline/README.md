@@ -39,13 +39,35 @@ python transcribe.py 素材_cut.mp4 --model small
 - **メモ帳でsrtを開き誤字を修正**（ここが人間の主作業。修正箇所数を数える）
 - 精度不足なら `--model medium`（処理時間は増える）
 
-## 3. 工程3: 字幕の焼き込み
+## 2.5 工程2.5: 抑揚をつける（スタイル字幕ASS生成）
+
+素の字幕は全区間同じ見た目で単調（実測で判明した弱点）。これに
+フェードイン＋キーワード強調をつける:
 
 ```
-ffmpeg -i 素材_cut.mp4 -vf "subtitles=素材_cut.srt:force_style='FontName=Meiryo,FontSize=20,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,MarginV=30'" -c:a copy 納品.mp4
+python style_subtitle.py 素材_cut.srt --res 1080
+python style_subtitle.py 素材_cut.srt --keywords "AI,自動化,効率化" --res 1080
 ```
-- Macは `FontName=Hiragino Sans` に変更
-- 黄色テロップにする場合: `PrimaryColour=&H33D3FF`（BGR順なので注意）
+- 出力: `素材_cut.ass`
+- 強調は1画面最大2個（指定語＞数字＞「」内＞長いカタカナの優先度）
+- 強調が的外れなら `--keywords` で明示指定
+- 英語字幕が欲しいときは工程2で `python transcribe.py 素材_cut.mp4 --translate`
+  → `素材_cut_en.srt` も出る
+
+## 3. 工程3: 字幕の焼き込み
+
+**スタイル字幕（ASS・推奨）**:
+```
+ffmpeg -i 素材_cut.mp4 -vf "ass=素材_cut.ass" -c:a copy 完成.mp4
+```
+
+**素の字幕（SRT・比較用）**:
+```
+ffmpeg -i 素材_cut.mp4 -vf "subtitles=素材_cut.srt:force_style='FontName=Meiryo,FontSize=20,PrimaryColour=&HFFFFFF,OutlineColour=&H000000,Outline=2,MarginV=30'" -c:a copy 素版.mp4
+```
+- **勝利条件の判定**: 完成.mp4（スタイル版）と素版.mp4を見比べて、
+  `cases/PJ-008/style-win-condition.md`の採点で60点以上か判断する
+- Macのフォントは `Meiryo` を `Hiragino Sans` に読み替え
 
 ## 4. 実測記録（このファイルに追記していく）
 

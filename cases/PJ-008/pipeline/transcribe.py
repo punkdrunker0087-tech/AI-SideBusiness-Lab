@@ -36,6 +36,7 @@ def main():
     ap.add_argument("--model", default="small", help="tiny/small/medium。精度が欲しければmedium")
     ap.add_argument("--max-chars", type=int, default=18, help="テロップ1行の最大文字数")
     ap.add_argument("--gpu", action="store_true", help="NVIDIA GPU＋CUDA環境で高速化（未導入なら付けない）")
+    ap.add_argument("--translate", action="store_true", help="英語翻訳字幕(_en.srt)も生成する")
     a = ap.parse_args()
 
     try:
@@ -62,7 +63,21 @@ def main():
             f.write(wrap(seg.text, a.max_chars) + "\n\n")
             print(f"  [{fmt_ts(seg.start)}] {seg.text.strip()}")
     print(f"\n完了: {out}（{n}区間）")
-    print("次: メモ帳等でsrtの誤字を直す → README工程3の焼き込みコマンドへ")
+
+    # --translate: 英語字幕も生成（whisperのtranslateタスク＝ローカル・無料）
+    if a.translate:
+        en = f"{base}_en.srt"
+        print("英語翻訳字幕を生成中（task=translate）...")
+        segs_en, _ = model.transcribe(a.input, task="translate", vad_filter=True)
+        m = 0
+        with open(en, "w", encoding="utf-8") as f:
+            for seg in segs_en:
+                m += 1
+                f.write(f"{m}\n{fmt_ts(seg.start)} --> {fmt_ts(seg.end)}\n")
+                f.write(seg.text.strip() + "\n\n")
+        print(f"完了: {en}（{m}区間）")
+
+    print("次: メモ帳等でsrtの誤字を直す → style_subtitle.pyで抑揚をつける")
 
 if __name__ == "__main__":
     main()
