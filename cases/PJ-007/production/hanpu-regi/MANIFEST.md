@@ -1,8 +1,8 @@
-# MANIFEST — 頒布レジ v1.0
+# MANIFEST — 頒布レジ v1.1
 
 ## 配布パッケージ構成
 
-### 製品版ZIP（hanpu-regi-v1.zip、¥780）
+### 製品版ZIP（hanpu-regi-v1.1.zip、¥780）
 | パッケージ内パス | 内容 |
 |---|---|
 | hanpu-regi.html | 本体（製品版、`const FREE = false`） |

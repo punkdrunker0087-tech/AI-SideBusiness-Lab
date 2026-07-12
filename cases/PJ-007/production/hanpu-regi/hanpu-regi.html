@@ -403,10 +403,15 @@ function exportCSV(){
   const date=db.event.date||today();
   const memo=db.event.name?`頒布レジ: ${db.event.name}`:"頒布レジ";
   const head=["日付","品名","金額","メモ"];
-  const rows=[];
+  /* 品目×日付で集計して1行にする。会計ごとに1行だと「同日・同品・
+     同額の別会計」が完全同一行になり、売上台帳側の重複除外（同じ
+     ファイルの再取り込み防止）が正当な売上を捨ててしまうため */
+  const agg=new Map();
   db.sales.forEach(s=>s.lines.forEach(l=>{
-    rows.push([date, l.name, l.price*l.qty, `${memo}（${l.qty}点）`]);
+    const a=agg.get(l.name)||{amount:0,qty:0};
+    a.amount+=l.price*l.qty; a.qty+=l.qty; agg.set(l.name,a);
   }));
+  const rows=[...agg].map(([name,a])=>[date, name, a.amount, `${memo}（計${a.qty}点）`]);
   if(!rows.length){ alert("まだ会計の記録がありません。"); return; }
   download(`hanpu-${date}.csv`,
     "﻿"+[head,...rows].map(r=>r.map(csvCell).join(",")).join("\n"), "text/csv");
