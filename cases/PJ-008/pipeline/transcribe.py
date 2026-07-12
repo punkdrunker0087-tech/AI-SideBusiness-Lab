@@ -35,6 +35,7 @@ def main():
     ap.add_argument("input")
     ap.add_argument("--model", default="small", help="tiny/small/medium。精度が欲しければmedium")
     ap.add_argument("--max-chars", type=int, default=18, help="テロップ1行の最大文字数")
+    ap.add_argument("--gpu", action="store_true", help="NVIDIA GPU＋CUDA環境で高速化（未導入なら付けない）")
     a = ap.parse_args()
 
     try:
@@ -42,8 +43,13 @@ def main():
     except ImportError:
         print("faster-whisperが未インストールです。実行: pip install faster-whisper"); sys.exit(1)
 
-    print(f"モデル{a.model}を読み込み中（初回はダウンロードあり）...")
-    model = WhisperModel(a.model, device="auto", compute_type="auto")
+    # device="auto"はGPUを誤検出してcuBLAS(cublas64_12.dll)を要求し、
+    # CUDA未導入のPCで落ちる。既定はCPUで確実に動かす（10分程度なら実用範囲）。
+    # NVIDIA GPU＋CUDA環境なら --gpu で高速化できる。
+    dev = "cuda" if a.gpu else "cpu"
+    ct = "float16" if a.gpu else "int8"
+    print(f"モデル{a.model}を{dev}で読み込み中（初回はダウンロードあり）...")
+    model = WhisperModel(a.model, device=dev, compute_type=ct)
     segments, info = model.transcribe(a.input, language="ja", vad_filter=True)
 
     base, _ = os.path.splitext(a.input)

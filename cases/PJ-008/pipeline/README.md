@@ -34,6 +34,8 @@ python silence_cut.py 素材.mp4
 python transcribe.py 素材_cut.mp4 --model small
 ```
 - 出力: `素材_cut.srt`
+- 既定はCPUで動作（GPU用CUDA未導入でも動く）。NVIDIA GPU＋CUDAが
+  あれば `--gpu` を付けると高速化
 - **メモ帳でsrtを開き誤字を修正**（ここが人間の主作業。修正箇所数を数える）
 - 精度不足なら `--model medium`（処理時間は増える）
 
