@@ -100,14 +100,19 @@ Markdownを置くだけ——は、すでに良質な解説が山ほどありま
 ---
 
 私たちはこの会社OSのテンプレート一式を「LIMIT LAB WORKS」として
-公開しています。この記事の設計パターンを、自分の環境ですぐ試せる形に
-まとめたものです。
-<!-- 🟡収益導線（CEO承認要）: 自社商品リンクをここに挿入
-     - AI Company OS Template Kit（OS一式）
-     - Claude Code Prompt Pack（コマンド集）
-     https://limit-lab.booth.pm/ -->
-<!-- 🟡アフィリ（提携があれば・要明示）: 実際に使っているAIツール等。
-     提携していないものは載せない。ステマにしない -->
+公開しています。この記事の設計パターンを自分の環境ですぐ試せる形に
+まとめたもので、本文で触れた各コマンドの実物も含みます。
+
+- **AI Company OS Template Kit** — 会社OS一式（部門定義・パイプライン・
+  意思決定フレーム・8軸評価）
+- **Claude Code Prompt Pack** — 本記事で紹介したコマンド群
+
+→ LIMIT LAB WORKS（BOOTH）: https://limit-lab.booth.pm/
+
+※本記事は自社商品の紹介を含みます。
+<!-- 投稿時メモ: 上は店舗トップURL。特定商品の個別item URLに差し替えて
+     もよい（OS Kit / Prompt Packの正しいitem URLはCEOが確認して挿入）。
+     アフィリンクは提携先が決まり実際に使うもののみ、明示付きで後日追加 -->
 
 ---
 
