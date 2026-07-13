@@ -7,7 +7,7 @@
 
 | # | 公開日 | タイトル/URL | 狙いKW | プラットフォーム | 収益導線 | 30日後インプレ | クリック | 回収（DL/売上/アフィリ） |
 |---|---|---|---|---|---|---|---|---|
-| 001 | 2026-07-13（CEO確認済み・公開済み） | Claude Codeのカスタムコマンドで“AI会社”を作った話（Zenn。URLは次回報告時に追記） | Claude Code カスタムコマンド 活用事例／設計 | Zenn（GitHub連携・自動公開） | 自社OS Kit/Prompt Pack（BOOTHリンク挿入済み）。アフィリは未提携 | - | - | - |
+| 001 | 2026-07-13（CEO確認済み・公開済み） | Claude Codeのカスタムコマンドで“AI会社”を作った話 https://zenn.dev/limit_lab_works/articles/claude-code-company-os | Claude Code カスタムコマンド 活用事例／設計 | Zenn（GitHub連携・自動公開） | 自社OS Kit/Prompt Pack（BOOTHリンク挿入済み）。アフィリは未提携 | - | - | - |
 
 ## アフィリエイト提携の段取り（2026-07-13メモ）
 - CEO確認: 記事の自社商品リンク挿入OK→記事001に反映済み

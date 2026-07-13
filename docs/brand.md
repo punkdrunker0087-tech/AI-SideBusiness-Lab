@@ -11,6 +11,7 @@
 | X（Twitter） | https://x.com/LimitLabJP（ハンドル: @LimitLabJP） |
 | GitHub | LimitLabWorks |
 | note | https://note.com/quirky_clam5265 |
+| Zenn | https://zenn.dev/limit_lab_works（検索資産エンジン用。記事は`limit-lab-articles`リポジトリのGitHub連携で自動公開） |
 
 表記に迷った場合は必ずこの表を参照する。各ドキュメント・販売ページ・
 SNS投稿でブランド名・ハンドルの表記を統一すること。
