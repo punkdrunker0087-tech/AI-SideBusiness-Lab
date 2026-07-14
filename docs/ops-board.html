@@ -1,0 +1,194 @@
+<title>LIMIT LAB WORKS — 作戦盤</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root{
+    --bg:#0c1420; --panel:#141f30; --panel2:#1c2940; --line:#2b3a53;
+    --ink:#e8eef7; --muted:#8fa0b8; --dim:#5f6f89;
+    --accent:#ffd333; --good:#4cd97b; --warn:#ffb454; --crit:#ff6b6b;
+    --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    --jp:"Hiragino Kaku Gothic ProN","Hiragino Sans",Meiryo,system-ui,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    background:
+      radial-gradient(1100px 600px at 78% -8%, #17253a 0%, transparent 60%),
+      var(--bg);
+    color:var(--ink); font-family:var(--jp);
+    -webkit-font-smoothing:antialiased; line-height:1.5;
+    padding:clamp(14px,2.4vw,30px);
+  }
+  .board{max-width:1120px; margin:0 auto; display:grid; gap:14px;}
+
+  /* header */
+  .head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap; border-bottom:1px solid var(--line); padding-bottom:12px}
+  .brand{display:flex; align-items:baseline; gap:12px}
+  .brand b{font-size:clamp(17px,2.2vw,22px); letter-spacing:.02em}
+  .brand .tag{color:var(--accent); font-family:var(--mono); font-size:12px; letter-spacing:.32em; text-transform:uppercase}
+  .meta{font-family:var(--mono); font-size:12.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+  .meta b{color:var(--ink)}
+
+  /* truth strip */
+  .truth{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  .t{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:12px 14px; display:flex; flex-direction:column; gap:3px}
+  .t .k{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+  .t .v{font-size:15px; font-weight:700; display:flex; align-items:center; gap:8px}
+  .dot{width:9px; height:9px; border-radius:50%; flex:none}
+  .dot.g{background:var(--good); box-shadow:0 0 0 3px #4cd97b22}
+  .dot.y{background:var(--accent); box-shadow:0 0 0 3px #ffd33322}
+  .dot.r{background:var(--crit); box-shadow:0 0 0 3px #ff6b6b22}
+  .t small{color:var(--muted); font-weight:400; font-size:12px}
+
+  /* flow */
+  .flowwrap{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px 14px 14px}
+  .caption{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--dim); margin:0 2px 12px}
+  .flow{display:flex; align-items:stretch; gap:0; overflow-x:auto; padding-bottom:4px}
+  .node{flex:1 0 132px; background:var(--panel2); border:1px solid var(--line); border-radius:9px; padding:12px; display:flex; flex-direction:column; gap:6px; min-height:104px}
+  .node .lab{font-size:12.5px; color:var(--muted)}
+  .node .big{font-size:15px; font-weight:700; line-height:1.3}
+  .node .sub{font-family:var(--mono); font-size:11.5px; color:var(--dim); font-variant-numeric:tabular-nums; margin-top:auto}
+  .node.auto{border-color:#33507a}
+  .node.auto .lab{color:#7fb0ef}
+  .node.crit{border-color:var(--crit); background:linear-gradient(180deg,#2a1720,#1c2940)}
+  .node.crit .big{color:#ffb0b0}
+  .node.crit .stripe{position:absolute}
+  .critwrap{position:relative; flex:1 0 150px; display:flex}
+  .critwrap::before{content:"詰まり"; position:absolute; top:-9px; left:12px; z-index:2; background:var(--crit); color:#2a0d0d; font-size:10px; font-weight:800; letter-spacing:.14em; padding:2px 8px; border-radius:99px}
+  .arrow{flex:0 0 30px; display:flex; align-items:center; justify-content:center; color:var(--dim)}
+  .arrow svg{width:26px; height:26px}
+  .arrow.live{color:var(--accent)}
+
+  .causal{margin-top:14px; border-top:1px dashed var(--line); padding-top:12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:13.5px}
+  .causal .lead{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim)}
+  .chip{font-family:var(--mono); font-size:12.5px; padding:3px 9px; border-radius:6px; border:1px solid var(--line); background:#0f1a29; font-variant-numeric:tabular-nums}
+  .chip.on{border-color:var(--accent); color:var(--accent)}
+  .flow-to{color:var(--dim)}
+
+  /* two panels */
+  .cols{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:14px}
+  .card h3{margin:0 0 10px; font-size:12px; letter-spacing:.16em; text-transform:uppercase; color:var(--dim); display:flex; align-items:center; gap:8px}
+  .card h3 .pulse{width:7px;height:7px;border-radius:50%;background:var(--good)}
+  ul.rows{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:9px}
+  ul.rows li{display:flex; align-items:baseline; gap:10px; font-size:13.5px}
+  ul.rows .when{font-family:var(--mono); font-size:12px; color:var(--accent); flex:0 0 62px; font-variant-numeric:tabular-nums; letter-spacing:.02em}
+  ul.rows .what{color:var(--ink)}
+  ul.rows .what small{display:block; color:var(--muted); font-size:11.5px}
+  ul.rows.cal .when{color:var(--warn)}
+
+  /* footer */
+  .foot{display:grid; grid-template-columns:1.1fr 1fr; gap:14px}
+  .doc{background:linear-gradient(180deg,#141f30,#101a2b); border:1px solid var(--line); border-radius:10px; padding:14px}
+  .doc .lead{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--dim); margin-bottom:9px}
+  .doc ol{margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:7px; counter-reset:d}
+  .doc li{position:relative; padding-left:26px; font-size:13.5px; counter-increment:d}
+  .doc li::before{content:counter(d); position:absolute; left:0; top:1px; width:18px; height:18px; border-radius:50%; background:#0f1a29; border:1px solid var(--line); color:var(--accent); font-family:var(--mono); font-size:11px; display:flex; align-items:center; justify-content:center}
+  .doc li b{color:var(--accent)}
+  .here{background:var(--panel); border:1px solid var(--accent); border-radius:10px; padding:14px; display:flex; flex-direction:column; gap:8px}
+  .here .lead{font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--accent)}
+  .here p{margin:0; font-size:13.5px}
+  .here .next{margin-top:auto; font-size:13px; color:var(--muted)}
+  .here .next b{color:var(--ink)}
+
+  @media(max-width:720px){
+    .truth,.cols,.foot{grid-template-columns:1fr}
+  }
+  @media(prefers-reduced-motion:no-preference){
+    .critwrap::before{animation:bl 1.8s ease-in-out infinite}
+    .card h3 .pulse{animation:bl 1.8s ease-in-out infinite}
+    @keyframes bl{50%{opacity:.45}}
+  }
+</style>
+
+<div class="board">
+
+  <div class="head">
+    <div class="brand"><span class="tag">作戦盤</span><b>LIMIT LAB WORKS</b></div>
+    <div class="meta">Phase 2・事業運営 &nbsp;|&nbsp; 現況 <b>2026-07-14</b> &nbsp;|&nbsp; 目標 <b>月5万円</b></div>
+  </div>
+
+  <!-- 一つの真実 -->
+  <div class="truth">
+    <div class="t"><span class="k">作る</span><span class="v"><span class="dot g"></span>できている</span><small>商品9点公開・品質監査7項目クリア</small></div>
+    <div class="t"><span class="k">広める</span><span class="v"><span class="dot y"></span>自動で稼働中</span><small>毎朝コンテンツ生成・SEO/note/X</small></div>
+    <div class="t"><span class="k">届いている</span><span class="v"><span class="dot r"></span>まだゼロ</span><small>売上0・DL0・お気に入り0（本物と確定）</small></div>
+  </div>
+
+  <!-- 機械の流れ -->
+  <div class="flowwrap">
+    <p class="caption">機械の流れ — どこで詰まっているか</p>
+    <div class="flow">
+      <div class="node auto">
+        <span class="lab">① 供給（自動）</span>
+        <span class="big">コンテンツ<br>エンジン</span>
+        <span class="sub">毎朝06:00 自動生成</span>
+      </div>
+      <div class="arrow live" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="critwrap">
+        <div class="node crit">
+          <span class="lab">② リーチ（認知）</span>
+          <span class="big">見られて<br>いない</span>
+          <span class="sub">フォロワー78・横ばい6日</span>
+        </div>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="node">
+        <span class="lab">③ 商品</span>
+        <span class="big">9点 公開済</span>
+        <span class="sub">有料6＋無料3 / 卒業6-of-10</span>
+      </div>
+      <div class="arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h14M13 6l6 6-6 6"/></svg></div>
+      <div class="node">
+        <span class="lab">④ 売上</span>
+        <span class="big">0円</span>
+        <span class="sub">6日連続・初回販売待ち</span>
+      </div>
+    </div>
+
+    <div class="causal">
+      <span class="lead">因果</span>
+      <span class="chip on">リーチ↑</span><span class="flow-to">⟶</span>
+      <span class="chip">DL↑</span><span class="flow-to">⟶</span>
+      <span class="chip">売上↑</span>
+      <span style="color:var(--muted);font-size:12.5px">— 商品も価格もページ品質も揃った。動かす一点は<b style="color:var(--accent)">②リーチ</b>だけ。</span>
+    </div>
+  </div>
+
+  <!-- 自動化 & 判定 -->
+  <div class="cols">
+    <div class="card">
+      <h3><span class="pulse"></span>稼働中の機械（気づき続ける）</h3>
+      <ul class="rows">
+        <li><span class="when">06:00</span><span class="what">コンテンツ下書き自動生成<small>X毎日・SEO月木・市場スキャン日曜</small></span></li>
+        <li><span class="when">21:00</span><span class="what">日次リマインド＋週次レビュー自動生成<small>失念を仕組みで防ぐ</small></span></li>
+        <li><span class="when">push</span><span class="what">Zenn記事の自動公開<small>フラグ変更＝人間の承認ゲート</small></span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>判定カレンダー（自動発火）</h3>
+      <ul class="rows cal">
+        <li><span class="when">7/25</span><span class="what">チャネル転換の判定<small>DL5件未満なら「量」仮説を棄却</small></span></li>
+        <li><span class="when">8/08</span><span class="what">PJ-006 30日判定<small>スコア予測精度の初実測</small></span></li>
+        <li><span class="when">8/09</span><span class="what">PJ-007 30日判定<small>イベント季節性の分岐あり</small></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ドクトリン & 現在地 -->
+  <div class="foot">
+    <div class="doc">
+      <div class="lead">運営ドクトリン — AI会社の型</div>
+      <ol>
+        <li><b>自動通知</b>で失念を防ぐ</li>
+        <li><b>最終承認は人間</b>（不変）— Go/No-Go・撤退・価格・公開・金銭</li>
+        <li><b>その他はすべて自動化</b> — 生成・記録・分析・下書き・判定計算</li>
+      </ol>
+    </div>
+    <div class="here">
+      <div class="lead">▸ 現在地・次に見る一点</div>
+      <p>「作る・広める」体制は完成。詰まりは<b style="color:#ffb0b0">②リーチ</b>だけ。いま増産は逃避——発見が動くまで在庫は増やさない。</p>
+      <p class="next">次に戻る一点 → <b>7/25 チャネル転換判定</b>（買い手向け施策が数字を動かすか）</p>
+    </div>
+  </div>
+
+</div>
