@@ -24,7 +24,7 @@ var params := {
 	"strength": 60.0,  # 磁力の強さ
 	"exponent": 2.0,   # 距離減衰の指数（現実の磁石は2〜4。小さいほど遠くまで効く）
 	"max_force": 45.0, # 力の上限（近距離での吹っ飛びすぎ防止）
-	"range": 8.0,      # 有効距離（これより遠いと磁力ゼロ）
+	"range": 5.0,      # 有効距離（これより遠いと磁力ゼロ）。実験ログ#1: 5前後が「いきなり反発、くっつく」で良い
 }
 var debug_polarity_visible := false
 var camera: Camera3D
