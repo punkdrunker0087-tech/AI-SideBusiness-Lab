@@ -28,6 +28,7 @@ var params := {
 }
 var debug_polarity_visible := false
 var camera: Camera3D
+var objective_label: Label  # Toy 0.5: 軽い目的の表示（Gキー、開発者用）
 
 
 func _ready() -> void:
@@ -56,6 +57,10 @@ func _unhandled_key_input(event: InputEvent) -> void:
 				debug_polarity_visible = not debug_polarity_visible
 				for p in players:
 					p.get_node("PolarityDebug").visible = debug_polarity_visible
+			KEY_G:
+				# Toy 0.5（仮説H6）: ルールなし・判定なし・報酬なしの「軽い目的」。
+				# 初見テストでは自由遊びの失速を確認してから点灯する
+				objective_label.visible = not objective_label.visible
 
 
 # --- 磁力 -------------------------------------------------------------------
@@ -233,8 +238,19 @@ func _build_ui() -> void:
 	_add_slider(vbox, "range", "有効距離", 2.0, 20.0, 0.5)
 
 	var help := Label.new()
-	help.text = "\n1P: WASD+Space / 2P: 矢印+Enter\nゲームパッド: 左スティック+Aボタン\nR: 極性シャッフル\n（Pは開発者専用: 極性デバッグ表示）"
+	help.text = "\n1P: WASD+Space / 2P: 矢印+Enter\nゲームパッド: 左スティック+Aボタン\nR: 極性シャッフル\n（Pは開発者専用: 極性デバッグ表示）\n（Gは開発者専用: 目的表示 Toy 0.5）"
 	vbox.add_child(help)
+
+	objective_label = Label.new()
+	objective_label.text = "橋を全員で渡ってみて"
+	objective_label.visible = false
+	objective_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	objective_label.add_theme_font_size_override("font_size", 36)
+	objective_label.anchor_left = 0.0
+	objective_label.anchor_right = 1.0
+	objective_label.offset_top = 32
+	objective_label.offset_bottom = 88
+	layer.add_child(objective_label)
 
 
 func _add_slider(parent: VBoxContainer, key: String, label_text: String, min_v: float, max_v: float, step: float) -> void:
