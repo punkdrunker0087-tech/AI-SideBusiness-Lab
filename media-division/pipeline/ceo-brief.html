@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0b0e14; }
+  body { font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif; color: #f2f4f8; position: relative; }
+  .bg {
+    position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 900px 700px at 20% 12%, rgba(88,101,242,.22), transparent 60%),
+      radial-gradient(ellipse 800px 900px at 85% 88%, rgba(0,194,168,.16), transparent 60%),
+      #0b0e14;
+  }
+  .grain { position: absolute; inset: 0; opacity: .5;
+    background-image: radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px); background-size: 22px 22px; }
+  .scene { position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; padding: 0 90px; text-align: center; opacity: 0; }
+  .label { font-size: 34px; letter-spacing: .35em; color: #8b93a7; margin-bottom: 60px; }
+  .sub { font-size: 74px; font-weight: 900; line-height: 1.45; }
+  .sub .accent { color: #4cc9b0; }
+  .sub .warn { color: #ffd166; }
+
+  .orb { width: 340px; height: 340px; border-radius: 50%; margin-bottom: 90px; position: relative;
+    background: radial-gradient(circle at 35% 30%, #6f7cf7, #2a3led 45%, #14192a 90%);
+    background: radial-gradient(circle at 35% 30%, #6f7cf7, #2a34a8 45%, #14192a 90%);
+    box-shadow: 0 0 120px rgba(88,101,242,.55), inset 0 0 80px rgba(76,201,176,.35);
+    animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+
+  .card { background: rgba(255,255,255,.05); border: 2px solid #262c3a; border-radius: 32px;
+    padding: 70px 60px; width: 100%; }
+  .card .big { font-size: 120px; font-weight: 900; color: #4cc9b0; line-height: 1.2; }
+  .card .cap { font-size: 46px; color: #8b93a7; margin-top: 18px; }
+
+  .rows { display: flex; flex-direction: column; gap: 40px; width: 100%; margin-top: 80px; }
+  .row { display: flex; align-items: center; gap: 34px; text-align: left;
+    background: rgba(255,255,255,.05); border: 2px solid #262c3a; border-radius: 26px; padding: 40px 46px; }
+  .row .ic { flex: none; width: 90px; height: 90px; border-radius: 24px; background: #1b2130;
+    display: flex; align-items: center; justify-content: center; font-size: 44px; }
+  .row .t { font-size: 50px; font-weight: 700; }
+  .row .t small { display: block; font-size: 34px; font-weight: 400; color: #8b93a7; margin-top: 6px; }
+
+  .btn { margin-top: 90px; background: #e5484d; border-radius: 999px; padding: 46px 110px;
+    font-size: 62px; font-weight: 900; box-shadow: 0 0 90px rgba(229,72,77,.4); }
+  .brand { margin-top: 110px; font-size: 42px; letter-spacing: .3em; color: #8b93a7; }
+
+  /* timeline: 21s */
+  #s1 { animation: s1 21s linear forwards; }
+  @keyframes s1 { 0%{opacity:0;transform:scale(.97);} 2.4%{opacity:1;transform:scale(1);} 11%{opacity:1;} 13%{opacity:0;transform:translateY(-50px);} 100%{opacity:0;} }
+  #s2 { animation: s2 21s linear forwards; }
+  @keyframes s2 { 13%{opacity:0;} 15%{opacity:1;} 30%{opacity:1;} 32.5%{opacity:0;transform:translateY(-50px);} 100%{opacity:0;} }
+  #s3 { animation: s3 21s linear forwards; }
+  @keyframes s3 { 32.5%{opacity:0;} 35%{opacity:1;} 56%{opacity:1;} 58.5%{opacity:0;transform:translateY(-50px);} 100%{opacity:0;} }
+  #s4 { animation: s4 21s linear forwards; }
+  @keyframes s4 { 58.5%{opacity:0;} 61%{opacity:1;} 80%{opacity:1;} 82.5%{opacity:0;transform:translateY(-50px);} 100%{opacity:0;} }
+  #s5 { animation: s5 21s linear forwards; }
+  @keyframes s5 { 82.5%{opacity:0;transform:scale(.97);} 85.5%{opacity:1;transform:scale(1);} 100%{opacity:1;} }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grain"></div>
+
+  <section class="scene" id="s1">
+    <div class="orb"></div>
+    <div class="label">AI CEO MORNING BRIEF</div>
+    <div class="sub">おはようございます。<br><span class="accent">AI社長</span>です。</div>
+  </section>
+
+  <section class="scene" id="s2">
+    <div class="label">本日のミッション</div>
+    <div class="card">
+      <div class="big">ショート動画<br>×3本</div>
+      <div class="cap">テーマ: AIが会社を経営したら</div>
+    </div>
+  </section>
+
+  <section class="scene" id="s3">
+    <div class="sub">台本と編集は<br><span class="accent">AI社員</span>が担当。</div>
+    <div class="rows">
+      <div class="row"><div class="ic">📝</div><div class="t">AI脚本部<small>30秒台本を量産</small></div></div>
+      <div class="row"><div class="ic">🎬</div><div class="t">AI編集部<small>字幕・構成・書き出し</small></div></div>
+      <div class="row"><div class="ic">📊</div><div class="t">AI分析部<small>数字を見て翌日改善</small></div></div>
+    </div>
+  </section>
+
+  <section class="scene" id="s4">
+    <div class="sub">ただし——<br>公開ボタンは<br><span class="warn">人間だけ</span>が押せる。</div>
+    <div class="btn">▶ 公開する（人間専用）</div>
+  </section>
+
+  <section class="scene" id="s5">
+    <div class="sub">AIが会社を経営したら、<br>何が起きるのか。</div>
+    <div class="brand">LIMIT CONTENT</div>
+  </section>
+</body>
+</html>

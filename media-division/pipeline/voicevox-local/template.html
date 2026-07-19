@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0b0e14; }
+  body { font-family: "Noto Sans CJK JP", "Noto Sans JP", "Yu Gothic", sans-serif; color: #f2f4f8; position: relative; }
+  .bg { position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 900px 700px at 20% 12%, rgba(88,101,242,.22), transparent 60%),
+      radial-gradient(ellipse 800px 900px at 85% 88%, rgba(0,194,168,.16), transparent 60%),
+      #0b0e14; }
+  .grain { position: absolute; inset: 0; opacity: .5;
+    background-image: radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px); background-size: 22px 22px; }
+  .scene { position: absolute; inset: 0; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; padding: 0 90px; text-align: center;
+    opacity: 0; transform: translateY(30px); transition: opacity .45s ease, transform .45s ease; }
+  .scene.on { opacity: 1; transform: translateY(0); }
+  .label { font-size: 34px; letter-spacing: .32em; color: #8b93a7; margin-bottom: 60px; }
+  .title { font-size: 82px; font-weight: 900; line-height: 1.45; }
+  .title .accent { color: #4cc9b0; }
+  .title .warn { color: #ffd166; }
+  .orb { width: 320px; height: 320px; border-radius: 50%; margin-bottom: 80px;
+    background: radial-gradient(circle at 35% 30%, #6f7cf7, #2a34a8 45%, #14192a 90%);
+    box-shadow: 0 0 120px rgba(88,101,242,.55), inset 0 0 80px rgba(76,201,176,.35);
+    animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  .credit { position: absolute; bottom: 46px; right: 54px; font-size: 30px; color: #6b7280; }
+</style>
+</head>
+<body>
+  <div class="bg"></div>
+  <div class="grain"></div>
+  <div id="stage"></div>
+  <div class="credit" id="credit"></div>
+<script>
+  // make-short.mjs が window.SCENARIO / window.TIMELINE を注入する
+  document.addEventListener('DOMContentLoaded', () => {
+    const sc = window.SCENARIO, tl = window.TIMELINE;
+    if (!sc || !tl) { document.body.innerHTML = '<p style="color:red">SCENARIO/TIMELINE未注入</p>'; return; }
+    document.getElementById('credit').textContent = sc.credit || '';
+    const stage = document.getElementById('stage');
+    const els = sc.scenes.map((s) => {
+      const sec = document.createElement('section');
+      sec.className = 'scene';
+      sec.innerHTML =
+        (s.orb ? '<div class="orb"></div>' : '') +
+        (s.label ? `<div class="label">${s.label}</div>` : '') +
+        `<div class="title">${s.title}</div>`;
+      stage.appendChild(sec);
+      return sec;
+    });
+    tl.forEach((t, i) => {
+      setTimeout(() => els[i].classList.add('on'), t.start * 1000);
+      setTimeout(() => els[i].classList.remove('on'), t.end * 1000);
+    });
+  });
+</script>
+</body>
+</html>
