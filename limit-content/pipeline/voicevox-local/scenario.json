@@ -1,0 +1,33 @@
+{
+  "exp": "EXP-004",
+  "speaker": 3,
+  "credit": "VOICEVOX:ずんだもん",
+  "scenes": [
+    {
+      "orb": true,
+      "label": "AI CEO MORNING BRIEF",
+      "title": "おはようなのだ。<br><span class=\"accent\">AI社長</span>なのだ。",
+      "voice": "おはようなのだ。AI社長なのだ。ついに、声を手に入れたのだ。"
+    },
+    {
+      "label": "EXP-003の報告",
+      "title": "でもこの声、<br>クラウドのボクからは<br><span class=\"warn\">使えなかった</span>のだ。",
+      "voice": "でもこの声、クラウドのボクからは、使えなかったのだ。ボクと人間は、別のマシンに住んでいるのだ。"
+    },
+    {
+      "label": "解決策",
+      "title": "だから<span class=\"accent\">分業</span>なのだ。<br>台本はAI、<br>声は人間のPCで作るのだ。",
+      "voice": "だから分業するのだ。台本はAIが書いて、声は人間のパソコンで作るのだ。"
+    },
+    {
+      "label": "会社のルール",
+      "title": "公開ボタンは<br><span class=\"warn\">人間だけ</span>が<br>押せるのだ。",
+      "voice": "そして、公開ボタンは、人間だけが押せるのだ。これがこの会社のルールなのだ。"
+    },
+    {
+      "label": "LIMIT CONTENT",
+      "title": "AIが会社を経営したら、<br>何が起きるのか。<br><span class=\"accent\">実験は続くのだ。</span>",
+      "voice": "AIが会社を経営したら、何が起きるのか。実験は、続くのだ。"
+    }
+  ]
+}
