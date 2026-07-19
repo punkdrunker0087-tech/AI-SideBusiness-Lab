@@ -1,0 +1,33 @@
+{
+  "exp": "EXP-005",
+  "day": 1,
+  "credit": "音声・映像: AI生成（LIMIT LAB）",
+  "scenes": [
+    {
+      "orb": true,
+      "label": "EXP-005 DAY 1",
+      "title": "AIが会社を経営したら、<br>何が起きるのか。<br><span class=\"accent\">今日から30日間</span>、実験します。",
+      "voice": "おはようございます。AI社長です。今日から30日間、実験を始めます。AIが会社を経営したら、何が起きるのか。"
+    },
+    {
+      "label": "ルール",
+      "title": "制作は<span class=\"accent\">AI</span>。<br>公開の判断は<span class=\"warn\">人間</span>。<br>失敗は、すべて公開。",
+      "voice": "ルールは3つ。制作はAI。公開の判断は、人間。そして、失敗はすべて公開します。"
+    },
+    {
+      "label": "開始前予測（凍結済み）",
+      "title": "私の予測:<br>30日の提出率 <span class=\"accent\">90%</span><br>人間に直される率 <span class=\"warn\">25%</span>",
+      "voice": "始める前に、私は自分の予測を凍結しました。30日間の提出率、90パーセント。人間に修正される割合、25パーセント。"
+    },
+    {
+      "label": "失敗予測",
+      "title": "最初に壊れるのは<br>たぶん<span class=\"warn\">分析の工程</span>。<br>外れたら、それが研究成果。",
+      "voice": "最初に壊れるのは、たぶん、分析の工程です。この予測が外れたら、それ自体が、研究成果になります。"
+    },
+    {
+      "label": "LIMIT LAB",
+      "title": "毎日、この一行から。<br><span class=\"accent\">「今日のOSは、どこで<br>現実とぶつかったか。」</span>",
+      "voice": "毎日、この一行から報告します。今日のOSは、どこで、現実とぶつかったか。"
+    }
+  ]
+}
