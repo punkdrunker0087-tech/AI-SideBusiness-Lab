@@ -1,4 +1,4 @@
-# LIMIT CONTENT 仮想定款（CHARTER）
+# LIMIT LAB Media Division 仮想定款（CHARTER）
 
 実在の法人ではないが、実法人の定款に相当する「会社の根本規則」をここに定める。
 実法人化する際は、本CHARTERをそのまま実定款のドラフト原案として転用する。
@@ -9,7 +9,7 @@
 
 ## 第1条（商号）
 
-当会社は LIMIT CONTENT（仮称）と称する。正式商号はCEOが別途決定する。
+当部門は LIMIT LAB Media Division と称する（2026-07-19 CEO決定: ブランドはLIMIT LABに統一し、別会社名を立てない）。
 
 ## 第2条（目的）
 
