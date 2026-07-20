@@ -19,6 +19,10 @@ AIエージェントはX・BOOTH・GitHubの実数値を自動取得できない
 - Xフォロワー数
 
 **週次のみ（CEO定例レビューの回にまとめて）**:
+- **BOOTHアクセス数（各商品ページの流入実数）** ← 2026-07-20追加。
+  戦略判断の前提条件（`knowledge/Decision Log/2026-07-20-access-
+  measurement-precondition.md`）。views≈0=reach問題／views>0＆DL=0=
+  offer問題で打ち手が正反対。大きな判断の前は週次を待たず随時取得する
 - note/Zennの記事別ビュー・スキ・コメント
 - X投稿の週間本数
 - BOOTHお気に入り・GitHubスター（変化があれば随時でも可）
