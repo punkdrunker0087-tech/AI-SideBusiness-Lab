@@ -23,6 +23,11 @@ AIエージェントはX・BOOTH・GitHubの実数値を自動取得できない
   戦略判断の前提条件（`knowledge/Decision Log/2026-07-20-access-
   measurement-precondition.md`）。views≈0=reach問題／views>0＆DL=0=
   offer問題で打ち手が正反対。大きな判断の前は週次を待たず随時取得する
+- **Xインプレッション数・リンククリック数** ← 2026-07-20追加
+  （届け方=reachの分析用。`knowledge/Decision Log/2026-07-20-bridge-
+  test-design.md`）。週合計と、一番伸びた投稿の内訳（Xアナリティクスの
+  画面で見える。特にリンククリックは「コンテンツ→BOOTH」の橋の太さを
+  示す唯一の実測値）
 - note/Zennの記事別ビュー・スキ・コメント
 - X投稿の週間本数
 - BOOTHお気に入り・GitHubスター（変化があれば随時でも可）
