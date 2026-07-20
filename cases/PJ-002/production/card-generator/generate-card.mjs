@@ -22,7 +22,7 @@ const html = `<!doctype html><html><head><meta charset="utf-8"><style>
   body {
     width:1200px; height:675px; background:${bg};
     display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-family:"Hiragino Sans","Noto Sans JP",sans-serif; text-align:center; padding:80px;
+    font-family:"IPAGothic","Hiragino Sans","Noto Sans JP",sans-serif; text-align:center; padding:80px;
   }
   .title { color:${accent}; font-size:56px; font-weight:700; line-height:1.4; max-width:960px; }
   .subtitle { color:#e8ecf2; font-size:28px; margin-top:32px; opacity:0.85; }
