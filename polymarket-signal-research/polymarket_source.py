@@ -67,6 +67,42 @@ def search_markets(keyword: str = "", limit: int = 200) -> list:
     return markets
 
 
+def search_events(query: str, limit: int = 10) -> list:
+    """gammaの全文検索。価格連動市場(例: 'Bitcoin above')の発掘に使う。
+
+    戻り値: Market のリスト(イベント内の各ストライクを1市場として展開)。
+    """
+    resp = requests.get(
+        f"{GAMMA}/public-search",
+        params={"q": query, "limit_per_type": limit},
+        timeout=25,
+    )
+    resp.raise_for_status()
+    events = resp.json().get("events", [])
+    markets = []
+    for e in events:
+        for m in e.get("markets", []):
+            token_ids = m.get("clobTokenIds")
+            if isinstance(token_ids, str):
+                try:
+                    token_ids = json.loads(token_ids)
+                except json.JSONDecodeError:
+                    continue
+            if not token_ids or len(token_ids) < 2:
+                continue
+            markets.append(
+                Market(
+                    question=m.get("question") or e.get("title", ""),
+                    condition_id=m.get("conditionId", ""),
+                    yes_token_id=str(token_ids[0]),
+                    no_token_id=str(token_ids[1]),
+                    volume_usd=float(m.get("volumeNum") or 0.0),
+                    end_date=m.get("endDate", ""),
+                )
+            )
+    return markets
+
+
 def price_history(token_id: str, interval: str = "1m", fidelity: int = 60) -> list:
     """指定トークン(YES/NO)の価格(=確率)時系列を取得する。
 

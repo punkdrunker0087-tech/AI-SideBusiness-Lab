@@ -89,6 +89,68 @@ def lead_lag(df: pd.DataFrame, max_lag: int = 12) -> LeadLagResult:
     )
 
 
+def _corr_at_lag(a: np.ndarray, b: np.ndarray, k: int) -> float:
+    """a[t] と b[t+k] のPearson相関。numpy実装(並べ替え検定の高速化用)。"""
+    if k > 0:
+        x, y = a[: len(a) - k], b[k:]
+    elif k < 0:
+        x, y = a[-k:], b[: len(b) + k]
+    else:
+        x, y = a, b
+    mask = ~(np.isnan(x) | np.isnan(y))
+    if mask.sum() < 3:
+        return np.nan
+    x, y = x[mask], y[mask]
+    if x.std() == 0 or y.std() == 0:
+        return np.nan
+    return float(np.corrcoef(x, y)[0, 1])
+
+
+def _best_lag_corr(a: np.ndarray, b: np.ndarray, max_lag: int):
+    """全ラグの中で|相関|が最大のもの(lag, corr)を返す。"""
+    best_k, best_c = 0, 0.0
+    for k in range(-max_lag, max_lag + 1):
+        c = _corr_at_lag(a, b, k)
+        if not np.isnan(c) and abs(c) > abs(best_c):
+            best_k, best_c = k, c
+    return best_k, best_c
+
+
+def permutation_pvalue(
+    df: pd.DataFrame, max_lag: int = 12, n_perm: int = 300, seed: int = 0
+):
+    """並べ替え検定でp値を求める。
+
+    「Polymarketの確率変化と金融商品リターンに *本当は何の関係もない* 場合、
+    今回観測した『全ラグ中の最大相関』がどれくらいの頻度で偶然出るか」を測る。
+
+    Polymarketの確率変化(Δprob)をランダムに並べ替えて関係を壊し、同じ
+    「最大相関」統計量を計算し直す。これをn_perm回繰り返し、観測値以上の
+    強さが偶然出た割合をp値とする。
+
+    - 全ラグの中の最大を統計量にしているため、複数ラグを試すことによる
+      「偽陽性の底上げ」も検定に織り込まれている。
+    - 戻り値: (観測された最大相関, p値)
+    """
+    d_prob = df["prob"].diff().to_numpy()
+    ret = np.log(df["price"]).diff().to_numpy()
+    _, obs = _best_lag_corr(d_prob, ret, max_lag)
+    obs_abs = abs(obs)
+
+    finite_idx = np.where(~np.isnan(d_prob))[0]
+    vals = d_prob[finite_idx].copy()
+    rng = np.random.default_rng(seed)
+    hits = 0
+    for _ in range(n_perm):
+        perm = d_prob.copy()
+        perm[finite_idx] = rng.permutation(vals)
+        _, c = _best_lag_corr(perm, ret, max_lag)
+        if abs(c) >= obs_abs:
+            hits += 1
+    pval = (hits + 1) / (n_perm + 1)  # +1補正(観測値自身を含める)
+    return obs, pval
+
+
 def interpret(result: LeadLagResult, unit_hours: int = 1) -> str:
     """結果を人間向けの短い解釈文にする(断定はしない)。"""
     lag_h = result.best_lag * unit_hours
