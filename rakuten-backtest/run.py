@@ -84,7 +84,7 @@ def main():
     p.add_argument("--symbol", default="1321.T", help="Yahooシンボル(例: 1321.T)")
     p.add_argument("--strategy", default="sma_crossover", help="戦略名 or 'all'")
     p.add_argument("--range", default="2y", help="取得期間(2y/5y/max)")
-    p.add_argument("--cost-bps", type=float, default=5.0, help="片道取引コスト(bps)")
+    p.add_argument("--cost-bps", type=float, default=15.0, help="片道取引コスト(bps)")
     p.add_argument("--split", type=float, default=0.6, help="train比率(残りをtest)")
     # 戦略パラメータ
     p.add_argument("--fast", type=int, default=None)

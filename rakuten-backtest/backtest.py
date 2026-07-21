@@ -21,7 +21,7 @@ class Result:
     n_trades: int
 
 
-def run(df: pd.DataFrame, positions: pd.Series, cost_bps: float = 5.0) -> Result:
+def run(df: pd.DataFrame, positions: pd.Series, cost_bps: float = 15.0) -> Result:
     """OHLCV とポジションからバックテストを実行する。
 
     cost_bps: 片道の取引コスト（bps）。往復ではなく、ポジション変化量に対して課金。
