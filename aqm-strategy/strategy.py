@@ -86,9 +86,11 @@ def backtest(
     ret = close.pct_change()
     vol = factors.volatility(close)
 
-    # リバランス日（月末など。指数内に存在する営業日へスナップ）
-    rebal_days = close.resample(rebalance).last().index
-    rebal_days = [d for d in rebal_days if d in close.index]
+    # リバランス日（実際の各期間最終取引日）。
+    # 暦日ラベル(例:1/31)で `in close.index` 判定すると、それが土日祝の月は
+    # 黙ってスキップされる（週次だと全滅しうる）ため、日付自体をresampleして
+    # 実際の取引日を取得する。
+    rebal_days = pd.Series(close.index, index=close.index).resample(rebalance).last().dropna().tolist()
 
     # リバランス日だけ配分ベクトルを入れ、他はNaN → ffillで前回配分を維持
     weights = pd.DataFrame(np.nan, index=close.index, columns=close.columns)
