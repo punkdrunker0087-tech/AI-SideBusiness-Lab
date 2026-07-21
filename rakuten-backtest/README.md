@@ -74,17 +74,46 @@ python run.py --symbol 1321.T --strategy momentum --lookback 60 --cost-bps 10
 ## 楽天証券RSSへの橋渡し（実行フェーズ）
 
 このバックテストで**アウトオブサンプルでも安定してB&Hを上回る戦略**が
-見つかった場合に限り、実行を検討する。実行はあなたのWindows PC上で行う:
+見つかった場合に限り、実行を検討する。実行はあなたのWindows PC上で行う。
+
+### アーキテクチャ（重要）
+
+マーケットスピードII RSSは **Excelアドイン** であり、純粋なPython/REST APIでは
+ない。したがってPythonから使う場合も**Excelを挟む**。2026年時点の主流は
+「**RSS + Excel + Python（xlwings）**」構成:
+
+```
+Python（売買判定ロジック = strategies.py を流用）
+  │  xlwings（Python↔Excelブリッジ）
+  ▼
+Excel（RSSアドイン。=RssMarket 等でセルに株価、発注関数で注文）
+  │  DDE通信
+  ▼
+楽天証券サーバー
+```
+
+Pythonが「頭脳」、Excel(RSS)が「証券会社への通信口」という分担。
+**このツールの `strategies.py` はPythonなので、VBAに書き直さず
+そのままxlwings経由の実行に流用できる**（バックテストと実行でロジックを共有）。
+
+### 手順
 
 1. 楽天証券でマーケットスピードIIをインストールし、RSS利用を申請
    （総合口座があれば無料。要「確認書兼同意書」への同意）
-2. Excelで、RSS関数 `=RssMarket(...)` 等でリアルタイム株価を取得
-3. `strategies.py` と同じロジックをExcel VBA（またはPython+xlwings）で再現し、
-   シグナルが出たら `=RssOrder(...)` 相当で発注
-4. **最初は必ず少額・低頻度で。** バックテストの成績は将来を保証しない
+2. `pip install xlwings` し、ExcelにRSSアドインを有効化
+3. Excelブックに `=RssMarket(...)` 等でリアルタイム株価を展開
+4. Pythonで `strategies.py` のシグナルを計算し、xlwingsでExcelの発注セル
+   （`=RssOrder(...)` 相当）に書き込んで発注
+5. **最初は必ず少額・低頻度で。** バックテストの成績は将来を保証しない
 
-> 注意: RSSはWindows専用・Office 2013/2016/2019対応（365非対応）。
-> 詳細は `../docs/articles/` および楽天証券公式のRSS仕様を参照。
+### 制約・注意
+
+- **Windows専用・Excel必須**（Office 2013/2016/2019対応、365は非対応）。
+  Pythonを使ってもこの前提は変わらない（RSSがExcelアドインのため）
+- xlwings経由のExcel操作は長時間稼働でメモリリークが起きうる → 定期再起動を推奨
+- DDE/RSS経由のデータ取得には数百ミリ秒〜数秒の遅延がある → 高頻度戦略には不向き。
+  日足・スイング系の戦略と相性が良い
+- 詳細は下記の実装例や楽天証券公式のRSS仕様を参照
 
 ## 限界・注意（必ず読む）
 
