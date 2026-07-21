@@ -1,0 +1,5 @@
+.env
+price_history.json
+daily_pnl.json
+__pycache__/
+*.pyc
