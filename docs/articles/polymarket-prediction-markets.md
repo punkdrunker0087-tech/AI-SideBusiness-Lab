@@ -28,7 +28,129 @@
 いずれの立場にとっても、Polymarketは現実世界の不確実性に関わるための
 透明な手段を提供する。
 
+## 何ができるのか
+
+Polygonネットワーク上でUSDCを使って賭けをするだけでなく、ユーザーは多様な
+市場を探索できる。例えば「年末までにビットコインは10万ドルに達するか？」
+「2025年に米国は景気後退に陥るか？」といった市場が並び、これらはUMAのような
+オラクルからの検証可能な結果に基づいて解決される。
+
+開発者やデータ愛好家にとっては、Polymarket APIを通じたプログラムによる
+アクセスがさらなる価値を持つ。このAPIを使うと、ライブ市場データの取得・
+取引量の追跡・確率の分析ができ、カスタムダッシュボードからアルゴリズム
+取引戦略まで幅広い用途に応用できる。
+
+## Polymarketとは何か、そして2025年にそれが重要な理由
+
+Polymarketはイベント契約のための分散型取引所として機能し、シェアは
+0.01ドルから1.00ドルの間で取引され、市場が示唆する結果の確率を表す。
+例えば0.75ドルの「はい」のシェアは、そのイベントが発生する確率が75%で
+あることを示す。このメカニズムは、多様な意見を動的な予測に集約し、
+2024年の選挙予測に見られたように、従来の世論調査を上回ることがある。
+
+2025年には、スポーツ・気候イベント・文化的な節目への拡大により、
+Polymarketの対象範囲は広がると見られる。トレーダーは正しい賭けから
+利益を得る一方、非トレーダーは価格変動からセンチメントを読み取る。
+プラットフォームの非管理型（non-custodial）な性質は、ユーザーが資金の
+管理を維持できることを保証し、中央集権型のリスクに満ちた空間で信頼を
+育む。開発者にとって、Polymarket APIはこれを受動的な観察から能動的な
+統合へと高め、トレンドの可視化や裁定取引の機会の検知といったアプリの
+構築を可能にする。
+
+## Polymarket APIへのアクセス方法
+
+1. polymarket.comでアカウントを作成し、ウォレット接続（例: Polygon上の
+   MetaMask）を介してUSDCで資金を供給する
+2. ログイン後「Cash」に移動し、3点メニューから「Export Private Key」を
+   選択して秘密鍵をエクスポートする
+3. アドレスとナンスを含むGETリクエストを`{clob-endpoint}/auth/derive-api-key`
+   に送信すると、APIキー・シークレット・パスフレーズが返される
+4. これらの認証情報を使って、リアルタイムデータ用のWebSocket接続や
+   履歴クエリ用のRESTコールを認証する
+
+PythonとJavaScriptのSDKが公式ドキュメントで提供されているほか、
+Axios/RequestsのようなライブラリでのHTTPリクエストからも開始できる。
+レート制限は無料ティアで通常1分あたり100リクエスト程度。主なエンドポイント
+は`/markets`（一覧）・`/orders`（取引）・`/prices`（スナップショット）で、
+すべてHMAC署名により保護される。
+
+## Polymarket APIの使用方法：データの分析と予測
+
+`requests`や`pandas`を使い、市場データの取得・取引量の処理・洞察の導出を
+行う例。
+
+```python
+import requests
+
+def get_markets(api_key, secret, passphrase):
+    url = "https://clob.polymarket.com/markets"
+    headers = {
+        'Authorization': f'Bearer {api_key}',
+        # ここにHMAC署名ロジックを追加
+    }
+    response = requests.get(url, headers=headers)
+    return response.json()
+```
+
+暗示確率は `prob_yes = yes_price * 100` で算出し、`pandas`のDataFrameで
+取引量の推移を集計・分析する。
+
+```python
+import pandas as pd
+
+markets = get_markets(api_key, secret, passphrase)
+df = pd.DataFrame(markets)
+df['implied_prob'] = df['yes_price'] * 100
+df.to_csv('market_analysis.csv')
+```
+
+Matplotlibで確率変化と取引量をプロットし勢いを特定したり、移動平均のような
+基本モデルで予測を行う。ライブ更新にはWebSocketを購読する。
+
+```python
+from websocket import create_connection
+import json
+
+ws = create_connection("wss://ws.polymarket.com")
+ws.send(json.dumps({"action": "subscribe", "channel": "markets", "keys": [api_key]}))
+```
+
+履歴エンドポイント（例: `/historical/prices?token=abc`）をイベントと
+相関させることで、バックテストやモデルの改良にも使える。
+
+## Polymarket APIの価格設定
+
+- **無料ティア**: 市場・価格のコアエンドポイントを含む基本アクセス
+  （非取引クエリで1時間あたり最大1,000コール程度）
+- **プレミアムティア**: 月額99ドル〜。WebSocketフィード、30日を超える
+  履歴深度、優先サポートが利用可能
+- **エンタープライズプラン**: 月額500ドル以上。専用ノードを含む機関向け
+  カスタムプラン
+- APIキー自体の前払い費用は不要。取引手数料（1取引あたり0.5〜1%）が
+  API経由の注文にも適用される
+
+## Apidogを使ったPolymarket APIのテスト
+
+1. 新しいプロジェクトを作成し、主要エンドポイント（例: `GET /markets`）を
+   手動追加するか、OpenAPI仕様をインポートする
+2. ベースURLを`https://clob.polymarket.com`に設定し、APIキーの
+   Authorizationヘッダーを追加。シークレットは環境変数で管理する
+3. パラメータ（例: `?category=politics`）を指定してリクエストを送信し、
+   レスポンスのJSON構造・確率・取引量を確認する
+4. エンドツーエンドのフローをコレクション化し、`response status is 200`
+   のようなアサーションで自動チェックする
+5. レイテンシやエラーのトレースを確認し、レポートをエクスポート・共有する
+
+## 結論
+
+Polymarket APIは、イベント駆動型取引とプログラムによるアクセスを融合させた
+データセットへの入り口である。基本の理解から分析スクリプトの実装まで、
+用途に応じて活用の幅を広げられる。
+
 ## 出典
 
 ユーザー提供テキストを基に整理。一次情報源（ICEの投資発表・Polymarket公式
-発表など）による裏取りは未実施のため、数値・評価額は要検証として扱うこと。
+発表・Apidogのブログ記事など）による裏取りは未実施のため、数値・評価額・
+料金体系・APIの仕様詳細は要検証として扱うこと。特にAPIキーの発行手順や
+料金プランは変更される可能性があるため、利用前に必ずPolymarket公式
+ドキュメントを確認すること。
