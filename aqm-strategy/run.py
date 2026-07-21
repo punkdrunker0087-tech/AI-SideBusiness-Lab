@@ -17,6 +17,30 @@ import panel
 import strategy
 
 
+def live_rank(close, volume, top_q):
+    """今日の4ファクター（Quality込み）ランキングを出力する。先読みなしの正当な用途。"""
+    import quality
+
+    print("Qualityファクター取得中（Yahoo財務スナップショット）…")
+    qz = quality.quality_zscore(list(close.columns))
+    scores = strategy.live_scores(close, volume, qz).sort_values(ascending=False)
+    k = max(1, int(len(scores) * top_q))
+    asof = close.index[-1].date()
+
+    print(f"\n=== AQM-01 4ファクター・ライブランキング（{asof}時点）===")
+    print("（今日のデータで今日の判断＝先読みなし。実発注機能はなし）\n")
+    print(f"  ロング候補（上位{k}）:")
+    for sym, sc in scores.head(k).items():
+        print(f"    {sym}  score={sc:+.2f}  quality_z={qz.get(sym, float('nan')):+.2f}")
+    print(f"\n  ショート候補（下位{k}）:")
+    for sym, sc in scores.tail(k).iloc[::-1].items():
+        print(f"    {sym}  score={sc:+.2f}  quality_z={qz.get(sym, float('nan')):+.2f}")
+    print(
+        "\n注意: Qualityは現在スナップショット。ライブ判断には妥当だが、"
+        "\n過去バックテストへの一律適用は先読みバイアス（README参照）。"
+    )
+
+
 def main():
     p = argparse.ArgumentParser(description="AQM-01 v0 バックテスト")
     p.add_argument("--range", default="5y", help="取得期間(2y/5y/max)")
@@ -24,6 +48,9 @@ def main():
     p.add_argument("--rebalance", default="ME", help="リバランス頻度(ME=月末/W=週次)")
     p.add_argument("--cost-bps", type=float, default=15.0, help="片道コスト(手数料+スリッページ)")
     p.add_argument("--borrow-bps", type=float, default=100.0, help="空売りコスト(年率bps)")
+    p.add_argument("--live", action="store_true", help="今日の4ファクター(Q込み)ランキングを出力")
+    p.add_argument("--quality-static", action="store_true",
+                   help="現在Qをバックテストへ一律適用(⚠️先読みバイアス・上限推定用)")
     p.add_argument("--no-cache", action="store_true", help="キャッシュを使わず再取得")
     args = p.parse_args()
 
@@ -33,7 +60,17 @@ def main():
     print(f"  期間: {close.index[0].date()} 〜 {close.index[-1].date()}  "
           f"銘柄数: {close.shape[1]}  営業日: {close.shape[0]}\n")
 
-    score = strategy.composite_score(close, volume)
+    if args.live:
+        live_rank(close, volume, args.top_q)
+        return
+
+    static_q = None
+    if args.quality_static:
+        import quality
+        print("⚠️ 先読みバイアス版: 現在のQualityを全期間に一律適用（上限推定）")
+        static_q = quality.quality_zscore(list(close.columns))
+
+    score = strategy.composite_score(close, volume, static_quality_z=static_q)
     res = strategy.backtest(
         close, score,
         top_q=args.top_q, rebalance=args.rebalance,
@@ -79,11 +116,18 @@ def main():
         else "× market-neutralな優位は確認できない"
     )
     print(f"判定: {verdict}")
-    print(
-        "\n注意: これはQuality抜き・25銘柄代理・単一設定の結果。"
-        "\nQualityファクター欠落で設計の劣化版であり、これで戦略の可否は断定できない。"
-        "\n本評価にはTOPIX500全銘柄・財務データ・複数設定でのウォークフォワードが必要。"
-    )
+    if static_q is not None:
+        print(
+            "\n注意: これは⚠️先読みバイアス版（現在Qを過去に一律適用＝最も有利な上限推定）。"
+            "\nこの『ズルあり』版でも勝てない場合、点in-time履歴を入れても勝ち目は薄い。"
+            "\n問題はQualityデータではなく、ユニバース(25銘柄)やファクター自体にある可能性。"
+        )
+    else:
+        print(
+            "\n注意: これはQuality抜き・25銘柄代理・単一設定の結果。"
+            "\n設計の劣化版であり、これで戦略の可否は断定できない。"
+            "\n本評価にはTOPIX500全銘柄・財務データ・複数設定でのウォークフォワードが必要。"
+        )
 
 
 if __name__ == "__main__":

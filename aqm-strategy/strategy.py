@@ -21,12 +21,42 @@ _ABS_SUM = sum(abs(w) for w in _RAW.values())  # 0.75
 WEIGHTS = {k: w / _ABS_SUM for k, w in _RAW.items()}  # M=0.533, σ=-0.267, L=0.200
 
 
-def composite_score(close: pd.DataFrame, volume: pd.DataFrame) -> pd.DataFrame:
-    """各日・各銘柄の合成スコア（高いほどロング向き）。"""
+# Quality を含む本来の重み（ライブ・ランキング用）
+FULL_WEIGHTS = {"M": 0.40, "Q": 0.25, "sigma": -0.20, "L": 0.15}
+
+
+def composite_score(
+    close: pd.DataFrame, volume: pd.DataFrame, static_quality_z: pd.Series = None
+) -> pd.DataFrame:
+    """各日・各銘柄の合成スコア（高いほどロング向き）。
+
+    static_quality_z=None: Quality抜きの3ファクター版（先読みなし・既定）。
+    static_quality_z を渡すと、その現在スナップショットQを全期間に一律適用した
+    4ファクター版になる（⚠️ look-ahead bias。上限推定・感度分析専用）。
+    """
     zM = factors.zscore_cross(factors.momentum(close))
     zS = factors.zscore_cross(factors.volatility(close))
     zL = factors.zscore_cross(factors.liquidity(close, volume))
-    return WEIGHTS["M"] * zM + WEIGHTS["sigma"] * zS + WEIGHTS["L"] * zL
+    if static_quality_z is None:
+        return WEIGHTS["M"] * zM + WEIGHTS["sigma"] * zS + WEIGHTS["L"] * zL
+
+    q = static_quality_z.reindex(close.columns).fillna(0.0)
+    qdf = pd.DataFrame(
+        np.tile(q.values, (len(close), 1)), index=close.index, columns=close.columns
+    )
+    w = FULL_WEIGHTS
+    return w["M"] * zM + w["sigma"] * zS + w["L"] * zL + w["Q"] * qdf
+
+
+def live_scores(close: pd.DataFrame, volume: pd.DataFrame, quality_z: pd.Series) -> pd.Series:
+    """最新日の 4ファクター合成スコア（銘柄index）。今日の判断に今日のデータを
+    使う正当な用途（先読みではない）。quality_z は quality.quality_zscore の出力。"""
+    zM = factors.zscore_cross(factors.momentum(close)).iloc[-1]
+    zS = factors.zscore_cross(factors.volatility(close)).iloc[-1]
+    zL = factors.zscore_cross(factors.liquidity(close, volume)).iloc[-1]
+    q = quality_z.reindex(close.columns).fillna(0.0)
+    w = FULL_WEIGHTS
+    return (w["M"] * zM + w["sigma"] * zS + w["L"] * zL + w["Q"] * q).rename("score")
 
 
 @dataclass
