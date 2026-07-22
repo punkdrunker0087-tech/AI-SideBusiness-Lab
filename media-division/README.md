@@ -58,6 +58,7 @@ LIMIT LAB（単一ブランド・人間のCEO）
 | `REJECTION-LOG.md` | 反証ログ。採用されなかったAI CEO提案と却下理由・再評価条件 |
 | `OBSERVATIONS.md` | プロトコルレベルの観測記録（OBS-NNN。実験に属さない発見） |
 | `pipeline/` | ショート動画 全自動生成パイプライン（SOP・テンプレート・実測済み） |
+| `pipeline/growth-tactics.md` | 成長戦術SOP。採用した戦術と、ブランド・実験設計と衝突するため採用しなかった範囲の記録 |
 | `../docs/company-setup/` | 実法人化する場合の手続き・費用・AIにできないこと調査 |
 
 ## 現在のステータス

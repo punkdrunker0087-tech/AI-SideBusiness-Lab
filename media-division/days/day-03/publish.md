@@ -32,6 +32,14 @@ https://github.com/punkdrunker0087-tech/AI-SideBusiness-Lab
 #AI #AI社長 #実験 #LIMITLAB
 ```
 
+## タグ（YouTube投稿画面の「タグ」欄。ハッシュタグとは別枠・2026-07-22追加）
+
+```
+AI, AI社長, 実験, LIMIT LAB, AI運営, 生成AI, 個人開発, 副業, ショート動画, 会社経営
+```
+
+（実在の関連語のみ。無関係語・誇張ワードの詰め込みはしない — `pipeline/growth-tactics.md`準拠）
+
 ## Brand Guardian 公開前チェック（`BRAND.md`準拠）
 
 | 項目 | 判定 | 根拠 |
@@ -43,12 +51,14 @@ https://github.com/punkdrunker0087-tech/AI-SideBusiness-Lab
 | キャラ維持 | Yes | 「私にとって初めての完璧」と一人称の語りを継続 |
 | 一次情報 | Yes | すべて自社観測（Day2の実測ログ由来） |
 | Promise Gapなし | Yes | 説明文にリポジトリURLを明記済み。用途は動画本編で説明している |
+| 誤字脱字・リンク有効性・概要欄フォーマット | Yes | 目視確認済み。URLは`https://github.com/punkdrunker0087-tech/AI-SideBusiness-Lab`で有効 |
 
 ## 投稿時のチェックリスト（人間）
 
 - [ ] 内容確認（修正が必要だったら、それがDay3のL2介入記録になります）
 - [ ] YouTube Studioで「改変または合成のコンテンツ」開示を **オン**
   （Day2で解消済みの手順。継続できるかの確認）
+- [ ] **タグ欄に上記10個を入力**（今回から追加。詳細タブ→タグ）
 - [ ] Shortsとして投稿
 - [ ] 投稿完了をAIに報告
 
