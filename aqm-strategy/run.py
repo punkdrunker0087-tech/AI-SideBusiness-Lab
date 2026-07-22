@@ -54,7 +54,7 @@ def main():
     p.add_argument("--no-cache", action="store_true", help="キャッシュを使わず再取得")
     args = p.parse_args()
 
-    print("パネル構築中（代理ユニバース25銘柄）…")
+    print(f"パネル構築中（代理ユニバース{len(panel.UNIVERSE)}銘柄・日経225）…")
     close, volume = panel.build_panel(range_=args.range, use_cache=not args.no_cache)
     bench_px = panel.benchmark_series(range_=args.range, use_cache=not args.no_cache)
     print(f"  期間: {close.index[0].date()} 〜 {close.index[-1].date()}  "
@@ -120,11 +120,14 @@ def main():
         print(
             "\n注意: これは⚠️先読みバイアス版（現在Qを過去に一律適用＝最も有利な上限推定）。"
             "\nこの『ズルあり』版でも勝てない場合、点in-time履歴を入れても勝ち目は薄い。"
-            "\n問題はQualityデータではなく、ユニバース(25銘柄)やファクター自体にある可能性。"
+            f"\n{len(panel.UNIVERSE)}銘柄（日経225）でも改善しなかった場合、"
+            "問題はユニバースの小ささではなく、"
+            "\nファクター定義（Momentum/LowVol/Liquidity）自体やこの検証期間にある可能性が高い。"
         )
     else:
         print(
-            "\n注意: これはQuality抜き・25銘柄代理・単一設定の結果。"
+            f"\n注意: これはQuality抜き・{len(panel.UNIVERSE)}銘柄代理(日経225)・"
+            "単一設定の結果。"
             "\n設計の劣化版であり、これで戦略の可否は断定できない。"
             "\n本評価にはTOPIX500全銘柄・財務データ・複数設定でのウォークフォワードが必要。"
         )
