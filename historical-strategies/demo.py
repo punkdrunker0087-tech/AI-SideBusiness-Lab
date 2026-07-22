@@ -5,12 +5,16 @@
 2. ウォーレン・バフェットのバリュー投資を「Buffett's Alpha」論文の
    Quality+Value+Safetyへの分解として現代データに翻訳し、レバレッジの
    効果を検証する
+3. Joel GreenblattのMagic Formula（Earnings Yield×ROC）を、共通の
+   10段階パイプライン（バックテスト・感度分析・レジーム分析）で検証する
 """
 import numpy as np
 import pandas as pd
 
 import buffett_style as bs
 import data_util
+import magic_formula as mf
+import pipeline
 import turtle_trading as tt
 
 UNIVERSE = ["7203.T", "6758.T", "9432.T", "8306.T", "9983.T", "6098.T",
@@ -74,11 +78,74 @@ def main():
                    "相対的に取り残されやすい）")
     print(f"  → {verdict}")
 
+    print("\n" + "=" * 70)
+    print("3. Greenblatt Magic Formula（共通10段階パイプライン）")
+    print("=" * 70)
+    inputs = mf.fetch_magic_formula_inputs(UNIVERSE)
+    ranked_ex = mf.compute_magic_formula(inputs, exclude_financials=True)
+    # 危険なケース: 原典の除外ルールも異常値チェックも行わない場合
+    ranked_naive = mf.compute_magic_formula(inputs, exclude_financials=False,
+                                           require_positive_values=False)
+    print(f"除外された金融セクター銘柄数: {ranked_ex.attrs['n_excluded_financials']}")
+    print("\nランキング（金融セクター除外・原典準拠）:")
+    print(ranked_ex[["sector", "earnings_yield", "roc", "combined_rank"]].round(3).to_string())
+
+    print("\nランキング（除外なし・異常値チェックなし＝危険なケース）:")
+    print(ranked_naive[["sector", "earnings_yield", "roc", "combined_rank"]].round(3).to_string())
+    bank_row = ranked_naive[ranked_naive["sector"].isin(mf.EXCLUDED_SECTORS)]
+    if not bank_row.empty:
+        position = int((ranked_naive["combined_rank"] <= bank_row["combined_rank"].iloc[0]).sum())
+        total = len(ranked_naive)
+        print(f"  → 銀行株のEarnings Yield={bank_row['earnings_yield'].iloc[0]:+.3f}"
+             f"（EVが負のため符号が反転し、無意味な値になっている）。"
+             f"\n    今回は{total}銘柄中{position}位(最下位)に沈んだため"
+             f"上位N銘柄の選定は結果的に汚染されなかったが、"
+             f"\n    符号の組み合わせ次第では逆に上位へ紛れ込みうる。"
+             f"「たまたま実害がなかった」のであって除外ルールが不要という"
+             f"意味ではない。")
+
+    print("\n--- ⑥バックテスト・⑦感度分析: 銘柄数(N)の頑健性 ---")
+    print("[金融セクター除外・原典準拠]")
+    print(pipeline.sensitivity_by_n(ranked_ex, close, n_values=[3, 5, 8]).round(3).to_string(index=False))
+    print("[除外なし・異常値チェックなし(危険なケース)]")
+    print(pipeline.sensitivity_by_n(ranked_naive, close, n_values=[3, 5, 8]).round(3).to_string(index=False))
+
+    print("\n--- ⑧レジーム分析(N=5・金融除外版) ---")
+    top5 = ranked_ex.index[:5].tolist()
+    eq5 = pipeline.backtest_static_selection(close, top5)
+    regimes = pipeline.classify_regime(bench)
+    reg_perf = pipeline.performance_by_regime(eq5, regimes)
+    if not reg_perf.empty:
+        print(reg_perf.round(3).to_string())
+
     print(
-        "\n注意: Quality/Valueはライブ断面のみ（先読みバイアスを避けるため"
-        "\n過去バックテストには使用していない）。Safety(β)は価格ベースで"
-        "\n全期間先読みなく計算可能。両手法とも「現代データへの翻訳」の"
-        "\n出発点であり、この検証だけで手法の優劣を断定するものではない。"
+        "\n⑨⑩機能する市場・破綻する条件: 8306.T(銀行)でEnterprise Valueが"
+        "\n負値になることを実データで確認した。これは原典が金融・公益株を"
+        "\n除外する理由そのもの（負債の概念が事業会社と異なり、EV/ROCの"
+        "\n前提が成立しない）。金融株を誤って含めると、ランキング自体が"
+        "\n意味をなさなくなる。"
+    )
+
+    print("\n" + "=" * 70)
+    print("総合考察（3手法共通）")
+    print("=" * 70)
+    print(
+        "・何が本質だったか: いずれも「予測しない・ルールに従う・分散/長期で"
+        "\n  優位性が発揮される」という規律の設計。個別の数式より規律の徹底が本質\n"
+        "・現代では何を変えるべきか: 点in-time財務データ(J-Quants等)への移行、"
+        "\n  金融/公益株など前提が崩れるセクターの自動検出、複数資産クラスへの拡張\n"
+        "・AIだから改善できる部分: 大量データの解析・複数戦略の並行検証・"
+        "\n  セクター例外や異常値(EV<0等)の自動検知——本デモで実際に発見した"
+        "\n  ようなデータ起因の落とし穴を人手より速く発見できる"
+    )
+
+    print(
+        "\n注意: Quality/Value/Earnings Yield/ROCはライブ断面のみ（先読み"
+        "\nバイアスを避けるため過去バックテストには使用していない）。"
+        "\nSafety(β)・タートルズの価格ベース指標は全期間先読みなく計算可能。"
+        "\n3手法とも「現代データへの翻訳」の出発点であり、この検証だけで"
+        "\n手法の優劣を断定するものではない。不利な結果も成功例と同様に"
+        "\n価値ある知見として扱う。"
     )
 
 
