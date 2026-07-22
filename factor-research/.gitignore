@@ -1,0 +1,6 @@
+*.csv
+*.log
+*.md
+!README.md
+__pycache__/
+*.pyc
