@@ -54,17 +54,14 @@
 - 着手時に個別TODOへ分解する。
 - **記録日**: 2026-07-21
 
-### 「歴史×AI」シリーズ: 残り8投資家（優先度: 中）
+### 「歴史×AI」シリーズ: 残り4投資家（優先度: 中）
 
 `historical-strategies/`で共通10段階パイプライン（`pipeline.py`）を確立。
-タートルズ・バフェット流・Greenblatt Magic Formulaの3つは完了。残りを
-このパイプラインで順次追加する。
+タートルズ・バフェット流・Greenblatt Magic Formula・Graham Deep Value・
+Lynch PEG・O'Neil CAN SLIMの6つは完了。残りをこのパイプラインで順次追加する。
 
-- グレアム → Deep Value（NCAV・強固なバランスシート）
-- リンチ → PEG（成長率対PER）
 - ソロス → リフレクシビティ・ニュース解析
 - ダリオ → リスクパリティ（`../portfolio-optimization/risk_parity.py`と関連）
-- オニール → CAN SLIM
 - シモンズ → 統計的裁定・機械学習（`../stat-arb/`・`../financial-ml/`と関連）
 - ファーマ＝フレンチ → Factor Investing（`../factor-research/`・
   `../multifactor-investing/`と大部分重複、差分のみ追加）
@@ -84,3 +81,18 @@
 - 実装中にPSI計算のゼロ幅ビンバグ・ビン数過多バグ・アラート重複抑制なし
   （77件連続発報）の3件を発見・修正。
 - **完了日**: 2026-07-21
+
+### 「歴史×AI」シリーズ: Graham・Lynch・O'Neil
+
+- `historical-strategies/`に `graham_deep_value.py`・`lynch_peg.py`・
+  `oneil_canslim.py`・共通の`fundamentals_util.py`を追加。
+- Grahamの正式なNCAVはYahoo無料APIの`balanceSheetHistory`が明細を
+  返さないため計算不能と判明。低PBR＋黒字EPS＋低D/Eの代理指標で代替。
+- O'Neilの四半期EPS成長率(C)もYahoo無料APIで欠損（本ユニバース全銘柄で
+  None）と判明。年間成長率(A)と同一値で代用する近似とした。
+- 10銘柄・5年での実測: Graham 2.25倍・Lynch(PEG<1群) 2.02倍・
+  O'Neil 2.94倍。いずれもユニバース全10銘柄均等保有（3.28倍）を
+  下回った。6手法全てが均等保有に見劣りする結果となり、これは
+  「静的な小規模ユニバース・単一の強気相場期間」という検証設計の
+  限界として記録（手法の優劣の断定ではない）。
+- **完了日**: 2026-07-22

@@ -7,13 +7,20 @@
    効果を検証する
 3. Joel GreenblattのMagic Formula（Earnings Yield×ROC）を、共通の
    10段階パイプライン（バックテスト・感度分析・レジーム分析）で検証する
+4. Benjamin GrahamのDeep Value（NCAVの代理指標）を検証する
+5. Peter LynchのPEGレシオを検証する
+6. William O'NeilのCAN SLIMを検証する
 """
 import numpy as np
 import pandas as pd
 
 import buffett_style as bs
 import data_util
+import fundamentals_util as fu
+import graham_deep_value as gv
+import lynch_peg as lp
 import magic_formula as mf
+import oneil_canslim as oc
 import pipeline
 import turtle_trading as tt
 
@@ -126,26 +133,103 @@ def main():
         "\n意味をなさなくなる。"
     )
 
+    fundamentals = fu.fetch(UNIVERSE)
+
     print("\n" + "=" * 70)
-    print("総合考察（3手法共通）")
+    print("4. Benjamin Graham の Deep Value（NCAVの代理指標）")
+    print("=" * 70)
+    print(
+        "⚠️ Yahoo無料APIの balanceSheetHistory は流動資産/負債の明細を"
+        "\n返さないため、原典の正式なNCAVは計算不能。低PBR・黒字EPS必須・"
+        "\n低D/Eという代理指標で代用する。"
+    )
+    gv_ranked = gv.compute_deep_value(fundamentals)
+    print(gv_ranked[["price_to_book", "trailing_eps", "debt_to_equity",
+                    "combined_rank"]].round(3).to_string())
+    print(f"  (赤字EPSで除外: {gv_ranked.attrs['n_excluded_negative_eps']}銘柄)")
+
+    gv_top5 = gv_ranked.index[:5].tolist()
+    eq_gv = pipeline.backtest_static_selection(close, gv_top5)
+    print(f"\n  ⑥バックテスト: 上位5銘柄・均等保有・5年 最終={eq_gv.iloc[-1]:.2f}倍"
+         f"  (参考: ユニバース全10銘柄均等保有={universe_equal.iloc[-1]:.2f}倍)")
+    sens_gv = pipeline.sensitivity_by_n(gv_ranked, close, n_values=[3, 5, 8])
+    print("  ⑦感度分析(N=3/5/8):")
+    print(sens_gv.round(3).to_string(index=False))
+    regimes = pipeline.classify_regime(bench)
+    reg_perf_gv = pipeline.performance_by_regime(eq_gv, regimes)
+    if not reg_perf_gv.empty:
+        print("  ⑧レジーム分析:")
+        print(reg_perf_gv.round(3).to_string())
+
+    print("\n" + "=" * 70)
+    print("5. Peter Lynch の PEG レシオ")
+    print("=" * 70)
+    peg_ranked = lp.compute_peg(fundamentals)
+    print(peg_ranked[["trailing_pe", "earnings_growth", "peg", "判定"]].round(3).to_string())
+    print(f"  (成長率不足/データ欠損で除外: {peg_ranked.attrs['n_excluded_total']}銘柄、"
+         f"うち低成長のみで除外: {peg_ranked.attrs['n_excluded_low_growth']}銘柄)")
+
+    peg_undervalued = peg_ranked[peg_ranked["peg"] < 1.0].index.tolist()
+    if peg_undervalued:
+        eq_peg = pipeline.backtest_static_selection(close, peg_undervalued)
+        print(f"\n  ⑥バックテスト: PEG<1割安銘柄({len(peg_undervalued)}銘柄)・均等保有・5年 "
+             f"最終={eq_peg.iloc[-1]:.2f}倍"
+             f"  (参考: ユニバース全10銘柄均等保有={universe_equal.iloc[-1]:.2f}倍)")
+        reg_perf_peg = pipeline.performance_by_regime(eq_peg, regimes)
+        if not reg_perf_peg.empty:
+            print("  ⑧レジーム分析:")
+            print(reg_perf_peg.round(3).to_string())
+
+    print("\n" + "=" * 70)
+    print("6. William O'Neil の CAN SLIM")
+    print("=" * 70)
+    print(
+        "⚠️ 四半期EPS成長率(C)はYahoo無料APIで欠損することが多いため、"
+        "\n年間成長率(A)と同じ`earnings_growth`で代用する近似。"
+    )
+    volume = pd.DataFrame({s: df["volume"] for s, df in ohlc.items()}).reindex(close.index)
+    cs_ranked = oc.compute_canslim(fundamentals, close, volume, bench)
+    print(cs_ranked[["C_proxy_quarterly_growth", "A_annual_growth", "N_price_vs_52w_high",
+                    "S_volume_ratio", "L_relative_strength", "I_institutional_pct",
+                    "combined_rank"]].round(3).to_string())
+    print(f"\n  M(市場の地合い)ゲート: ベンチマークは200日線"
+         f"{'上' if cs_ranked.attrs['M_market_uptrend'] else '下'} → "
+         f"{'新規建玉に適した地合い' if cs_ranked.attrs['M_market_uptrend'] else '新規建玉は見送るべき地合い'}")
+
+    cs_top5 = cs_ranked.index[:5].tolist()
+    eq_cs = pipeline.backtest_static_selection(close, cs_top5)
+    print(f"\n  ⑥バックテスト: 上位5銘柄・均等保有・5年 最終={eq_cs.iloc[-1]:.2f}倍"
+         f"  (参考: ユニバース全10銘柄均等保有={universe_equal.iloc[-1]:.2f}倍)")
+    sens_cs = pipeline.sensitivity_by_n(cs_ranked, close, n_values=[3, 5, 8])
+    print("  ⑦感度分析(N=3/5/8):")
+    print(sens_cs.round(3).to_string(index=False))
+    reg_perf_cs = pipeline.performance_by_regime(eq_cs, regimes)
+    if not reg_perf_cs.empty:
+        print("  ⑧レジーム分析:")
+        print(reg_perf_cs.round(3).to_string())
+
+    print("\n" + "=" * 70)
+    print("総合考察（6手法共通）")
     print("=" * 70)
     print(
         "・何が本質だったか: いずれも「予測しない・ルールに従う・分散/長期で"
         "\n  優位性が発揮される」という規律の設計。個別の数式より規律の徹底が本質\n"
         "・現代では何を変えるべきか: 点in-time財務データ(J-Quants等)への移行、"
-        "\n  金融/公益株など前提が崩れるセクターの自動検出、複数資産クラスへの拡張\n"
+        "\n  金融/公益株など前提が崩れるセクターの自動検出、複数資産クラスへの拡張、"
+        "\n  欠損データ(NCAV明細・四半期成長率)を補う代替データソースの併用\n"
         "・AIだから改善できる部分: 大量データの解析・複数戦略の並行検証・"
         "\n  セクター例外や異常値(EV<0等)の自動検知——本デモで実際に発見した"
         "\n  ようなデータ起因の落とし穴を人手より速く発見できる"
     )
 
     print(
-        "\n注意: Quality/Value/Earnings Yield/ROCはライブ断面のみ（先読み"
-        "\nバイアスを避けるため過去バックテストには使用していない）。"
-        "\nSafety(β)・タートルズの価格ベース指標は全期間先読みなく計算可能。"
-        "\n3手法とも「現代データへの翻訳」の出発点であり、この検証だけで"
-        "\n手法の優劣を断定するものではない。不利な結果も成功例と同様に"
-        "\n価値ある知見として扱う。"
+        "\n注意: Quality/Value/Earnings Yield/ROC/PBR/PEG/CAN SLIMの財務項目は"
+        "\nライブ断面のみ（先読みバイアスを避けるため過去バックテストの銘柄選定"
+        "\nそのものには使用せず、「今日選んだ銘柄群を過去5年保有していたら」という"
+        "\n条件付きの参考値として扱う）。Safety(β)・タートルズ・CAN SLIMのN/S/L等の"
+        "\n価格ベース指標は全期間先読みなく計算可能。6手法とも「現代データへの翻訳」"
+        "\nの出発点であり、この検証だけで手法の優劣を断定するものではない。"
+        "\n不利な結果も成功例と同様に価値ある知見として扱う。"
     )
 
 
