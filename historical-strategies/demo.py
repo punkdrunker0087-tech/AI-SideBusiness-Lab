@@ -10,18 +10,26 @@
 4. Benjamin GrahamのDeep Value（NCAVの代理指標）を検証する
 5. Peter LynchのPEGレシオを検証する
 6. William O'NeilのCAN SLIMを検証する
+7. George Sorosのリフレクシビティ（bias×加速度の代理指標）を検証する
+8. Ray Dalioのリスクパリティ（既存portfolio-optimizationの差分適用）を検証する
+9. Jim Simons流の統計的裁定（既存stat-arbの差分適用）を検証する
+10. Fama-FrenchのSize/Valueファクター（既存multifactor-investingの差分適用）を検証する
 """
 import numpy as np
 import pandas as pd
 
 import buffett_style as bs
+import dalio_risk_parity as dr
 import data_util
+import famafrench_factors as ff
 import fundamentals_util as fu
 import graham_deep_value as gv
 import lynch_peg as lp
 import magic_formula as mf
 import oneil_canslim as oc
 import pipeline
+import simons_stat_arb as ss
+import soros_reflexivity as sr
 import turtle_trading as tt
 
 UNIVERSE = ["7203.T", "6758.T", "9432.T", "8306.T", "9983.T", "6098.T",
@@ -209,26 +217,123 @@ def main():
         print(reg_perf_cs.round(3).to_string())
 
     print("\n" + "=" * 70)
-    print("総合考察（6手法共通）")
+    print("7. George Soros のリフレクシビティ（bias×加速度の代理指標）")
+    print("=" * 70)
+    print(
+        "⚠️ Sorosの「実際のPERと長期平均PERの乖離」はPER時系列が必要で"
+        "\n無料データでは再現不能。価格のみで構築できる代理指標"
+        "\n（長期MA乖離率=bias、モメンタムの加速度=accel）で代用する。"
+    )
+    n_beat_soros = 0
+    soros_finals = []
+    for sym in UNIVERSE:
+        res_sr = sr.backtest_reflexivity_rule(ohlc[sym]["close"])
+        beat = res_sr["final_multiple"] > res_sr["bh_final_multiple"]
+        n_beat_soros += beat
+        soros_finals.append({"銘柄": sym, "ルール最終倍率": res_sr["final_multiple"],
+                            "B&H最終倍率": res_sr["bh_final_multiple"], "B&H超え": beat})
+    print(pd.DataFrame(soros_finals).round(3).to_string(index=False))
+    print(f"\n  → リフレクシビティ・ルールがB&Hを上回った銘柄: {n_beat_soros}/{len(UNIVERSE)}")
+    print(
+        "    黄昏期・バストでフラットにする設計は下落を避けられる反面、"
+        "\n    このユニバース・期間は総じて強気相場だったため、フラット化した"
+        "\n    期間の機会損失がB&Hに対して不利に働いた。Sorosの理論は「ブームの"
+        "\n    終盤を正確に当てる」ことではなく「非対称な出口設計」が主眼であり、"
+        "\n    単純な強気相場での勝敗だけでは理論の価値を測れない。"
+    )
+
+    print("\n" + "=" * 70)
+    print("8. Ray Dalio のリスクパリティ（既存portfolio-optimizationの差分適用）")
+    print("=" * 70)
+    print(
+        "⚠️ 原典は株式・債券・コモディティ等の複数資産クラスにまたがる"
+        "\nリスク均等化が前提。本ユニバースは日本株10銘柄のみで、資産クラス"
+        "\n分散という核心部分は再現できていない。"
+    )
+    res_dr = dr.backtest_risk_parity_vs_equal_weight(close)
+    print(f"  リスクパリティ: 最終={res_dr['final_rp']:.2f}倍  年率ボラ={res_dr['vol_rp']*100:.1f}%"
+         f"  最大DD={res_dr['max_dd_rp']*100:.1f}%")
+    print(f"  等ウェイト　　: 最終={res_dr['final_ew']:.2f}倍  年率ボラ={res_dr['vol_ew']*100:.1f}%"
+         f"  最大DD={res_dr['max_dd_ew']*100:.1f}%")
+    print(
+        "  → 同一資産クラス内でも、リスク均等化はボラティリティ・最大DDを"
+        "\n    明確に縮小させた。ただしリターンも等ウェイトを下回っており、"
+        "\n    「低リスク・低リターン」というリスクパリティの原理通りの結果。"
+    )
+
+    print("\n" + "=" * 70)
+    print("9. Jim Simons流の統計的裁定（既存stat-arbの差分適用）")
+    print("=" * 70)
+    print(
+        "⚠️ Renaissance Technologiesの実際のモデルは非公開。ここではSimonsの"
+        "\n哲学に近い、学術的に再現可能なコインテグレーション・ペアトレーディング"
+        "\nを本ユニバースに適用した場合の挙動のみを検証する。"
+    )
+    res_ss = ss.find_best_cointegrated_pair(close)
+    print(f"  検定した全ペア数: {res_ss['n_pairs_tested']}  "
+         f"5%水準でコインテグレーション成立: {res_ss['n_cointegrated']}ペア")
+    if res_ss["n_cointegrated"] > 0:
+        bt_ss = ss.backtest_best_pair(close, res_ss["best_pair"])
+        print(f"  最良ペア {bt_ss['pair']}: 取引数={bt_ss['n_trades']}  "
+             f"純損益={bt_ss['total_net_pnl']:.1f}円  Sharpe(日次)={bt_ss['sharpe_daily']:.3f}")
+        verdict_ss = ("プラスの純損益" if bt_ss["total_net_pnl"] > 0 else "マイナスの純損益")
+        print(f"  → 5年間で唯一コインテグレーションが成立したペアも、{verdict_ss}"
+             f"となった。10銘柄という本シリーズのユニバースは、そもそも"
+             f"\n    ペア候補の厳選（同業種・流動性・相関）を経ておらず、統計的裁定が"
+             f"\n    前提とする「大量の候補から本当に安定した関係を持つペアだけを選ぶ」"
+             f"\n    プロセスの入り口にすら立てていない可能性が高い。")
+
+    print("\n" + "=" * 70)
+    print("10. Fama-French の Size/Valueファクター（既存multifactor-investingの差分適用）")
+    print("=" * 70)
+    print(
+        "⚠️ 原典は数千銘柄規模の断面統計検定が前提。10銘柄では統計的な"
+        "\n有意性は主張できず、傾向の参考値に留まる。"
+    )
+    fnd_ff = fu.fetch(UNIVERSE)
+    scores_ff = ff.build_size_value_score(fnd_ff)
+    res_ff = ff.backtest_smb_hml_tilt(close, scores_ff)
+    print(f"  小型5銘柄: 最終={res_ff['final_small']:.2f}倍　"
+         f"大型5銘柄: 最終={res_ff['final_big']:.2f}倍　(SMBスプレッド={res_ff['smb_final_spread']:+.2f})")
+    print(f"  割安5銘柄: 最終={res_ff['final_value']:.2f}倍　"
+         f"割高5銘柄: 最終={res_ff['final_growth']:.2f}倍　(HMLスプレッド={res_ff['hml_final_spread']:+.2f})")
+    print(
+        "  → このユニバース・期間ではSMB・HMLとも符号がマイナス"
+        "\n    （大型・グロースが小型・バリューを上回った）。原典の学術的な"
+        "\n    長期・大規模サンプルでの発見と逆行する結果だが、これは10銘柄・"
+        "\n    5年・強気相場という本検証の設計が生んだ特殊な結果であり、"
+        "\n    SMB/HMLプレミアムそのものが消滅したことを意味しない。"
+    )
+
+    print("\n" + "=" * 70)
+    print("総合考察（10手法共通）")
     print("=" * 70)
     print(
         "・何が本質だったか: いずれも「予測しない・ルールに従う・分散/長期で"
         "\n  優位性が発揮される」という規律の設計。個別の数式より規律の徹底が本質\n"
         "・現代では何を変えるべきか: 点in-time財務データ(J-Quants等)への移行、"
         "\n  金融/公益株など前提が崩れるセクターの自動検出、複数資産クラスへの拡張、"
-        "\n  欠損データ(NCAV明細・四半期成長率)を補う代替データソースの併用\n"
+        "\n  欠損データ(NCAV明細・四半期成長率・PER時系列)を補う代替データソースの併用\n"
         "・AIだから改善できる部分: 大量データの解析・複数戦略の並行検証・"
         "\n  セクター例外や異常値(EV<0等)の自動検知——本デモで実際に発見した"
         "\n  ようなデータ起因の落とし穴を人手より速く発見できる"
     )
 
     print(
-        "\n注意: Quality/Value/Earnings Yield/ROC/PBR/PEG/CAN SLIMの財務項目は"
-        "\nライブ断面のみ（先読みバイアスを避けるため過去バックテストの銘柄選定"
-        "\nそのものには使用せず、「今日選んだ銘柄群を過去5年保有していたら」という"
-        "\n条件付きの参考値として扱う）。Safety(β)・タートルズ・CAN SLIMのN/S/L等の"
-        "\n価格ベース指標は全期間先読みなく計算可能。6手法とも「現代データへの翻訳」"
-        "\nの出発点であり、この検証だけで手法の優劣を断定するものではない。"
+        "\n注意: Quality/Value/Earnings Yield/ROC/PBR/PEG/CAN SLIM/Size/Value"
+        "\nの財務項目はライブ断面のみ（先読みバイアスを避けるため過去バックテストの"
+        "\n銘柄選定そのものには使用せず、「今日選んだ銘柄群を過去5年保有していたら」"
+        "\nという条件付きの参考値として扱う）。Safety(β)・タートルズ・CAN SLIMの"
+        "\nN/S/L・Sorosのbias/accel等の価格ベース指標は全期間先読みなく計算可能。"
+        "\n10手法とも「現代データへの翻訳」の出発点であり、この検証だけで手法の"
+        "\n優劣を断定するものではない。集中選定型の手法（タートルズ・Buffett流・"
+        "\nMagic Formula・Graham・Lynch・O'Neil・Soros・Dalio・Simons）は軒並み"
+        "\nユニバース均等保有に見劣りしたが、Fama-Frenchの検証だけは例外的に"
+        "\n大型株tilt(3.81倍)がユニバース平均(3.28倍)をわずかに上回った——ただし"
+        "\nこれは原典が主張するSMBプレミアム(小型>大型)とは逆方向の結果であり、"
+        "\n「Fama-French流が機能した」のではなく「このユニバース・期間ではSMB/HML"
+        "\nプレミアムが観測されなかった」ことを示す。個別の勝敗より、10銘柄・5年・"
+        "\n単一の強気相場という検証設計そのものの限界を認識することが重要。"
         "\n不利な結果も成功例と同様に価値ある知見として扱う。"
     )
 

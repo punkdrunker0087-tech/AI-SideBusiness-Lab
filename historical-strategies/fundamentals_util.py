@@ -35,12 +35,13 @@ def fetch(symbols: list) -> pd.DataFrame:
     for sym in symbols:
         try:
             r = s.get(_QS.format(sym),
-                     params={"modules": "financialData,defaultKeyStatistics,summaryDetail",
+                     params={"modules": "financialData,defaultKeyStatistics,summaryDetail,price",
                             "crumb": crumb}, timeout=15).json()
             res = r["quoteSummary"]["result"][0]
             fd = res.get("financialData", {})
             ks = res.get("defaultKeyStatistics", {})
             sd = res.get("summaryDetail", {})
+            price = res.get("price", {})
             rows[sym] = {
                 "trailing_pe": _raw(sd, "trailingPE"),
                 "price_to_book": _raw(ks, "priceToBook"),
@@ -49,10 +50,13 @@ def fetch(symbols: list) -> pd.DataFrame:
                 "roe": _raw(fd, "returnOnEquity"),
                 "earnings_growth": _raw(fd, "earningsGrowth"),
                 "held_pct_institutions": _raw(ks, "heldPercentInstitutions"),
+                "market_cap": _raw(price, "marketCap"),
+                "gross_margin": _raw(fd, "grossMargins"),
             }
             time.sleep(0.05)
         except Exception:  # noqa: BLE001
             rows[sym] = {k: np.nan for k in [
                 "trailing_pe", "price_to_book", "trailing_eps", "debt_to_equity",
-                "roe", "earnings_growth", "held_pct_institutions"]}
+                "roe", "earnings_growth", "held_pct_institutions",
+                "market_cap", "gross_margin"]}
     return pd.DataFrame(rows).T.astype(float)
