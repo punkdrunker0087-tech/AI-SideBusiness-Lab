@@ -32,9 +32,6 @@
 
 `backtest-framework/` の続き。ひとつずつ対処する。
 
-- **Stage 7: ペーパートレード・ハーネス**（唯一未実装の段階）。ライブ環境で
-  実資金を使わず検証し、バックテストと実運用の差異（スリッページ・約定遅延）を
-  測定する仕組み。
 - **統計検定の可視化**。エクイティカーブ・PBO分布・パラメータ感度ヒートマップを
   matplotlib または Artifact で可視化する。
 - **既存戦略への適用**。DSR/PBO/Reality Check を AQM-01 や rakuten-backtest の
@@ -59,4 +56,12 @@
 
 ## 済
 
-（まだなし）
+### Stage 7: ペーパートレード・ハーネス
+
+- `research-paper-trading-system/` として実装。Data Providers→Validation→
+  Feature Pipeline→Research Models→Paper Trading Layer→Monitoring Dashboard
+  の一気通貫パイプライン、イベントログ・アラート・リコンシリエーション込み。
+  自動発注・ブローカー接続は含まない。
+- 実装中にPSI計算のゼロ幅ビンバグ・ビン数過多バグ・アラート重複抑制なし
+  （77件連続発報）の3件を発見・修正。
+- **完了日**: 2026-07-21
