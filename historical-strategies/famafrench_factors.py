@@ -48,11 +48,19 @@ def build_size_value_score(fundamentals: pd.DataFrame) -> pd.DataFrame:
 def backtest_smb_hml_tilt(close: pd.DataFrame, scores: pd.DataFrame, top_n: int = 5) -> dict:
     """Sizeスコア上位(小型寄り)・Valueスコア上位(割安寄り)の各tiltを均等保有し、
     ユニバース平均・大型/グロース側と比較する。
+
+    ⚠️ 財務データ取得に失敗した銘柄はNaNになるが、pandasの`sort_values`は
+    既定でNaNを（ascendingの向きに関わらず）末尾に置く。dropnaせずに
+    `.index[-top_n:]`のようにスコア下位N件を取ると、取得失敗銘柄が
+    「実際のサイズ・バリューとは無関係に」大型/グロース側へ紛れ込む
+    バグになる。必ずdropnaしてから上位/下位を取る。
     """
-    small = scores["size_score"].sort_values(ascending=False).index[:top_n].tolist()
-    big = scores["size_score"].sort_values(ascending=False).index[-top_n:].tolist()
-    value = scores["value_score"].sort_values(ascending=False).index[:top_n].tolist()
-    growth = scores["value_score"].sort_values(ascending=False).index[-top_n:].tolist()
+    size_valid = scores["size_score"].dropna()
+    value_valid = scores["value_score"].dropna()
+    small = size_valid.sort_values(ascending=False).index[:top_n].tolist()
+    big = size_valid.sort_values(ascending=False).index[-top_n:].tolist()
+    value = value_valid.sort_values(ascending=False).index[:top_n].tolist()
+    growth = value_valid.sort_values(ascending=False).index[-top_n:].tolist()
 
     def eq(symbols):
         sub = close[symbols]

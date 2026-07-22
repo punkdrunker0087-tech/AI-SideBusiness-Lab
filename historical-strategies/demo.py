@@ -41,12 +41,14 @@ def main():
     ohlc = {s: data_util.fetch_ohlc(s, "5y") for s in UNIVERSE}
     close = pd.DataFrame({s: df["close"] for s, df in ohlc.items()}).dropna()
     bench = data_util.fetch_ohlc("1306.T", "5y")["close"].reindex(close.index).ffill()
+    universe_equal = (close.mean(axis=1) / close.mean(axis=1).iloc[0])
     print(f"  期間 {close.index[0].date()}〜{close.index[-1].date()}\n")
 
     print("=" * 70)
     print("1. タートルズのトレンドフォロー戦略（Donchian breakout・原典準拠）")
     print("=" * 70)
     rows = []
+    turtle_multiples = {}
     for sym in UNIVERSE:
         res = tt.run_turtle_system(ohlc[sym])
         bh_final = 10_000_000 * ohlc[sym]["close"].iloc[-1] / ohlc[sym]["close"].iloc[0]
@@ -54,10 +56,19 @@ def main():
         wr = wins / len(res.trades) if res.trades else np.nan
         rows.append({"銘柄": sym, "タートルズ最終資産": res.equity.iloc[-1],
                     "B&H最終資産": bh_final, "取引数": len(res.trades), "勝率": wr})
+        turtle_multiples[sym] = res.equity / res.equity.iloc[0]
     turtle_df = pd.DataFrame(rows)
     print(turtle_df.round(2).to_string(index=False))
     n_beat_bh = (turtle_df["タートルズ最終資産"] > turtle_df["B&H最終資産"]).sum()
-    print(f"\n  → タートルズがB&Hを上回った銘柄: {n_beat_bh}/{len(UNIVERSE)}")
+    print(f"\n  → タートルズがB&Hを上回った銘柄(各銘柄自身のB&Hが基準): {n_beat_bh}/{len(UNIVERSE)}")
+
+    # 他手法と同じ基準（ユニバース全10銘柄均等保有）で比較するため、
+    # 10戦略に均等資金配分した場合のブレンド倍率も計算する（上のB&H比較とは
+    # 別軸の指標。銘柄ごとの自己B&Hに勝つことと、ユニバース平均に勝つことは
+    # 異なる問いであり、混同しないよう明確に分けて報告する）。
+    turtle_blend = pd.DataFrame(turtle_multiples).reindex(close.index).ffill().bfill().mean(axis=1)
+    print(f"    10戦略・均等資金配分ブレンド最終倍率={turtle_blend.iloc[-1]:.2f}倍"
+         f"  (参考: ユニバース全10銘柄均等保有={universe_equal.iloc[-1]:.2f}倍)")
     print("    単一の上昇トレンド銘柄では、頻繁な損切りがB&Hに劣後しやすい"
          "\n    （原典は多市場分散・大暴落からの保護が主眼。単一株・単一の"
          "\n    強気相場サンプルでの検証には限界がある）")
@@ -82,7 +93,6 @@ def main():
         dd = (eq / eq.cummax() - 1).min()
         print(f"  レバレッジ{lev}倍: 最終={eq.iloc[-1]:.2f}倍  最大DD={dd*100:.1f}%")
 
-    universe_equal = (close.mean(axis=1) / close.mean(axis=1).iloc[0])
     print(f"\n  参考: ユニバース全{len(UNIVERSE)}銘柄・等ウェイト保有: "
          f"最終={universe_equal.iloc[-1]:.2f}倍")
     best_lev_final = bs.backtest_concentrated_portfolio(close, selected_symbols, 1.7).iloc[-1]
@@ -226,14 +236,22 @@ def main():
     )
     n_beat_soros = 0
     soros_finals = []
+    soros_multiples = {}
     for sym in UNIVERSE:
         res_sr = sr.backtest_reflexivity_rule(ohlc[sym]["close"])
         beat = res_sr["final_multiple"] > res_sr["bh_final_multiple"]
         n_beat_soros += beat
         soros_finals.append({"銘柄": sym, "ルール最終倍率": res_sr["final_multiple"],
                             "B&H最終倍率": res_sr["bh_final_multiple"], "B&H超え": beat})
+        soros_multiples[sym] = res_sr["equity"]
     print(pd.DataFrame(soros_finals).round(3).to_string(index=False))
-    print(f"\n  → リフレクシビティ・ルールがB&Hを上回った銘柄: {n_beat_soros}/{len(UNIVERSE)}")
+    print(f"\n  → リフレクシビティ・ルールがB&Hを上回った銘柄(各銘柄自身のB&Hが基準): "
+         f"{n_beat_soros}/{len(UNIVERSE)}")
+
+    # タートルズと同様、他手法と同じ基準（ユニバース均等保有）でも比較する
+    soros_blend = pd.DataFrame(soros_multiples).reindex(close.index).ffill().bfill().mean(axis=1)
+    print(f"    10戦略・均等資金配分ブレンド最終倍率={soros_blend.iloc[-1]:.2f}倍"
+         f"  (参考: ユニバース全10銘柄均等保有={universe_equal.iloc[-1]:.2f}倍)")
     print(
         "    黄昏期・バストでフラットにする設計は下落を避けられる反面、"
         "\n    このユニバース・期間は総じて強気相場だったため、フラット化した"
@@ -326,15 +344,18 @@ def main():
         "\nという条件付きの参考値として扱う）。Safety(β)・タートルズ・CAN SLIMの"
         "\nN/S/L・Sorosのbias/accel等の価格ベース指標は全期間先読みなく計算可能。"
         "\n10手法とも「現代データへの翻訳」の出発点であり、この検証だけで手法の"
-        "\n優劣を断定するものではない。集中選定型の手法（タートルズ・Buffett流・"
-        "\nMagic Formula・Graham・Lynch・O'Neil・Soros・Dalio・Simons）は軒並み"
-        "\nユニバース均等保有に見劣りしたが、Fama-Frenchの検証だけは例外的に"
-        "\n大型株tilt(3.81倍)がユニバース平均(3.28倍)をわずかに上回った——ただし"
-        "\nこれは原典が主張するSMBプレミアム(小型>大型)とは逆方向の結果であり、"
-        "\n「Fama-French流が機能した」のではなく「このユニバース・期間ではSMB/HML"
-        "\nプレミアムが観測されなかった」ことを示す。個別の勝敗より、10銘柄・5年・"
-        "\n単一の強気相場という検証設計そのものの限界を認識することが重要。"
-        "\n不利な結果も成功例と同様に価値ある知見として扱う。"
+        "\n優劣を断定するものではない。全10戦略をユニバース全10銘柄均等保有"
+        f"({universe_equal.iloc[-1]:.2f}倍)という共通の基準に揃えて比較すると"
+        "\n（タートルズ・Sorosは元々個別銘柄自身のB&Hとの比較だが、10戦略を"
+        "均等資金配分したブレンドで揃えた）、"
+        f"\nタートルズ{turtle_blend.iloc[-1]:.2f}倍・Soros{soros_blend.iloc[-1]:.2f}倍を"
+        "含む9手法が軒並みユニバース均等保有に見劣りした。"
+        "\nFama-Frenchの検証だけは例外的に大型株tilt(3.81倍)がユニバース平均を"
+        "わずかに上回ったが、これは原典が主張するSMBプレミアム(小型>大型)とは"
+        "\n逆方向の結果であり、「Fama-French流が機能した」のではなく"
+        "「このユニバース・期間ではSMB/HMLプレミアムが観測されなかった」ことを示す。"
+        "\n個別の勝敗より、10銘柄・5年・単一の強気相場という検証設計そのものの"
+        "限界を認識することが重要。不利な結果も成功例と同様に価値ある知見として扱う。"
     )
 
 
