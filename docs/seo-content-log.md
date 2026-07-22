@@ -5,16 +5,21 @@
 反応は人間（CEO）がSearch Console/各プラットフォームのアナリティクスで
 確認した実数のみを書く（憶測で埋めない）。
 
-| # | 公開日 | タイトル/URL | 狙いKW | プラットフォーム | 収益導線 | 30日後インプレ | クリック | 回収（DL/売上/アフィリ） |
-|---|---|---|---|---|---|---|---|---|
-| 001 | 2026-07-13（CEO確認済み・公開済み） | Claude Codeのカスタムコマンドで“AI会社”を作った話 https://zenn.dev/limit_lab_works/articles/claude-code-company-os | Claude Code カスタムコマンド 活用事例／設計 | Zenn（GitHub連携・自動公開） | 自社OS Kit/Prompt Pack（BOOTHリンク挿入済み）。アフィリは未提携 | - | - | - |
-| 002 | 2026-07-16（CEO公開報告済み） | AIに会社を運営させるなら“何を自動化して・どこに人間を残すか”を先に決める https://zenn.dev/limit_lab_works/articles/ai-company-what-to-automate | AI 業務 自動化 どこまで／Claude Code Routine 設計（「定期実行 やり方」は飽和のため回避） | Zenn（GitHub連携） | 自社OS Kit（BOOTHリンク挿入済み）。アフィリは未提携 | - | - | - |
-| n007 | 2026-07-16（CEO公開報告済み） | 同人イベント当日、"お金まわり"だけ先に準備しておく（お釣り・売上記録・完売管理） | 同人イベント 当日 お釣り／売上記録（「持ち物リスト」は飽和のため回避） | note（買い手向け・同人／創作＝従ニッチ） | 頒布レジ／クリエイター売上台帳（BOOTH） | - | - | - |
-
-| 003 | 2026-07-20（下書き・published:false） | 個人開発の有料版を出した直後に、無料の競合を見つけた話 https://zenn.dev/limit_lab_works/articles/free-competitor-appeared-after-launch | 個人開発 無料の競合 出現 価格見直し（「マネタイズ体験談」は一般論が飽和のため、実際の競合発見という具体エピソードに差別化） | Zenn（主軸=AI/副業） | 自社OS Kit（BOOTHリンク挿入済み）。アフィリは未提携 | - | - | - |
+| # | 公開日 | タイトル/URL | 狙いKW | プラットフォーム | 収益導線 | 資産分類 | 30日後インプレ | クリック | 回収（DL/売上/アフィリ） |
+|---|---|---|---|---|---|---|---|---|---|
+| 001 | 2026-07-13（CEO確認済み・公開済み） | Claude Codeのカスタムコマンドで“AI会社”を作った話 https://zenn.dev/limit_lab_works/articles/claude-code-company-os | Claude Code カスタムコマンド 活用事例／設計 | Zenn（GitHub連携・自動公開） | 自社OS Kit/Prompt Pack（BOOTHリンク挿入済み）。アフィリは未提携 | Evergreen（設計思想の解説・陳腐化しにくい） | - | - | - |
+| 002 | 2026-07-16（CEO公開報告済み） | AIに会社を運営させるなら“何を自動化して・どこに人間を残すか”を先に決める https://zenn.dev/limit_lab_works/articles/ai-company-what-to-automate | AI 業務 自動化 どこまで／Claude Code Routine 設計（「定期実行 やり方」は飽和のため回避） | Zenn（GitHub連携） | 自社OS Kit（BOOTHリンク挿入済み）。アフィリは未提携 | Evergreen（判断フレームは陳腐化しにくい） | - | - | - |
+| n007 | 2026-07-16（CEO公開報告済み） | 同人イベント当日、"お金まわり"だけ先に準備しておく（お釣り・売上記録・完売管理） | 同人イベント 当日 お釣り／売上記録（「持ち物リスト」は飽和のため回避） | note（買い手向け・同人／創作＝従ニッチ） | 頒布レジ／クリエイター売上台帳（BOOTH） | Evergreen（季節性はあるがイベント開催中は繰り返し有効） | - | - | - |
+| 003 | 2026-07-20頃CEO公開（published同期は2026-07-22） | 個人開発の有料版を出した直後に、無料の競合を見つけた話 https://zenn.dev/limit_lab_works/articles/free-competitor-appeared-after-launch | 個人開発 無料の競合 出現 価格見直し（「マネタイズ体験談」は一般論が飽和のため、実際の競合発見という具体エピソードに差別化） | Zenn（主軸=AI/副業） | 自社OS Kit（BOOTHリンク挿入済み）。アフィリは未提携 | Story（一次情報の実体験。競合状況が変われば陳腐化しうる） | - | - | - |
 
 （配分メモ: 2026-07-16以降、主軸=AI/副業(Zenn)・従=同人(note)。連続3本
 以上同一ニッチに寄せない。`docs/seo-content-engine.md`「テーマ配分ルール」）
+
+（資産分類の凡例・2026-07-22追加: Evergreen=長期的に有効な設計・判断
+フレーム／Story=一次情報の実体験談・状況依存で陳腐化しうる／
+Trend=時事性が高く短命。記事を追加する際は分類も付記し、将来
+Evergreenのリライト候補を選ぶ材料にする。新しい管理システムは作らず
+この表に列を足すだけとする）
 
 ## キーワード選定の記録（続き）
 - 2026-07-20: 「SNS自動化 自動いいね 危険」は9件以上のブログで飽和
