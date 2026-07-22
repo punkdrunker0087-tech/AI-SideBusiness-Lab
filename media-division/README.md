@@ -56,6 +56,7 @@ LIMIT LAB（単一ブランド・人間のCEO）
 | `ORG.md` | 組織設計。「AIが社長という設定」・アーカイブ部・実験番号・2系統KPI・量産の規律 |
 | `EXPERIMENTS.md` | 実験台帳。全活動をEXP-NNNで採番し、成果物を紐付ける主キー |
 | `REJECTION-LOG.md` | 反証ログ。採用されなかったAI CEO提案と却下理由・再評価条件 |
+| `POST-EXP005-CANDIDATES.md` | Day 30後の展開候補（Postmortem材料）。実行はEXP-005完了後・L4判断待ち |
 | `OBSERVATIONS.md` | プロトコルレベルの観測記録（OBS-NNN。実験に属さない発見） |
 | `pipeline/` | ショート動画 全自動生成パイプライン（SOP・テンプレート・実測済み） |
 | `pipeline/growth-tactics.md` | 成長戦術SOP。採用した戦術と、ブランド・実験設計と衝突するため採用しなかった範囲の記録 |
