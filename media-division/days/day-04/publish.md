@@ -5,6 +5,10 @@
 ## 動画
 
 - `day4.mp4`（47.3秒・1080×1920・edge-tts音声・完全自動生成）
+- **2026-07-23 差し替え済み**: フォント修正版（EXP-006）。当初生成版は
+  日本語フォント未導入により中華圏フォントでレンダリングされていたため、
+  `fonts-noto-cjk`導入後に再レンダリング。文字内容・タイミングは同一、
+  字形のみ修正
 - 生成コマンド: `node pipeline/make-short-cloud.mjs days/day-04/scenario.json days/day-04/day4.mp4`
 - テーマ: 「月100万円」というYouTube事業OSプロンプトの目標を、今は追わず
   Day30のPostmortemまで判断を保留した、という実際の意思決定

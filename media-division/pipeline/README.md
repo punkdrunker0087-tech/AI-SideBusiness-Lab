@@ -23,6 +23,7 @@
 
 ```bash
 apt-get update && apt-get install -y ffmpeg          # フル版ffmpeg（Playwright付属版はVP8のみで不可）
+apt-get install -y fonts-noto-cjk                     # 日本語フォント（2026-07-23必須化。後述の理由参照）
 npm i playwright-core                                 # ブラウザは /opt/pw-browsers/ の同梱Chromiumを使う
 pip install edge-tts                                  # ニューラルTTS
 cat /root/.ccr/ca-bundle.crt >> $(python3 -c "import certifi; print(certifi.where())")
@@ -63,6 +64,15 @@ ffmpeg -y -ss 0.4 -i out/page@*.webm -i voice.mp3 \
   台本を差し替える場合はシーンのテキストと`@keyframes`のタイミング%を
   音声区切りに合わせて調整する
 - `record.mjs` — 録画スクリプト
+
+## フォントに関する注意（2026-07-23発覚・EXP-006）
+
+この環境には日本語フォント（Noto Sans CJK JP等）が標準で入っていない。
+`template.html`のCSSは`font-family: "Noto Sans CJK JP", "Noto Sans JP", sans-serif`
+と指定しているが、該当フォントが未インストールだと**中華圏向けフォント
+「WenQuanYi Zen Hei」にフォールバックし、字形が中国語寄りになる**。
+毎回の環境セットアップで`apt-get install -y fonts-noto-cjk`を必ず実行すること
+（上記コマンド列に追加済み）。詳細は`EXPERIMENTS.md`のEXP-006参照。
 
 ## 提出物の受け渡し方（2026-07-23追加）
 
