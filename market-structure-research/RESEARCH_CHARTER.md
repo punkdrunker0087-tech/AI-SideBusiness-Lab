@@ -46,15 +46,24 @@
 テーマは「候補を分類する箱」ではなく、「問いを整理する箱」である。
 テーマの中身は「候補→候補→候補」ではなく、**「Research Question→
 検証→結論」という単位（研究単位）**で構成する。1つの研究単位は
-`research_questions/RESEARCH_UNIT_TEMPLATE.md`で定義した9項目
-（Research Question→Mechanism→Observable→Proxy→Hypothesis→
-Pre-registration→Test→Evidence→Negative/Positive Result）だけを
-持ち、これ以上増やさない。各テーマのフォルダ内に`RQ-001`
-`RQ-002`...という形で研究単位を積み上げる（`research_questions/
-theme1_price_reaction_speed/RQ-001_earnings_reaction_speed.md`が
-第1号）。パイプライン自体の妥当性検証（ネガティブコントロール等、
-市場構造の問いではないもの）は`research_questions/pipeline_
-validation/`に`PV-001`のようにRQ番号とは別の連番で記録する。
+`research_questions/RESEARCH_UNIT_TEMPLATE.md`で定義した10項目
+（Research Question→Mechanism Candidate→Observable→Proxy→
+Alternative Explanation→Hypothesis→Pre-registration→Test→
+Evidence→Negative/Positive Result）だけを持ち、これ以上増やさない。
+各テーマのフォルダ内に`RQ-001``RQ-002`...という形で研究単位を
+積み上げる（`research_questions/theme1_price_reaction_speed/
+RQ-001_earnings_reaction_speed.md`が第1号）。パイプライン自体の
+妥当性検証（ネガティブコントロール等、市場構造の問いではないもの）は
+`research_questions/pipeline_validation/`に`PV-001`のようにRQ番号とは
+別の連番で記録する。
+
+**運用ルール（ユーザー指摘への応答、新しいマップ・憲章を増やさない
+代わりに）**: 新しいRQを書く・既存RQをレビューする際は、
+`RESEARCH_UNIT_TEMPLATE.md`の「レビュー運用」節にある5点
+（Mechanism/Mechanism Candidateの混同なし・RQの粒度が具体的・代理
+変数の妥当性が根拠つき・Alternative Explanationの明示・因果主張には
+DAG）を満たしているかを確認する。満たしていない既存RQ（`RQ-001`）は
+遡って修正済み。
 
 イベント（指数組入れ・政策保有株解消・決算等）は、この3テーマを
 検証するための**実験材料**であり、それ自体を「良さそうだから採用」
