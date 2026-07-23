@@ -1,21 +1,26 @@
-"""J-Quants API（無料プラン）クライアント ―― Point-in-Time財務データの取得。
+"""J-Quantsクライアント ―― Point-in-Time財務データの取得。
 
-## 認証フロー（無料プラン、v1）
-1. 登録したメールアドレス・パスワードを `/token/auth_user` にPOSTし、
-   リフレッシュトークン（有効期間1週間）を取得する。
-2. リフレッシュトークンを `/token/auth_refresh` に渡し、IDトークン
-   （有効期間24時間、以後のAPI呼び出しのBearerトークン）を取得する。
+## 認証方式（2種類に対応）
+J-Quantsには少なくとも2つの認証方式が存在することを実地で確認した:
 
-⚠️ 認証情報はコードに直接書かず、環境変数から読む
-（`JQUANTS_EMAIL` / `JQUANTS_PASSWORD`、または既にリフレッシュトークンが
-あれば `JQUANTS_REFRESH_TOKEN`）。`.gitignore`でcredentialsやキャッシュを
-除外している。
+1. **APIキー方式（J-Quants Pro/新方式）**: マイページの「API Keys」から
+   発行したキーを`x-api-key`ヘッダーで渡すだけ。メール/パスワードは
+   不要（Googleアカウントでの登録でもこちらが使える）。
+   環境変数 `JQUANTS_API_KEY` を使う。
+2. **メール/パスワード方式（旧・無料プランv1）**: `/token/auth_user`に
+   メール/パスワードをPOSTしてリフレッシュトークンを取得→
+   `/token/auth_refresh`でIDトークンを取得→Bearerトークンとして使う。
+   環境変数 `JQUANTS_EMAIL` / `JQUANTS_PASSWORD`（または既にリフレッシュ
+   トークンがあれば `JQUANTS_REFRESH_TOKEN`）を使う。
 
-⚠️ 無料プランの制約（AQM-01シリーズの調査で確認済み）: 提供される財務
-データは**過去2年分・12週間の開示遅延**。本シリーズ（Project A/AQM-01）
-のような15年間のPoint-in-Timeバックテストはこのデータだけでは組めない
-点に注意。まずは「短期間でも独立した情報軸を持つか」という限定的な
-問いから検証を始める。
+`JQUANTS_API_KEY`が設定されていればそちらを優先する。
+
+⚠️ 認証情報はコードに直接書かず、必ず環境変数から読む。
+`.gitignore`でcredentialsやキャッシュを除外している。
+
+⚠️ プラン・データ範囲の制約: 無料プランは過去2年分・12週間の開示遅延
+（AQM-01シリーズの調査で確認済み）。Proプランであれば範囲が広い可能性が
+あるが、実際の契約内容に応じて`check_connection()`で確認すること。
 """
 import os
 import time
@@ -24,27 +29,35 @@ import pandas as pd
 import requests
 
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "data")
-BASE_URL = "https://api.jquants.com/v1"
+BASE_URL_V1 = "https://api.jquants.com/v1"
+BASE_URL_V2 = "https://api.jquants-pro.com/v2"
 
 
 class JQuantsAuthError(RuntimeError):
     pass
 
 
+def _auth_mode() -> str:
+    if os.environ.get("JQUANTS_API_KEY"):
+        return "api_key"
+    if os.environ.get("JQUANTS_EMAIL") and os.environ.get("JQUANTS_PASSWORD"):
+        return "email_password"
+    if os.environ.get("JQUANTS_REFRESH_TOKEN"):
+        return "email_password"
+    raise JQuantsAuthError(
+        "認証情報が環境変数にありません。JQUANTS_API_KEY か、"
+        "JQUANTS_EMAIL+JQUANTS_PASSWORD（またはJQUANTS_REFRESH_TOKEN）を設定してください。"
+    )
+
+
 def _get_refresh_token() -> str:
     token = os.environ.get("JQUANTS_REFRESH_TOKEN")
     if token:
         return token
-
     email = os.environ.get("JQUANTS_EMAIL")
     password = os.environ.get("JQUANTS_PASSWORD")
-    if not email or not password:
-        raise JQuantsAuthError(
-            "認証情報が環境変数にありません。JQUANTS_EMAIL / JQUANTS_PASSWORD "
-            "（またはJQUANTS_REFRESH_TOKEN）を設定してください。"
-        )
     resp = requests.post(
-        f"{BASE_URL}/token/auth_user",
+        f"{BASE_URL_V1}/token/auth_user",
         json={"mailaddress": email, "password": password},
         timeout=20,
     )
@@ -55,11 +68,10 @@ def _get_refresh_token() -> str:
     return data["refreshToken"]
 
 
-def get_id_token() -> str:
-    """IDトークンを取得する（毎回リフレッシュトークンから再発行。24時間有効）。"""
+def _get_id_token() -> str:
     refresh_token = _get_refresh_token()
     resp = requests.post(
-        f"{BASE_URL}/token/auth_refresh",
+        f"{BASE_URL_V1}/token/auth_refresh",
         params={"refreshtoken": refresh_token},
         timeout=20,
     )
@@ -70,8 +82,14 @@ def get_id_token() -> str:
     return data["idToken"]
 
 
-def _headers() -> dict:
-    return {"Authorization": f"Bearer {get_id_token()}"}
+def _base_url_and_headers() -> tuple:
+    """(base_url, headers) を認証方式に応じて返す。"""
+    mode = _auth_mode()
+    if mode == "api_key":
+        api_key = os.environ["JQUANTS_API_KEY"]
+        return BASE_URL_V2, {"x-api-key": api_key}
+    id_token = _get_id_token()
+    return BASE_URL_V1, {"Authorization": f"Bearer {id_token}"}
 
 
 def fetch_statements(code: str = None, date: str = None, use_cache: bool = True) -> pd.DataFrame:
@@ -88,6 +106,7 @@ def fetch_statements(code: str = None, date: str = None, use_cache: bool = True)
     if use_cache and os.path.exists(cache_path):
         return pd.read_csv(cache_path)
 
+    base_url, headers = _base_url_and_headers()
     params = {}
     if code:
         params["code"] = code
@@ -99,8 +118,8 @@ def fetch_statements(code: str = None, date: str = None, use_cache: bool = True)
     while True:
         if pagination_key:
             params["pagination_key"] = pagination_key
-        resp = requests.get(f"{BASE_URL}/fins/statements", params=params,
-                            headers=_headers(), timeout=30)
+        resp = requests.get(f"{base_url}/fins/statements", params=params,
+                            headers=headers, timeout=30)
         resp.raise_for_status()
         data = resp.json()
         rows.extend(data.get("statements", []))
@@ -116,18 +135,19 @@ def fetch_statements(code: str = None, date: str = None, use_cache: bool = True)
 
 
 def check_connection() -> dict:
-    """接続確認用: IDトークン取得と、直近の開示情報を1件だけ試し取りする。"""
-    token = get_id_token()
+    """接続確認用: 認証情報の有効性と、直近の開示情報を1件だけ試し取りする。"""
+    mode = _auth_mode()
+    base_url, headers = _base_url_and_headers()
     resp = requests.get(
-        f"{BASE_URL}/fins/statements",
+        f"{base_url}/fins/statements",
         params={"code": "86970"},  # 例: 日本取引所グループ自身
-        headers={"Authorization": f"Bearer {token}"},
+        headers=headers,
         timeout=20,
     )
     resp.raise_for_status()
     data = resp.json()
     n = len(data.get("statements", []))
-    return {"id_token_prefix": token[:12] + "...", "sample_records": n}
+    return {"auth_mode": mode, "base_url": base_url, "sample_records": n}
 
 
 if __name__ == "__main__":
