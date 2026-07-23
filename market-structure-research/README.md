@@ -177,6 +177,19 @@ control.md`で事前登録し、`negative_control_test.py`（RQ-001と同一の
 段階に移行したと判断する。** Evidence Level: 両方ともE2-R0
 （単一データセット・単一条件、感度分析は未実施）。
 
+## RQ-002（流動性によるBlocking Strategy）
+
+`research_questions/theme1_price_reaction_speed/RQ-002_liquidity_
+blocking.md`。RQ-001のAlternative Explanationのうち最有力だった
+「流動性」を、高流動性群・低流動性群に中央値分割して統制した。両群の
+ratio点推定値はほぼ一致（中央値0.435 vs 0.442）したが、有意性は
+低流動性群のみ（p=0.017、高流動性群はp=0.106）で、事前登録した
+「想定していなかったパターン」に該当した。**Decision: 再実験**——
+2群のp値を別々に見る設計では「効果が流動性に依存するか」を直接
+検定できないという設計上の限界が判明したため、棄却でも支持でもなく、
+2群の差を直接検定する設計（回帰・ブートストラップ）でのRQ-003を
+次に予定する。
+
 ## サブテーマ候補（未着手、`ARBITRAGE_CONSTRAINT_MAP.md`で検討中）
 
 - **需給・制度イベント**（指数組入れ・除外、政策保有株解消等）:
