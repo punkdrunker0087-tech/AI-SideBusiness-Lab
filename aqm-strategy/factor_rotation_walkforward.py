@@ -36,17 +36,28 @@ import stats_eval  # noqa: E402
 import factors
 import fx_factor as fx
 import panel
+import rate_factor as rate
 import strategy
 
 
 def build_factor_scores(close: pd.DataFrame, volume: pd.DataFrame,
-                        fx_close: pd.Series, fx_window: int = 504) -> dict:
-    """各ファクターの単独スコア（符号統一済み、高いほど良い）を返す。"""
+                        fx_close: pd.Series, rate_close: pd.Series = None,
+                        fx_window: int = 504, rate_window: int = 252) -> dict:
+    """各ファクターの単独スコア（符号統一済み、高いほど良い）を返す。
+
+    rate_close を渡すと、金利感応度ファクター（`rate_factor.py`。FXベータとの
+    横断相関は約0.49で、部分的に独立した情報を持つと確認済み）を5つ目の
+    候補として追加する。「材料自体を増やす」というループ学習改善の最優先
+    施策に対応。
+    """
     zM = factors.zscore_cross(factors.momentum(close))
     zS = factors.zscore_cross(factors.volatility(close))
     zL = factors.zscore_cross(factors.liquidity(close, volume))
     zFX = fx.fx_zscore_factor(close, fx_close, window=fx_window)
-    return {"Momentum": zM, "LowVol": -zS, "Liquidity": zL, "FX": zFX}
+    result = {"Momentum": zM, "LowVol": -zS, "Liquidity": zL, "FX": zFX}
+    if rate_close is not None:
+        result["Rate"] = rate.rate_zscore_factor(close, rate_close, window=rate_window)
+    return result
 
 
 def factor_standalone_returns(close: pd.DataFrame, scores: dict,
@@ -160,8 +171,9 @@ def main():
     print("パネル構築中（15年・225銘柄・キャッシュ利用）…")
     close, volume = panel.build_panel(range_="15y", use_cache=True)
     fx_close = fx.fetch_usdjpy(range_="15y", use_cache=True)
+    rate_close = rate.fetch_us10y(range_="15y", use_cache=True)
 
-    scores = build_factor_scores(close, volume, fx_close)
+    scores = build_factor_scores(close, volume, fx_close, rate_close)
     standalone = factor_standalone_returns(close, scores)
 
     print("\n各ファクター単独の全期間成績（参考）:")
@@ -195,10 +207,19 @@ def main():
     m_fx = strategy.metrics(res_fx.returns, res_fx.equity)
     ret_series["fixed_fx_only"] = res_fx.returns
 
+    res_rate = strategy.backtest(close, scores["Rate"], top_q=0.2, rebalance="ME")
+    m_rate = strategy.metrics(res_rate.returns, res_rate.equity)
+    ret_series["fixed_rate_only"] = res_rate.returns
+
+    fixed_fx_rate = scores["FX"] * 0.5 + scores["Rate"] * 0.5
+    res_fxrate = strategy.backtest(close, fixed_fx_rate, top_q=0.2, rebalance="ME")
+    m_fxrate = strategy.metrics(res_fxrate.returns, res_fxrate.equity)
+    ret_series["fixed_fx_rate_5050"] = res_fxrate.returns
+
     universe_eq = (close.mean(axis=1) / close.mean(axis=1).iloc[0])
 
     print("\n" + "=" * 78)
-    print("全手法まとめ")
+    print("全手法まとめ（Rate追加＝5ファクタープールでの再検証）")
     print("=" * 78)
     for method, label in [("chasing", "v1チェイシング型　"), ("shrinkage", "v2シュリンク+下限型"),
                           ("risk_parity", "v3リスクパリティ型")]:
@@ -206,9 +227,11 @@ def main():
         print(f"  {label}: {strategy.format_metrics(m)}")
     print(f"  固定3ファクターのみ　: {strategy.format_metrics(m_3f)}")
     print(f"  固定FXのみ　　　　　: {strategy.format_metrics(m_fx)}")
+    print(f"  固定Rateのみ　　　　: {strategy.format_metrics(m_rate)}")
+    print(f"  固定FX+Rate 50/50　　: {strategy.format_metrics(m_fxrate)}")
     print(f"  （参考）ユニバース均等保有 最終={universe_eq.iloc[-1]:.2f}倍")
 
-    # DSR/PBO: 3つの動的手法 + 固定3F + 固定FX の5通りを比較
+    # DSR/PBO: 3つの動的手法 + 固定3F + 固定FX + 固定Rate + 固定FX+Rate の7通りを比較
     common_index = None
     for r in ret_series.values():
         common_index = r.index if common_index is None else common_index.intersection(r.index)
@@ -219,7 +242,7 @@ def main():
     best_key = list(ret_series.keys())[best_idx]
     dsr = stats_eval.deflated_sharpe_ratio(returns_matrix[:, best_idx], per_period_sharpes)
     pbo = stats_eval.pbo_cscv(returns_matrix, n_splits=10)
-    print(f"\nDSR/PBO比較（5通り: v1/v2/v3/固定3F/固定FX）:")
+    print(f"\nDSR/PBO比較（7通り: v1/v2/v3/固定3F/固定FX/固定Rate/固定FX+Rate）:")
     print(f"  最良: {best_key}  DSR={dsr['dsr']:.3f}  PBO={pbo['pbo']:.3f}")
 
 
