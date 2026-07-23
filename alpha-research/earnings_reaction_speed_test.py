@@ -50,23 +50,29 @@ def load_disclosure_dates():
     return events
 
 
-def main():
-    close = load_universe_prices()
-    events = load_disclosure_dates()
-
+def compute_ar(close):
+    """全銘柄共通の市場調整後異常収益を計算する。ネガティブコントロール
+    (negative_control_test.py)からも同一関数を呼び、パイプラインの
+    計算部分自体は一切変更せずにイベント日だけを差し替える。"""
     logret = np.log(close / close.shift(1))
     market = logret.mean(axis=1)  # 日経225近似ユニバースの単純平均＝市場リターンの代理
-    ar = logret.sub(market, axis=0)  # 市場調整後異常収益
+    return logret.sub(market, axis=0)
 
-    trading_days = close.index
 
+def run_reaction_speed_pipeline(ar, trading_days, events, seed=SEED, label="H2"):
+    """イベント日の集合を受け取り、CAR3/CAR20比率とPermutation検定を返す。
+
+    events: {code: [Timestamp, ...]} 形式。本物のDiscDateでもランダムな
+    偽イベント日でも、この関数は同一のロジックで処理する
+    （ネガティブコントロールの前提: パイプライン自体は変えない）。
+    """
     rows = []
     for code, disc_dates in events.items():
         if code not in ar.columns:
             continue
         series = ar[code]
         for d in disc_dates:
-            pos = trading_days.searchsorted(d, side="right")  # DiscDate翌営業日
+            pos = trading_days.searchsorted(d, side="right")
             if pos <= 0 or pos + CAR_LONG >= len(trading_days):
                 continue
             window = series.iloc[pos: pos + CAR_LONG + 1]
@@ -78,24 +84,22 @@ def main():
                          "car3": car3, "car20": car20, "window": window.values})
 
     events_df = pd.DataFrame([{k: v for k, v in r.items() if k != "window"} for r in rows])
-    print(f"検出したイベント総数: {len(events_df)}")
+    print(f"[{label}] 検出したイベント総数: {len(events_df)}")
 
     events_df["abs_car20"] = events_df["car20"].abs()
     qualifying = events_df[events_df["abs_car20"] >= MIN_ABS_CAR20].copy()
-    print(f"|CAR_20|>=1%のフィルタ後: {len(qualifying)}件")
+    print(f"[{label}] |CAR_20|>=1%のフィルタ後: {len(qualifying)}件")
 
     qualifying["ratio"] = qualifying["car3"].abs() / qualifying["car20"].abs()
     median_ratio = qualifying["ratio"].median()
     mean_ratio = qualifying["ratio"].mean()
-    print(f"ratio中央値: {median_ratio:.4f}")
-    print(f"ratio平均値: {mean_ratio:.4f}")
-    print(f"H2判定（中央値>=0.80で支持）: {'支持' if median_ratio >= 0.80 else '棄却'}")
+    print(f"[{label}] ratio中央値: {median_ratio:.4f} / 平均値: {mean_ratio:.4f}")
 
     windows = {r["code"] + str(r["event_date"]): r["window"] for r in rows}
     qual_keys = [c + str(d) for c, d in zip(qualifying["code"], qualifying["event_date"])]
     qual_windows = [windows[k] for k in qual_keys]
 
-    rng = np.random.default_rng(SEED)
+    rng = np.random.default_rng(seed)
     perm_means = []
     for _ in range(N_PERM):
         ratios = []
@@ -110,12 +114,31 @@ def main():
     perm_means = np.array(perm_means)
 
     p_value = (perm_means >= mean_ratio).mean()
-    print(f"Permutation null平均: {perm_means.mean():.4f} (std {perm_means.std():.4f})")
-    print(f"実際の平均ratio: {mean_ratio:.4f}")
-    print(f"片側p値（実際 >= null分布上での比率）: {p_value:.4f}")
+    print(f"[{label}] Permutation null平均: {perm_means.mean():.4f} (std {perm_means.std():.4f})")
+    print(f"[{label}] 片側p値: {p_value:.4f}")
 
-    events_df.to_csv(os.path.join(ALPHA_DIR, "data", "h2_events_raw.csv"), index=False)
-    qualifying.to_csv(os.path.join(ALPHA_DIR, "data", "h2_qualifying_events.csv"), index=False)
+    return {
+        "events_df": events_df,
+        "qualifying": qualifying,
+        "median_ratio": median_ratio,
+        "mean_ratio": mean_ratio,
+        "perm_mean": perm_means.mean(),
+        "perm_std": perm_means.std(),
+        "p_value": p_value,
+    }
+
+
+def main():
+    close = load_universe_prices()
+    events = load_disclosure_dates()
+    ar = compute_ar(close)
+    result = run_reaction_speed_pipeline(ar, close.index, events, label="H2(実イベント)")
+
+    print(f"H2判定（中央値>=0.80で支持）: "
+          f"{'支持' if result['median_ratio'] >= 0.80 else '棄却'}")
+
+    result["events_df"].to_csv(os.path.join(ALPHA_DIR, "data", "h2_events_raw.csv"), index=False)
+    result["qualifying"].to_csv(os.path.join(ALPHA_DIR, "data", "h2_qualifying_events.csv"), index=False)
 
 
 if __name__ == "__main__":
