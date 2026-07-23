@@ -5,17 +5,20 @@
 
 ## 未着手
 
-### 【新プロジェクト・着手済】Point-in-Time Research（`pit-research/`、AQM-01の続きではない）
+### 【新プロジェクト・接続確認済】Point-in-Time Research（`pit-research/`、AQM-01の続きではない）
 
-- **着手した**: `pit-research/`ディレクトリを新設し、J-Quants API
-  クライアント（`jquants_client.py`、email/password→refreshToken→
-  idToken認証、`/fins/statements`取得）とREADME（Project A/Bの区別・
-  データソースの制約・3段階ゲートの進め方を明記）を用意した。
-- **現在の状態**: ユーザーがJ-Quants(https://jpx-jquants.com)に登録し、
-  API認証情報（環境変数`JQUANTS_EMAIL`/`JQUANTS_PASSWORD`または
-  `JQUANTS_REFRESH_TOKEN`）を共有するのを待っている段階。認証情報が
-  揃い次第、まずEPS修正率を1つ目の候補として①新規性→②DSR/PBO→
-  ③限界貢献度のゲートを通す。
+- **接続確認済み（2026-07-23）**: `pit-research/`ディレクトリを新設。
+  J-Quants API(V2)は当初想定と異なりAPIキー認証のみ（`x-api-key`
+  ヘッダー、メール/パスワード不要）で、ベースURLも
+  `https://api.jquants.com/v2`（`api.jquants-pro.com`ではない）と
+  実地確認して`jquants_client.py`を修正。`/fins/summary`（決算短信
+  サマリー、EPS・予想EPS・修正後予想EPS・`DiscDate`=開示日つき）への
+  接続・実データ取得に成功した。
+- Freeプランのデータ範囲は実地確認で約2年分（確認時点で
+  2024-04-30〜2026-04-30のローリングウィンドウ）。
+- **次にやること**: EPS修正率を1つ目の候補として①新規性（Project Aの
+  2テーマとの相関・クラスタリング）→②単独DSR/PBO→③限界貢献度の
+  ゲートを通す。
 - **記録日**: 2026-07-23
 
 - **AQM-01（Price-only Research v1.0）は2026-07-23付けで凍結済み**

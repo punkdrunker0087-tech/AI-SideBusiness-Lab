@@ -1,26 +1,27 @@
-"""J-Quantsクライアント ―― Point-in-Time財務データの取得。
+"""J-Quants API (V2) クライアント ―― Point-in-Time財務データの取得。
 
-## 認証方式（2種類に対応）
-J-Quantsには少なくとも2つの認証方式が存在することを実地で確認した:
+## 認証方式（実地で確認・2026-07-23）
+V2 APIはAPIキー方式（`x-api-key`ヘッダー）のみ。マイページの
+「API Keys」から発行する（Googleアカウントでの登録でも問題なく使える。
+メール/パスワードは不要）。
 
-1. **APIキー方式（J-Quants Pro/新方式）**: マイページの「API Keys」から
-   発行したキーを`x-api-key`ヘッダーで渡すだけ。メール/パスワードは
-   不要（Googleアカウントでの登録でもこちらが使える）。
-   環境変数 `JQUANTS_API_KEY` を使う。
-2. **メール/パスワード方式（旧・無料プランv1）**: `/token/auth_user`に
-   メール/パスワードをPOSTしてリフレッシュトークンを取得→
-   `/token/auth_refresh`でIDトークンを取得→Bearerトークンとして使う。
-   環境変数 `JQUANTS_EMAIL` / `JQUANTS_PASSWORD`（または既にリフレッシュ
-   トークンがあれば `JQUANTS_REFRESH_TOKEN`）を使う。
+⚠️ ベースURLは`https://api.jquants.com/v2`（`api.jquants-pro.com`では
+ない。実地の接続テストで確認済み）。
 
-`JQUANTS_API_KEY`が設定されていればそちらを優先する。
+環境変数 `JQUANTS_API_KEY` にAPIキーをセットして使う。コードには
+直接書かない。`.gitignore`でcredentials・キャッシュを除外している。
 
-⚠️ 認証情報はコードに直接書かず、必ず環境変数から読む。
-`.gitignore`でcredentialsやキャッシュを除外している。
+## 使用エンドポイント
+- `/v2/fins/summary`: 決算短信サマリー（EPS・予想EPS・修正後予想・
+  配当等。`DiscDate`=開示日つきなので、これを基準にPoint-in-Timeで
+  扱える——「その開示日**より後**でなければ、その数値は市場参加者に
+  見えていなかった」という先読み防止の基準そのものになる）。
+- `/v2/equities/bars/daily`: 株価四本値（分割調整済み `Adj*` 列あり）。
 
-⚠️ プラン・データ範囲の制約: 無料プランは過去2年分・12週間の開示遅延
-（AQM-01シリーズの調査で確認済み）。Proプランであれば範囲が広い可能性が
-あるが、実際の契約内容に応じて`check_connection()`で確認すること。
+⚠️ Freeプランのデータ範囲は実地確認で **約2年分（動的なローリング
+ウィンドウ、確認時点で2024-04-30〜2026-04-30）**。範囲外の日付を指定
+すると400エラー（"Your subscription covers the following dates: ..."）
+になる。
 """
 import os
 import time
@@ -29,104 +30,78 @@ import pandas as pd
 import requests
 
 CACHE_DIR = os.path.join(os.path.dirname(__file__), "data")
-BASE_URL_V1 = "https://api.jquants.com/v1"
-BASE_URL_V2 = "https://api.jquants-pro.com/v2"
+BASE_URL = "https://api.jquants.com/v2"
 
 
 class JQuantsAuthError(RuntimeError):
     pass
 
 
-def _auth_mode() -> str:
-    if os.environ.get("JQUANTS_API_KEY"):
-        return "api_key"
-    if os.environ.get("JQUANTS_EMAIL") and os.environ.get("JQUANTS_PASSWORD"):
-        return "email_password"
-    if os.environ.get("JQUANTS_REFRESH_TOKEN"):
-        return "email_password"
-    raise JQuantsAuthError(
-        "認証情報が環境変数にありません。JQUANTS_API_KEY か、"
-        "JQUANTS_EMAIL+JQUANTS_PASSWORD（またはJQUANTS_REFRESH_TOKEN）を設定してください。"
-    )
+def _headers() -> dict:
+    api_key = os.environ.get("JQUANTS_API_KEY")
+    if not api_key:
+        raise JQuantsAuthError("環境変数 JQUANTS_API_KEY が設定されていません。")
+    return {"x-api-key": api_key}
 
 
-def _get_refresh_token() -> str:
-    token = os.environ.get("JQUANTS_REFRESH_TOKEN")
-    if token:
-        return token
-    email = os.environ.get("JQUANTS_EMAIL")
-    password = os.environ.get("JQUANTS_PASSWORD")
-    resp = requests.post(
-        f"{BASE_URL_V1}/token/auth_user",
-        json={"mailaddress": email, "password": password},
-        timeout=20,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    if "refreshToken" not in data:
-        raise JQuantsAuthError(f"リフレッシュトークン取得失敗: {data}")
-    return data["refreshToken"]
+def _get(path: str, params: dict) -> list:
+    """ページネーションに対応した汎用GET。"""
+    rows = []
+    cursor = None
+    while True:
+        p = dict(params)
+        if cursor:
+            p["cursor"] = cursor
+        resp = requests.get(f"{BASE_URL}{path}", params=p, headers=_headers(), timeout=30)
+        resp.raise_for_status()
+        data = resp.json()
+        rows.extend(data.get("data", []))
+        cursor = data.get("cursor") or data.get("pagination_key")
+        if not cursor:
+            break
+        time.sleep(0.2)
+    return rows
 
 
-def _get_id_token() -> str:
-    refresh_token = _get_refresh_token()
-    resp = requests.post(
-        f"{BASE_URL_V1}/token/auth_refresh",
-        params={"refreshtoken": refresh_token},
-        timeout=20,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    if "idToken" not in data:
-        raise JQuantsAuthError(f"IDトークン取得失敗: {data}")
-    return data["idToken"]
+def fetch_fins_summary(code: str = None, date: str = None, use_cache: bool = True) -> pd.DataFrame:
+    """決算短信サマリーを取得する（`code`=銘柄コード or `date`=開示日）。
 
-
-def _base_url_and_headers() -> tuple:
-    """(base_url, headers) を認証方式に応じて返す。"""
-    mode = _auth_mode()
-    if mode == "api_key":
-        api_key = os.environ["JQUANTS_API_KEY"]
-        return BASE_URL_V2, {"x-api-key": api_key}
-    id_token = _get_id_token()
-    return BASE_URL_V1, {"Authorization": f"Bearer {id_token}"}
-
-
-def fetch_statements(code: str = None, date: str = None, use_cache: bool = True) -> pd.DataFrame:
-    """財務情報を取得する（`code`=銘柄コード or `date`=開示日、いずれか指定）。
-
-    銘柄コード指定時はその銘柄の開示履歴（複数期）が返る＝Point-in-Time
-    分析の核。開示日指定時はその日に開示された全銘柄分が返る。
+    銘柄コード指定時はその銘柄の開示履歴（複数期、Point-in-Time分析の核）
+    が返る。`DiscDate`列を基準に「この開示日より後の時点でのみこの数値を
+    使ってよい」という先読み防止ルールを適用すること。
     """
     if not code and not date:
         raise ValueError("code か date のいずれかを指定してください。")
     key = code or date
     safe_key = str(key).replace("/", "_")
-    cache_path = os.path.join(CACHE_DIR, f"statements_{safe_key}.csv")
+    cache_path = os.path.join(CACHE_DIR, f"fins_summary_{safe_key}.csv")
     if use_cache and os.path.exists(cache_path):
         return pd.read_csv(cache_path)
 
-    base_url, headers = _base_url_and_headers()
     params = {}
     if code:
         params["code"] = code
     if date:
         params["date"] = date
+    rows = _get("/fins/summary", params)
 
-    rows = []
-    pagination_key = None
-    while True:
-        if pagination_key:
-            params["pagination_key"] = pagination_key
-        resp = requests.get(f"{base_url}/fins/statements", params=params,
-                            headers=headers, timeout=30)
-        resp.raise_for_status()
-        data = resp.json()
-        rows.extend(data.get("statements", []))
-        pagination_key = data.get("pagination_key")
-        if not pagination_key:
-            break
-        time.sleep(0.2)
+    df = pd.DataFrame(rows)
+    os.makedirs(CACHE_DIR, exist_ok=True)
+    df.to_csv(cache_path, index=False)
+    return df
+
+
+def fetch_daily_bars(code: str, date: str = None, use_cache: bool = True) -> pd.DataFrame:
+    """株価四本値（分割調整済み）を取得する。`date`省略時は取得可能な全期間。"""
+    safe_key = f"{code}_{date}" if date else code
+    cache_path = os.path.join(CACHE_DIR, f"bars_{safe_key}.csv")
+    if use_cache and os.path.exists(cache_path):
+        return pd.read_csv(cache_path)
+
+    params = {"code": code}
+    if date:
+        params["date"] = date
+    rows = _get("/equities/bars/daily", params)
 
     df = pd.DataFrame(rows)
     os.makedirs(CACHE_DIR, exist_ok=True)
@@ -135,19 +110,10 @@ def fetch_statements(code: str = None, date: str = None, use_cache: bool = True)
 
 
 def check_connection() -> dict:
-    """接続確認用: 認証情報の有効性と、直近の開示情報を1件だけ試し取りする。"""
-    mode = _auth_mode()
-    base_url, headers = _base_url_and_headers()
-    resp = requests.get(
-        f"{base_url}/fins/statements",
-        params={"code": "86970"},  # 例: 日本取引所グループ自身
-        headers=headers,
-        timeout=20,
-    )
-    resp.raise_for_status()
-    data = resp.json()
-    n = len(data.get("statements", []))
-    return {"auth_mode": mode, "base_url": base_url, "sample_records": n}
+    """接続確認用: サンプル銘柄(8697=日本取引所グループ)の決算サマリーを1件取得する。"""
+    df = fetch_fins_summary(code="86970", use_cache=False)
+    return {"base_url": BASE_URL, "n_records": len(df),
+           "columns_sample": df.columns.tolist()[:10] if not df.empty else []}
 
 
 if __name__ == "__main__":
