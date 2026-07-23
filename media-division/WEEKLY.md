@@ -121,6 +121,29 @@ media-division/weeks/week-01/
   report.md             週次報告（今週のEXP一覧を含む）
 ```
 
+## Research Review（毎週末・必須・2026-07-24追加）
+
+週報パッケージの最後に必ず実行し、`week-0N/report.md`に記録する。
+これがあることで、毎週の実験が独立せず、一つの研究プロジェクトとして
+連続性を持つ。翌週のRoutine実行時（Day7の倍数の日）は、前週の
+Research Reviewを参照してから当週の台本を作る。
+
+```
+Research Review — Week N
+
+今週の仮説は正しかったか？: YES / NO / 保留
+その理由:
+次週の仮説:
+実験番号: EXP-0NN
+引き継ぐ課題:
+中止する課題:
+```
+
+- 「保留」は許容する（Analyticsが取得できない等、判断材料が
+  揃わない場合はYES/NOを断定しない。憲法第4条）
+- 「中止する課題」は削除ではなく、`EXPERIMENTS.md`側でArchived/
+  Supersededのステータスに変更して残す（憲法第2条・第3条）
+
 ## 年間資産としての位置づけ
 
 52週続けば、Week1〜Week52がそのまま「AI動画自動生成プロジェクトの開発
