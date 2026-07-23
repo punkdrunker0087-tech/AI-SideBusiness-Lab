@@ -21,8 +21,19 @@
 - **却下候補の資産化（2026-07-23）**: `NEGATIVE_RESULTS.md`を新設し、
   これまで却下した7候補（Accruals・Gross Profitability・短期
   リバーサル・IVOL・スキューネス・共変動・EPS修正率）を検証設計・
-  却下根拠・Evidence Levelつきで記録。「良かったもの」より「捨てた
-  もの」の方が多いことこそがこのプロジェクトの資産、という位置づけ。
+  却下根拠（Novelty/DSR・PBO/Mechanism/Replication/Economic
+  Rationaleに構造化したタグつき）・Evidence Levelで記録。「良かった
+  もの」より「捨てたもの」の方が多いことこそがこのプロジェクトの
+  資産、という位置づけ。
+- **研究単位（Research Unit）への一段の抽象化（2026-07-23）**:
+  「テーマ→候補→候補」ではなく「Research Question→Mechanism→
+  Observable→Proxy→Hypothesis→Pre-registration→Test→Evidence→
+  Negative/Positive Result」という固定9項目の研究単位に統一
+  （`research_questions/RESEARCH_UNIT_TEMPLATE.md`）。テーマフォルダ
+  内に`RQ-001``RQ-002`...と積み上げる形に再編し、H2/H0をRQ-001/PV-001
+  として移設。憲章の末尾に「本プロジェクトの成果は、採択した仮説の
+  数ではなく、正しく棄却できた仮説の質によって評価する」という
+  評価軸を追記。
 - **Evidence Level・Robustness軸・投資候補への昇格ルール**:
   E2未満は「候補」と呼ばない、E4未満は「頑健」と呼ばない
   （Evidence Level）。R0〜R5（単一条件〜完全再現）を併記し、
