@@ -46,20 +46,28 @@
 テーマは「候補を分類する箱」ではなく、「問いを整理する箱」である。
 テーマの中身は「候補→候補→候補」ではなく、**「Research Question→
 検証→結論」という単位（研究単位）**で構成する。1つの研究単位は
-`research_questions/RESEARCH_UNIT_TEMPLATE.md`で定義した10項目
-（Research Question→Mechanism Candidate→Observable→Proxy→
-Alternative Explanation→Hypothesis→Pre-registration→Test→
-Evidence→Negative/Positive Result）だけを持ち、これ以上増やさない。
-各テーマのフォルダ内に`RQ-001``RQ-002`...という形で研究単位を
-積み上げる（`research_questions/theme1_price_reaction_speed/
-RQ-001_earnings_reaction_speed.md`が第1号）。パイプライン自体の
+`research_questions/RESEARCH_UNIT_TEMPLATE.md`で定義した**必須7項目
+（Research Question→Observable→Hypothesis→Pre-registration→Test→
+Evidence→Decision）＋条件付き必須4項目（Mechanism Candidate・Proxy・
+Alternative Explanation・DAG＋Blocking Strategy、該当する場合のみ）**
+で構成する。各テーマのフォルダ内に`RQ-001``RQ-002`...という形で
+研究単位を積み上げる（`research_questions/theme1_price_reaction_
+speed/RQ-001_earnings_reaction_speed.md`が第1号）。パイプライン自体の
 妥当性検証（ネガティブコントロール等、市場構造の問いではないもの）は
 `research_questions/pipeline_validation/`に`PV-001`のようにRQ番号とは
 別の連番で記録する。
 
+**⚠️ テンプレートの拡張はここで凍結する（ユーザー指摘）。** 必須項目
+5つ（RQ・Observable・Hypothesis・Test・Evidence）はユーザー提案通り、
+Pre-registrationとDecisionを本プロジェクトの判断で必須に維持した
+（理由は`RESEARCH_UNIT_TEMPLATE.md`参照）。**以降、テンプレートを
+さらに改訂したくなっても、まず10〜20本のRQを実際に運用し、「どの
+項目が実際に使われ、どの項目が使われなかったか」を観察してから
+判断する。** これ自体が新しいマップ・憲章を増やさないための歯止め。
+
 **運用ルール（ユーザー指摘への応答、新しいマップ・憲章を増やさない
 代わりに）**: 新しいRQを書く・既存RQをレビューする際は、
-`RESEARCH_UNIT_TEMPLATE.md`の「レビュー運用」節にある5点
+`RESEARCH_UNIT_TEMPLATE.md`の「レビュー運用」節にある6点
 （Mechanism/Mechanism Candidateの混同なし・RQの粒度が具体的・代理
 変数の妥当性が根拠つき・Alternative Explanationの明示・因果主張には
 DAG）を満たしているかを確認する。満たしていない既存RQ（`RQ-001`）は
