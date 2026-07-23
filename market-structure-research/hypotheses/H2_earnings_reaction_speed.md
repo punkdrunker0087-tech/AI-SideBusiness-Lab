@@ -29,12 +29,13 @@
 
 ### ユニバース・データ
 
-- `aqm-strategy`の日経225近似ユニバース（225銘柄）と、`alpha-research`
-  にJ-Quantsからキャッシュ済みの`/fins/summary`データの共通銘柄
+- `aqm-strategy`の日経225近似ユニバース（225銘柄）と、本ディレクトリ
+  （当時`alpha-research`、現`market-structure-research`）にJ-Quantsから
+  キャッシュ済みの`/fins/summary`データの共通銘柄
   （225銘柄中225銘柄がマッチ、データ確認済み）
 - 価格データ: `aqm-strategy/data/{code}.T_15y.csv`（Yahoo Finance
   調整済み終値、既存のsplit修正・グリッチ除去済み）
-- 開示データ: `alpha-research/data/fins_summary_{code}.csv`の`DiscDate`
+- 開示データ: `data/fins_summary_{code}.csv`の`DiscDate`
   列（FY・四半期決算の全開示、開示種別を区別しない）
 
 ### イベント定義
