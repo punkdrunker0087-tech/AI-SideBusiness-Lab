@@ -60,6 +60,7 @@ LIMIT LAB（単一ブランド・人間のCEO）
 | `OBSERVATIONS.md` | プロトコルレベルの観測記録（OBS-NNN。実験に属さない発見） |
 | `pipeline/` | ショート動画 全自動生成パイプライン（SOP・テンプレート・実測済み） |
 | `pipeline/growth-tactics.md` | 成長戦術SOP。採用した戦術と、ブランド・実験設計と衝突するため採用しなかった範囲の記録 |
+| `WEEKLY.md` | 週次まとめ動画（EXP-008）のSOP。台本構成・サムネイル生成・投稿タイミング |
 | `../docs/company-setup/` | 実法人化する場合の手続き・費用・AIにできないこと調査 |
 
 ## 現在のステータス
