@@ -5,7 +5,18 @@
 
 ## 未着手
 
-### 【新プロジェクト候補】Point-in-Time Research（AQM-01の続きではない）
+### 【新プロジェクト・着手済】Point-in-Time Research（`pit-research/`、AQM-01の続きではない）
+
+- **着手した**: `pit-research/`ディレクトリを新設し、J-Quants API
+  クライアント（`jquants_client.py`、email/password→refreshToken→
+  idToken認証、`/fins/statements`取得）とREADME（Project A/Bの区別・
+  データソースの制約・3段階ゲートの進め方を明記）を用意した。
+- **現在の状態**: ユーザーがJ-Quants(https://jpx-jquants.com)に登録し、
+  API認証情報（環境変数`JQUANTS_EMAIL`/`JQUANTS_PASSWORD`または
+  `JQUANTS_REFRESH_TOKEN`）を共有するのを待っている段階。認証情報が
+  揃い次第、まずEPS修正率を1つ目の候補として①新規性→②DSR/PBO→
+  ③限界貢献度のゲートを通す。
+- **記録日**: 2026-07-23
 
 - **AQM-01（Price-only Research v1.0）は2026-07-23付けで凍結済み**
   （下記「済」参照、詳細は`aqm-strategy/README.md`「研究フェーズの
