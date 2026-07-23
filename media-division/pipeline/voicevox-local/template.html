@@ -6,17 +6,23 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body { width: 1080px; height: 1920px; overflow: hidden; background: #0b0e14; }
   body { font-family: "Noto Sans CJK JP", "Noto Sans JP", "Yu Gothic", sans-serif; color: #f2f4f8; position: relative; }
-  .bg { position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 900px 700px at 20% 12%, rgba(88,101,242,.22), transparent 60%),
-      radial-gradient(ellipse 800px 900px at 85% 88%, rgba(0,194,168,.16), transparent 60%),
-      #0b0e14; }
+  .bg { position: absolute; inset: 0; background: #0b0e14; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(60px); will-change: transform; }
+  .blob1 { width: 900px; height: 700px; left: -200px; top: -150px;
+    background: radial-gradient(ellipse closest-side, rgba(88,101,242,.30), transparent 70%);
+    animation: drift1 26s ease-in-out infinite; }
+  .blob2 { width: 800px; height: 900px; right: -220px; bottom: -200px;
+    background: radial-gradient(ellipse closest-side, rgba(0,194,168,.22), transparent 70%);
+    animation: drift2 32s ease-in-out infinite; }
+  @keyframes drift1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px,50px) scale(1.08); } }
+  @keyframes drift2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-50px,-40px) scale(1.1); } }
   .grain { position: absolute; inset: 0; opacity: .5;
     background-image: radial-gradient(rgba(255,255,255,.045) 1px, transparent 1px); background-size: 22px 22px; }
   .scene { position: absolute; inset: 0; display: flex; flex-direction: column;
     justify-content: center; align-items: center; padding: 0 90px; text-align: center;
-    opacity: 0; transform: translateY(30px); transition: opacity .45s ease, transform .45s ease; }
-  .scene.on { opacity: 1; transform: translateY(0); }
+    opacity: 0; transform: translateY(30px) scale(.97);
+    transition: opacity .5s ease, transform .5s cubic-bezier(.2,.8,.2,1); }
+  .scene.on { opacity: 1; transform: translateY(0) scale(1); }
   .label { font-size: 34px; letter-spacing: .32em; color: #8b93a7; margin-bottom: 60px; }
   .title { font-size: 82px; font-weight: 900; line-height: 1.45; }
   .title .accent { color: #4cc9b0; }
@@ -30,7 +36,7 @@
 </style>
 </head>
 <body>
-  <div class="bg"></div>
+  <div class="bg"><div class="blob blob1"></div><div class="blob blob2"></div></div>
   <div class="grain"></div>
   <div id="stage"></div>
   <div class="credit" id="credit"></div>
