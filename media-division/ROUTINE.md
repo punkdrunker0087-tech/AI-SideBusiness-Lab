@@ -17,7 +17,10 @@
 「仮説→実装→結果→期待と違った点→次の仮説」の研究レポート形式。
 週報パッケージ（Xスレッド案・note記事案・来週の実験計画）を追加。
 毎週末にResearch Reviewを追加。トリガー本文を本仕様書参照方式に変更
-（EXP-009として記録） |
+（EXP-009として記録）。同日中にResearch Reviewへ判定理由タグ
+（DATA/EFFECT/NO_EFFECT/REGRESSION/IMPLEMENTATION/EXTERNAL/
+INCONCLUSIVE）と「研究プロセス自体の改善点」の問いを追加（詳細は
+`WEEKLY.md`） |
 
 ## 共通の前提
 
@@ -58,23 +61,10 @@
 2. 週報パッケージ5点セットを生成する（動画・Xスレッド案・note記事案・
    変更履歴・来週の実験計画）。動画とサムネイル以外はドラフトのみ
 3. **Research Reviewを実行し、`week-0N/report.md`に記録する**
-   （書式は下記）。この記録は翌週のRoutine実行時に参照し、実験の
-   連続性を保つ
+   （書式・判定理由タグの定義は`WEEKLY.md`参照——本仕様書では重複させない）。
+   この記録は翌週のRoutine実行時に参照し、実験の連続性を保つ
 4. `media-division/weeks/week-0N/`へ保存し、コミット・プッシュ・
    動画とサムネイルを送付・報告する
-
-### Research Review（毎週末・必須）
-
-```
-Research Review — Week N
-
-今週の仮説は正しかったか？: YES / NO / 保留
-その理由:
-次週の仮説:
-実験番号: EXP-0NN
-引き継ぐ課題:
-中止する課題:
-```
 
 ## 本仕様書の改定について
 
