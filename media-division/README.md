@@ -62,6 +62,7 @@ LIMIT LAB（単一ブランド・人間のCEO）
 | `pipeline/growth-tactics.md` | 成長戦術SOP。採用した戦術と、ブランド・実験設計と衝突するため採用しなかった範囲の記録 |
 | `WEEKLY.md` | 週次「研究レポート」動画（EXP-008）のSOP。台本構成・週報パッケージ・Research Review |
 | `ROUTINE.md` | 日次Routineの仕様書（EXP-009）。トリガーが参照する正典。バージョン履歴つき |
+| `LESSONS.md` | 教訓ナレッジベース（EXP-010）。何度も使える知見だけを実験結果から昇格させる |
 | `../docs/company-setup/` | 実法人化する場合の手続き・費用・AIにできないこと調査 |
 
 ## 現在のステータス
