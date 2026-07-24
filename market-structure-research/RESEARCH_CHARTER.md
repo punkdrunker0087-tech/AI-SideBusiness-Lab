@@ -38,7 +38,7 @@
 | テーマ | 問い |
 |---|---|
 | Theme 1（Archived） | 標準的な情報環境Proxy（サイズ・流動性・ボラティリティ）ではReaction Timingを十分説明できなかった（RQ-001〜006・PV-001〜002完了、Decision State: **絞り込み**、Closedではなくいつでも再開しうるArchived。詳細は`research_questions/theme1_price_reaction_speed/RQ-006_theme1_synthesis.md`） |
-| Theme 2 | どんな主体が裁定を遅らせるのか（`ARBITRAGE_AGENT_MAP.md`の時間軸を実証していく） |
+| Theme 2（Waiting for Observable） | どんな主体が裁定を遅らせるのか。RQ-007（決算開示種別）で列挙済み候補中最も低コストなProxyが棄却され、ボトルネックがMechanismからProxy設計に移ったと判明（詳細・再開の最低条件は`THEME2_RESEARCH_NOTE.md`） |
 | Theme 3 | どんな制約が価格の歪みを残すのか（`ARBITRAGE_CONSTRAINT_MAP.md`の代理変数を実証していく） |
 
 ### 研究単位（Research Unit）への一段の抽象化（ユーザー指摘）
