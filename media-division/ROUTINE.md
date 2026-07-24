@@ -20,7 +20,11 @@
 （EXP-009として記録）。同日中にResearch Reviewへ判定理由タグ
 （DATA/EFFECT/NO_EFFECT/REGRESSION/IMPLEMENTATION/EXTERNAL/
 INCONCLUSIVE）と「研究プロセス自体の改善点」の問いを追加（詳細は
-`WEEKLY.md`） |
+`WEEKLY.md`）。さらに`LESSONS.md`へ状態管理（Candidate/Accepted/
+Rejected/Superseded）を導入し、`PRINCIPLES.md`を新設して
+Experiment→Review→Lesson→Principleの4段階昇格モデルを整備
+（EXP-010・EXP-011）。Day7を「Week1 Design Review」として
+再定義（詳細は`WEEKLY.md`） |
 
 ## 共通の前提
 
