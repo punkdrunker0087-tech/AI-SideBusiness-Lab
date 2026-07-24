@@ -288,6 +288,39 @@ Archivedになったのは「安価なProxy」である。したがってTheme 2
 「Reaction Timingに最も情報を与える制約は何か」という、Mechanism
 Candidateを1つに固定しない開かれた問いから始める。
 
+## Theme 2（Go with constraints、査読方針）
+
+Theme 2着手は「Go」ではなく「Go with constraints」。Theme 1の最大の
+敵がProxy≠Mechanismだったのに対し、Theme 2の最大の敵は
+**Constraint≠Cause**——ある制約とReaction Timingが相関しても、
+「その制約が価格反応を遅らせた」とは限らず、業種・指数採用・時価
+総額等の共通の交絡要因を共有している可能性が常にある。新しい査読
+項目は追加せず（テンプレートは凍結、既存のAlternative Explanation・
+DAG・Blocking Strategyで十分扱える）、代わりに毎回この一問を繰り返す:
+**「このConstraintが効いているという解釈以外に、同じ結果を説明でき
+る競合説明は何か」**。Theme 2への期待値: 「新しいアルファ」ではなく
+「市場参加者を情報処理主体ではなく制約を受ける主体として見ることで
+研究全体の見方が変わるか」。最初のRQでは「制約が効くか」を証明する
+のではなく、「どの制約のOperationalizationが情報を持ち、どれが
+持たないかを切り分ける」という期待値で始める。
+
+## RQ-007（Theme 2第1号: 決算開示種別という制約タイミングの操作化）
+
+`research_questions/theme2_arbitrage_agents/RQ-007_disclosure_type_
+constraint.md`。新規データ取得ゼロで検証できる制約操作化として、
+決算開示種別（FY決算=年次ベンチマーク再構成・window dressing等の
+制約タイミングと重なりやすい／四半期決算）を検証。RQ-002の教訓
+（群間差そのものを検定する設計にする）を踏まえ、群ラベルの
+シャッフルによる直接比較を実施。結果はFY平均0.817・Q平均0.744、
+観測差0.073、p=0.342——明確な非有意。**Decision: 棄却**（この特定の
+操作化を棄却。「機関投資家の制約が反応タイミングに影響する」という
+Mechanism Candidateそのものは棄却しない、Theme 1の規律をそのまま
+適用）。参考として確認したAlternative Explanation（情報量の違い、
+`|CAR_20|`のFY/四半期差）も0.003とごく小さく、今回はConstraint≠Cause
+の判断自体が不要だった。次に試す制約操作化（ベンチマーク乖離・
+パッシブ資金・ETFフロー等）は、いずれも新規データまたはより手の
+込んだProxy構築を要する。
+
 ## サブテーマ候補（未着手、`ARBITRAGE_CONSTRAINT_MAP.md`で検討中）
 
 - **需給・制度イベント**（指数組入れ・除外、政策保有株解消等）:
