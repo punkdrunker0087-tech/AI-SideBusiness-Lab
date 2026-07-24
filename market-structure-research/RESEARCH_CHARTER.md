@@ -37,7 +37,7 @@
 
 | テーマ | 問い |
 |---|---|
-| Theme 1 | 価格はどの速度で情報を織り込むのか（RQ-001/PV-001で着手済み） |
+| Theme 1 | 価格はどの速度で情報を織り込むのか（RQ-001〜006・PV-001〜002完了、Decision State: **絞り込み**——安価な代理変数3種では説明できず、詳細は`research_questions/theme1_price_reaction_speed/RQ-006_theme1_synthesis.md`） |
 | Theme 2 | どんな主体が裁定を遅らせるのか（`ARBITRAGE_AGENT_MAP.md`の時間軸を実証していく） |
 | Theme 3 | どんな制約が価格の歪みを残すのか（`ARBITRAGE_CONSTRAINT_MAP.md`の代理変数を実証していく） |
 
