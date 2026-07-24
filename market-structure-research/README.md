@@ -2,6 +2,13 @@
 
 > 研究・学習用。発注機能は持たない。
 
+> ## ステータス: Research OS Phase 1 — Complete（2026-07-24）
+> Theme 1はNarrow→Archived、Theme 2はWaiting for Observableで
+> 一区切り。Theme 3には着手しない。Meta Review #1は`RESEARCH_
+> CHARTER.md`参照。次に動くのは新しいテーマができたときではなく、
+> Waiting for Observableの解除ゲートを満たすObservableが現れたとき、
+> またはOS自体のMeta Reviewのタイミングが来たとき。
+
 > ⚠️ **呼び方の訂正（査読コメント）**: このプロジェクトは「戦略開発
 > フレームワーク」でも「アルファ探索基盤」でもない。実態に最も近い
 > 呼び方は**Research Operating System**——仮説を作り、弱く表現し、

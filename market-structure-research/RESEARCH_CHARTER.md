@@ -1,5 +1,19 @@
 # 研究憲章（Research Charter）
 
+> ## ステータス: Research OS Phase 1 — Complete（2026-07-24）
+> Finished（もう何もない）でも Abandoned（放棄）でも Closed（もう
+> 戻らない）でもない。**Phase Complete**: Theme 1（Narrow→Archived）・
+> Theme 2（Waiting for Observable）ともに、適切なDecision Stateで
+> 一区切りに達し、Meta Review #1（下記）でOS自体の運用実績も棚卸し
+> 済み。Theme 3には着手しない。次にプロジェクトが動くのは、新しい
+> テーマがあるからではなく、①Waiting for Observableの解除ゲート
+> （`THEME2_RESEARCH_NOTE.md`）を満たす新しいObservableが現れたとき、
+> または②Research OS自体を見直すMeta Reviewのタイミングが来たとき。
+>
+> 一年後にこの文書を読み返す人へ、最も再利用価値が高いのはこの2文:
+> **「Mechanismを棄却したのではなく、Proxyを棄却した。」**
+> **「研究を再開する条件を、研究を止めた時点で定義した。」**
+
 > 実装なし。目的が「儲かる戦略を探す」（Project A当初）→「アルファが
 > 残る理由を探す」→「アルファ研究の方法論を作る」と揺れてきたため
 > 固定してきたが、研究基盤（イベント評価パイプライン・ネガティブ
@@ -92,6 +106,61 @@ PBO・Evidence Level・Robustness・Research Unit・Negative Resultsと
 このMeta Reviewこそが「どの項目が実際に研究の質を上げ、どの項目が
 飾りだったか」を実証的に判断する唯一の材料であり、その時点で行う
 テンプレート改訂は思いつきではなく実績に基づくものになる。
+
+### Meta Review #1（ユーザー判断、20本・半年を待たずに実施）
+
+⚠️ 上記の起動条件（20本のRQまたは半年）にはまだ達していない
+（RQ-001〜007＋PV-001〜002で計9件）。ただし、Research OSが
+「仮説を棄却する→Proxyを棄却する→Observableを守る→Mechanism
+Candidateとの混同を防ぐ→Research Noteで停止判断を記録する」という
+一連のライフサイクルを一周したことをもって、テンプレート改訂とは
+別に「研究プロセスの棚卸し」としてのMeta Reviewを1回行う（ユーザー
+判断。これはテンプレートの起動条件の変更ではなく、Meta Review自体を
+1回、実績十分と判断して前倒しで実施するもの）。
+
+**Decisionの内訳**（RQ-001〜005・007の6件、Theme横断のRQ-006は除く）:
+
+| Decision | 件数 | 該当RQ |
+|---|---|---|
+| 保留 | 2 | RQ-001, RQ-003 |
+| 棄却 | 3 | RQ-004, RQ-005, RQ-007 |
+| 再実験 | 1 | RQ-002 |
+
+PV-001・PV-002（パイプライン検証）はいずれも「採用」。RQ-006
+（Theme横断シンセシス）は「絞り込み」。
+
+**Proxy棄却とMechanism棄却の比率（最も重要な集計）**: 棄却された
+3件（RQ-004ボラティリティ・RQ-005サイズ・RQ-007決算開示種別）は
+**すべてProxyレベルの棄却であり、Mechanism Candidateレベルの棄却は
+ゼロ**。`NEGATIVE_RESULTS.md`に記録された旧7候補（Accruals・Gross
+Profitability・短期リバーサル・IVOL・スキューネス・共変動・EPS
+修正率）も、構造化タグを見る限り**Mechanism列に✕が付いた候補は
+1つもない**（すべてNovelty不足・DSR/PBO不足・文献再現性の欠如で
+却下）。プロジェクト全体を通じて10件の却下のうち、Mechanism自体が
+明確に否定されたことは一度もない。これは偶然ではなく、
+「ProxyとMechanismを混同しない」という規律が一貫して適用された
+結果と解釈できる
+
+**Alternative Explanationとして最も頻繁に検証されたもの**: 流動性
+（RQ-002の中央値分割、RQ-003の連続変数の2回、Theme 1で唯一2度
+検証された競合説明）
+
+**Blocking Strategyの傾向**: 中央値2値分割（RQ-002）は情報損失を
+理由に却下され、以降は連続変数での相関・回帰（RQ-003・004・005）、
+または群間差を直接検定するpermutation（RQ-002の教訓を反映した
+RQ-007）へ移行した
+
+**Waiting/Holdになった理由の分布**: 3種類に分離できる——
+①Mechanismの曖昧さ（Alternative Explanationを排除しきれない、
+RQ-001）、②検出力の曖昧さ（境界線上のp値、RQ-003）、③データ・
+Proxy構築の制約（Theme 2 Waiting for Observable）。これらは原因が
+異なり、同じ「保留」でも対処法が異なることを示している
+
+**この1回で得られた最大の知見**: プロジェクト全体を通じて、却下は
+一貫してProxy・統計的頑健性・データの側で起きており、Mechanism
+Candidateそのものが崩れたことは一度もない。「Mechanismを棄却したの
+ではなく、Proxyを棄却した」という規律が、テンプレート上の建前では
+なく実際の運用で繰り返し確認された。
 
 ### レビュー契約（ユーザー提案、テンプレート変更ではない）
 
