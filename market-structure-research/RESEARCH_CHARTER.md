@@ -304,3 +304,25 @@ Theme 2以降も繰り返し試される:
 Theme 2でこの規律が維持できるかどうかが、このプロジェクトが
 「たまたま良いRQを書けた」のか「再現性のある研究プロセスを獲得した」
 のかを分ける。
+
+## このプロジェクトが実際に蓄積してきた資産（ユーザー総括）
+
+当初は「アルファ候補」を資産にしようとしていたが、Theme 1・Theme 2
+初動を経て、実際に蓄積されたのは以下4点であり、**「判断の質」その
+ものが資産**になっている:
+
+1. **Research OS（研究運営の規律）**: `RESEARCH_UNIT_TEMPLATE.md`・
+   Evidence Level・Robustness・Decision Stateという、仮説を弱く
+   表現し反証するための規律
+2. **Validation Pipeline（検証基盤）**: `EVENT_EVALUATION_PIPELINE.md`・
+   PV-001/PV-002によるパイプライン自体の妥当性検証
+3. **Negative Results Database（再探索を防ぐ知識）**:
+   `NEGATIVE_RESULTS.md`に蓄積された、却下理由の構造化タグつき記録
+4. **Research Notes（なぜ止めたかという判断履歴）**:
+   `RQ-006_theme1_synthesis.md`・`THEME2_RESEARCH_NOTE.md`のような、
+   テーマを止める判断そのものを記録した文書
+
+プロジェクトが次に動くのは、新しいアイデアが浮かんだからではなく、
+各Research Noteに明記した解除条件（データ条件＋Evidenceベースの
+3点説明）を満たすObservableが現れたときで十分である。この順序を
+守ることが、Research OSを長期的な土台にする。
