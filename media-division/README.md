@@ -50,14 +50,21 @@ LIMIT LAB（単一ブランド・人間のCEO）
 
 | ファイル | 内容 |
 |---|---|
+| `MISSION.md` | **最も変更コストが高い1ページ。** 研究所の存在理由。憲法が常に立ち返る土台（EXP-012） |
 | `AI-CEO-CONSTITUTION.md` | AI CEO憲法（第0条〜第6条）。終了条件と「何をしないか」 |
 | `BRAND.md` | ブランド戦略。核の一文・コンテンツ4役割・静かな研究所トーン・Brand Guardian |
 | `CHARTER.md` | 仮想定款。事業目的・引き継ぎ条項・実法人化の発動条件 |
 | `ORG.md` | 組織設計。「AIが社長という設定」・アーカイブ部・実験番号・2系統KPI・量産の規律 |
 | `EXPERIMENTS.md` | 実験台帳。全活動をEXP-NNNで採番し、成果物を紐付ける主キー |
 | `REJECTION-LOG.md` | 反証ログ。採用されなかったAI CEO提案と却下理由・再評価条件 |
+| `POST-EXP005-CANDIDATES.md` | Day 30後の展開候補（Postmortem材料）。実行はEXP-005完了後・L4判断待ち |
 | `OBSERVATIONS.md` | プロトコルレベルの観測記録（OBS-NNN。実験に属さない発見） |
 | `pipeline/` | ショート動画 全自動生成パイプライン（SOP・テンプレート・実測済み） |
+| `pipeline/growth-tactics.md` | 成長戦術SOP。採用した戦術と、ブランド・実験設計と衝突するため採用しなかった範囲の記録 |
+| `WEEKLY.md` | 週次「研究レポート」動画（EXP-008）のSOP。台本構成・週報パッケージ・Research Review |
+| `ROUTINE.md` | 日次Routineの仕様書（EXP-009）。トリガーが参照する正典。バージョン履歴つき |
+| `LESSONS.md` | 教訓ナレッジベース（EXP-010）。何度も使える知見だけを実験結果から昇格させる |
+| `PRINCIPLES.md` | 運営原則（EXP-011）。3実験以上で再確認されたLessonだけがCEO承認を経てPrincipleへ昇格する |
 | `../docs/company-setup/` | 実法人化する場合の手続き・費用・AIにできないこと調査 |
 
 ## 現在のステータス
